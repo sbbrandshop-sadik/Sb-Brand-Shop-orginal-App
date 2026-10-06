@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SB BRAND SHOP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="lang.js"></script>
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="logo">SB BRAND SHOP</div>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search your favorite product..." data-i18n-ph="searchPlaceholder">
+            <button type="submit" id="searchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+    </header>
+
+    <main class="main-content">
+
+        <section class="banner-section" id="bannerSection">
+            <div class="banner-box"><img src="https://via.placeholder.com/600x200?text=Loading..." alt="Banner 1"></div>
+            <div class="banner-box"><img src="https://via.placeholder.com/600x200?text=Loading..." alt="Banner 2"></div>
+        </section>
+
+        <section class="category-section">
+            <h2 class="section-title" data-i18n="categoryTitle">Product Categories</h2>
+            <div class="category-grid" id="categoryGrid">
+                <div class="loading-text" data-i18n="loading">Loading...</div>
+            </div>
+        </section>
+
+        <section class="offer-section" id="offerSection">
+            <h2 class="section-title" data-i18n="offerTitle">Special Offers</h2>
+            <div class="product-grid" id="offerGrid">
+                <div class="loading-text" data-i18n="loading">Loading...</div>
+            </div>
+        </section>
+
+        <section class="all-products-section">
+            <h2 class="section-title" id="allProductsTitle" data-i18n="allProductsTitle">All Our Products</h2>
+            <div class="product-grid" id="allProductsGrid">
+                <div class="loading-text" data-i18n="loading">Loading...</div>
+            </div>
+        </section>
+
+    </main>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <i class="fa-solid fa-house"></i>
+            <span data-i18n="navHome">Home</span>
+        </a>
+        <a href="#reels" class="nav-item">
+            <i class="fa-solid fa-clapperboard"></i>
+            <span data-i18n="navReels">Reels</span>
+        </a>
+        <a href="cart.html" class="nav-item">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span data-i18n="navCart">Cart</span>
+            <span class="cart-badge" id="cartCount" style="display:none">0</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fa-solid fa-user"></i>
+            <span data-i18n="navProfile">Profile</span>
+        </a>
+    </nav>
+
+    <!-- Toast Message -->
+    <div id="toast" class="toast"></div>
+
+    <script type="module">
+        import { db } from './firebase-config.js';
+        import {
+            collection, getDocs, query, where, orderBy, limit, doc, getDoc
+        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const { t, applyI18n, initShopLang } = window.APP_I18N;
+        applyI18n();
+
+        // ========== CART ==========
+        function getCart() {
+            return JSON.parse(localStorage.getItem('sb_cart') || '[]');
+        }
+        function saveCart(cart) {
+            localStorage.setItem('sb_cart', JSON.stringify(cart));
+            updateCartCount();
+        }
+        function updateCartCount() {
+            const cart = getCart();
+            const total = cart.reduce((s, i) => s + i.quantity, 0);
+            const badge = document.getElementById('cartCount');
+            badge.textContent = total;
+            badge.style.display = total > 0 ? 'flex' : 'none';
+        }
+        window.addToCart = function(encoded) {
+            const product = JSON.parse(decodeURIComponent(encoded));
+            const cart = getCart();
+            const found = cart.find(i => i.id === product.id);
+            if (found) found.quantity += 1;
+            else cart.push({ ...product, quantity: 1 });
+            saveCart(cart);
+            showToast(t('addedToCart'));
+        };
+        window.buyNow = function(encoded) {
+            const p = JSON.parse(decodeURIComponent(encoded));
+            const params = new URLSearchParams({
+                id: p.id,
+                name: encodeURIComponent(p.name),
+                price: p.price,
+                oldPrice: p.oldPrice || '',
+                img: encodeURIComponent(p.imageUrl || ''),
+                freeDelivery: p.freeDelivery ? '1' : '0'
+            });
+            window.location.href = 'order.html?' + params.toString();
+        };
+
+        // ========== TOAST ==========
+        function showToast(msg) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 2500);
+        }
+
+        // ========== PRODUCT CARD ==========
+        function productCard(p) {
+            const safe = encodeURIComponent(JSON.stringify({
+                id: p.id, name: p.name, price: p.price,
+                oldPrice: p.oldPrice || null, imageUrl: p.imageUrl,
+                freeDelivery: p.freeDelivery || false
+            }));
+            return `
+            <div class="product-card">
+                ${p.discount ? `<span class="badge">-${p.discount}%</span>` : ''}
+                <a href="product.html?id=${p.id}" class="product-link">
+                    <img src="${p.imageUrl || 'https://via.placeholder.com/150'}" alt="${p.name}" loading="lazy">
+                    <h3>${p.name}</h3>
+                </a>
+                <p class="price">
+                    ${p.oldPrice ? `<span class="old-price">৳${p.oldPrice}</span>` : ''}
+                    ৳${p.price}
+                </p>
+                <button class="cart-btn" onclick="addToCart('${safe}')">
+                    <i class="fa-solid fa-cart-plus"></i> ${t('addToCart')}
+                </button>
+                <button class="buy-btn" onclick="buyNow('${safe}')">${t('buyNow')}</button>
+            </div>`;
+        }
+
+        // ========== LOAD BANNERS ==========
+        async function loadBanners() {
+            try {
+                const snap = await getDocs(query(collection(db, 'banners'), orderBy('order')));
+                if (!snap.empty) {
+                    const sec = document.getElementById('bannerSection');
+                    sec.innerHTML = '';
+                    snap.forEach(d => {
+                        sec.innerHTML += `<div class="banner-box"><img src="${d.data().imageUrl}" alt="Banner"></div>`;
+                    });
+                }
+            } catch(e) {}
+        }
+
+        // ========== LOAD CATEGORIES ==========
+        async function loadCategories() {
+            try {
+                const snap = await getDocs(query(collection(db, 'categories'), orderBy('order')));
+                const grid = document.getElementById('categoryGrid');
+                if (snap.empty) {
+                    const defaults = ['ব্যাগস','ফ্যাশন','জুতো','ঘড়ি'];
+                    grid.innerHTML = defaults.map(c => `
+                        <div class="category-item" onclick="filterByCategory('${c}')">
+                            <img src="https://via.placeholder.com/80" alt="${c}">
+                            <p>${c}</p>
+                        </div>`).join('');
+                    return;
+                }
+                grid.innerHTML = '';
+                snap.forEach(d => {
+                    const c = d.data();
+                    grid.innerHTML += `
+                        <div class="category-item" onclick="filterByCategory('${c.name}')">
+                            <img src="${c.imageUrl || 'https://via.placeholder.com/80'}" alt="${c.name}">
+                            <p>${c.name}</p>
+                        </div>`;
+                });
+            } catch(e) { console.log(e); }
+        }
+
+        // ========== LOAD OFFERS ==========
+        async function loadOffers() {
+            try {
+                const snap = await getDocs(query(collection(db, 'products'), where('isOffer', '==', true)));
+                const grid = document.getElementById('offerGrid');
+                const offers = [];
+                snap.forEach(d => {
+                    const p = { id: d.id, ...d.data() };
+                    // pending/rejected product offer-তেও দেখাবে না
+                    if (!p.status || p.status === 'approved') offers.push(p);
+                });
+                if (offers.length === 0) {
+                    document.getElementById('offerSection').style.display = 'none';
+                    return;
+                }
+                grid.innerHTML = '';
+                offers.forEach(p => grid.innerHTML += productCard(p));
+            } catch(e) { document.getElementById('offerSection').style.display = 'none'; }
+        }
+
+        // ========== LOAD ALL PRODUCTS ==========
+        async function loadProducts(category = null, search = null) {
+            const grid = document.getElementById('allProductsGrid');
+            grid.innerHTML = `<div class="loading-text">${t('loading')}</div>`;
+            try {
+                const snap = await getDocs(collection(db, 'products'));
+                let products = [];
+                snap.forEach(d => products.push({ id: d.id, ...d.data() }));
+
+                // 🔑 Merchant-এর pending/rejected product shop-এ দেখাবে না
+                products = products.filter(p => !p.status || p.status === 'approved');
+
+                if (category) products = products.filter(p => p.category === category);
+                if (search) products = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
+
+                if (products.length === 0) {
+                    grid.innerHTML = `<p class="empty-msg">${t('emptyMsg')}</p>`;
+                    return;
+                }
+                grid.innerHTML = '';
+                products.forEach(p => grid.innerHTML += productCard(p));
+            } catch(e) {
+                grid.innerHTML = `<p class="empty-msg">${t('loadFailed')}</p>`;
+            }
+        }
+
+        // ========== FILTER ==========
+        window.filterByCategory = function(cat) {
+            document.getElementById('allProductsTitle').textContent = cat + ' ' + t('productsOf');
+            loadProducts(cat);
+            document.querySelector('.all-products-section').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        // ========== SEARCH ==========
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            const term = document.getElementById('searchInput').value.trim();
+            if (term) {
+                document.getElementById('allProductsTitle').textContent = '"' + term + '"' + t('searchSuffix');
+                loadProducts(null, term);
+                document.querySelector('.all-products-section').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+        document.getElementById('searchInput').addEventListener('keypress', e => {
+            if (e.key === 'Enter') document.getElementById('searchBtn').click();
+        });
+
+        // ========== INIT ==========
+        await initShopLang(async () => {
+            const snap = await getDoc(doc(db, 'settings', 'general'));
+            return snap.exists() ? snap.data() : null;
+        });
+        updateCartCount();
+        loadBanners();
+        loadCategories();
+        loadOffers();
+        loadProducts();
+    </script>
+</body>
+</html>

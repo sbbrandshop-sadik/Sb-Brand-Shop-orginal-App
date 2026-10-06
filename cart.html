@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - SB BRAND SHOP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="lang.js"></script>
+    <style>
+        .cart-page { padding: 0 15px 15px; max-width: 600px; margin: 0 auto; }
+        .cart-item { display: flex; align-items: center; gap: 12px; background: white; border-radius: 12px; padding: 12px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .cart-item img { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+        .cart-item-info { flex: 1; }
+        .cart-item-info h4 { font-size: 14px; font-weight: 600; color: #333; margin-bottom: 4px; }
+        .cart-item-info .item-price { font-size: 14px; color: #d9534f; font-weight: bold; }
+        .qty-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+        .qty-btn { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid #ddd; background: #f5f5f5; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; line-height: 1; transition: 0.2s; }
+        .qty-btn:hover { background: #006643; color: white; border-color: #006643; }
+        .qty-num { font-weight: bold; font-size: 16px; min-width: 20px; text-align: center; }
+        .remove-btn { background: none; border: none; cursor: pointer; color: #d9534f; font-size: 18px; padding: 5px; }
+        .cart-summary { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .summary-row { display: flex; justify-content: space-between; font-size: 14px; color: #555; margin-bottom: 10px; }
+        .summary-total { font-size: 17px; font-weight: bold; color: #006643; border-top: 1.5px solid #eee; padding-top: 12px; display: flex; justify-content: space-between; }
+        .checkout-btn { width: 100%; padding: 15px; background: #006643; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.2s; }
+        .checkout-btn:hover { background: #004d33; }
+        .empty-state { text-align: center; padding: 60px 20px; }
+        .empty-state i { font-size: 70px; color: #ddd; display: block; margin-bottom: 15px; }
+        .empty-state p { color: #999; margin-bottom: 20px; font-size: 16px; }
+        .shop-link { display: inline-block; background: #006643; color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: bold; }
+
+        /* Modal */
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 9999; align-items: flex-end; justify-content: center; }
+        .overlay.show { display: flex; }
+        .modal { background: white; border-radius: 20px 20px 0 0; padding: 25px; width: 100%; max-width: 500px; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .modal-title { font-size: 17px; font-weight: bold; color: #006643; margin-bottom: 18px; }
+        .m-group { margin-bottom: 13px; }
+        .m-group label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 5px; }
+        .m-group input, .m-group textarea { width: 100%; padding: 11px 14px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 14px; outline: none; }
+        .m-group input:focus, .m-group textarea:focus { border-color: #006643; }
+        .modal-btns { display: flex; gap: 10px; margin-top: 15px; }
+        .modal-btns button { flex: 1; padding: 13px; border: none; border-radius: 10px; font-weight: bold; font-size: 15px; cursor: pointer; }
+        .confirm-btn { background: #006643; color: white; }
+        .confirm-btn:hover { background: #004d33; }
+        .confirm-btn:disabled { background: #aaa; cursor: not-allowed; }
+        .cancel-btn { background: #f0f0f0; color: #444; }
+    </style>
+</head>
+<body>
+    <header class="top-header">
+        <div class="logo" data-i18n="cartTitle">🛒 My Cart</div>
+    </header>
+
+    <div class="cart-page" id="cartContainer"></div>
+
+    <!-- Order Modal -->
+    <div class="overlay" id="orderOverlay">
+        <div class="modal">
+            <div class="modal-title" data-i18n="deliveryInfo">📦 Delivery Information</div>
+            <div class="m-group">
+                <label data-i18n="yourName">Your Name *</label>
+                <input type="text" id="oName" placeholder="Full name" data-i18n-ph="namePh">
+            </div>
+            <div class="m-group">
+                <label data-i18n="phone">Phone Number *</label>
+                <input type="tel" id="oPhone" placeholder="01XXXXXXXXX" data-i18n-ph="phonePh">
+            </div>
+            <div class="m-group">
+                <label data-i18n="address">Delivery Address *</label>
+                <textarea id="oAddress" rows="3" placeholder="House/Flat, Road, Area, District" data-i18n-ph="addressPh"></textarea>
+            </div>
+            <div class="modal-btns">
+                <button class="cancel-btn" onclick="closeModal()" data-i18n="cancel">Cancel</button>
+                <button class="confirm-btn" id="confirmBtn" data-i18n="confirmOrder">✅ Confirm Order</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span data-i18n="navHome">Home</span></a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-clapperboard"></i><span data-i18n="navReels">Reels</span></a>
+        <a href="cart.html" class="nav-item active"><i class="fa-solid fa-cart-shopping"></i><span data-i18n="navCart">Cart</span></a>
+        <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i><span data-i18n="navProfile">Profile</span></a>
+    </nav>
+
+    <script type="module">
+        import { db, auth } from './firebase-config.js';
+        import { collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+        const { t, applyI18n, initShopLang } = window.APP_I18N;
+        applyI18n();
+
+        let currentUser = null;
+        onAuthStateChanged(auth, u => {
+            currentUser = u;
+            if (u) document.getElementById('oName').value = u.displayName || '';
+        });
+
+        function getCart() { return JSON.parse(localStorage.getItem('sb_cart') || '[]'); }
+        function saveCart(c) { localStorage.setItem('sb_cart', JSON.stringify(c)); render(); }
+
+        function render() {
+            const cart = getCart();
+            const box = document.getElementById('cartContainer');
+
+            if (cart.length === 0) {
+                box.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <p>${t('cartEmpty')}</p>
+                        <a href="index.html" class="shop-link">${t('startShopping')}</a>
+                    </div>`;
+                return;
+            }
+
+            let total = 0;
+            let html = '';
+            cart.forEach((item, i) => {
+                total += item.price * item.quantity;
+                html += `
+                <div class="cart-item">
+                    <img src="${item.imageUrl || 'https://via.placeholder.com/70'}" alt="${item.name}">
+                    <div class="cart-item-info">
+                        <h4>${item.name}</h4>
+                        <div class="item-price">৳${item.price}</div>
+                        <div class="qty-row">
+                            <button class="qty-btn" onclick="changeQty(${i},-1)">−</button>
+                            <span class="qty-num">${item.quantity}</span>
+                            <button class="qty-btn" onclick="changeQty(${i},1)">+</button>
+                        </div>
+                    </div>
+                    <button class="remove-btn" onclick="removeItem(${i})"><i class="fa-solid fa-trash"></i></button>
+                </div>`;
+            });
+
+            const itemCount = cart.length;
+            box.innerHTML = html + `
+            <div class="cart-summary">
+                <div class="summary-row"><span>${t('totalItems')}</span><span>${itemCount}</span></div>
+                <div class="summary-row"><span>${t('deliveryRow')}</span><span style="color:#006643">${t('free')}</span></div>
+                <div class="summary-total"><span>${t('grandTotal')}</span><span>৳${total}</span></div>
+                <button class="checkout-btn" onclick="openModal()">
+                    <i class="fa-solid fa-bag-shopping"></i> ${t('cartOrderBtn')}
+                </button>
+            </div>`;
+        }
+
+        window.changeQty = function(i, d) {
+            const c = getCart();
+            c[i].quantity += d;
+            if (c[i].quantity <= 0) c.splice(i, 1);
+            saveCart(c);
+        };
+        window.removeItem = function(i) {
+            const c = getCart();
+            c.splice(i, 1);
+            saveCart(c);
+        };
+        window.openModal = function() {
+            if (!currentUser) {
+                if (confirm(t('loginRequired')))
+                    window.location.href = 'login.html';
+                return;
+            }
+            document.getElementById('orderOverlay').classList.add('show');
+        };
+        window.closeModal = function() {
+            document.getElementById('orderOverlay').classList.remove('show');
+        };
+
+        document.getElementById('confirmBtn').addEventListener('click', async () => {
+            const name = document.getElementById('oName').value.trim();
+            const phone = document.getElementById('oPhone').value.trim();
+            const address = document.getElementById('oAddress').value.trim();
+            if (!name || !phone || !address) { alert(t('fillAll')); return; }
+            const cart = getCart();
+            const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+            const btn = document.getElementById('confirmBtn');
+            btn.disabled = true;
+            btn.textContent = t('orderingNow');
+            try {
+                await addDoc(collection(db, 'orders'), {
+                    userId: currentUser.uid,
+                    userEmail: currentUser.email,
+                    name, phone, address, items: cart, total,
+                    status: 'pending',
+                    createdAt: serverTimestamp()
+                });
+                localStorage.removeItem('sb_cart');
+                closeModal();
+                alert(t('orderSuccessAlert'));
+                window.location.href = 'index.html';
+            } catch(e) {
+                alert(t('orderFailAlert'));
+                btn.disabled = false;
+                btn.textContent = t('confirmOrder');
+            }
+        });
+
+        await initShopLang(async () => {
+            const snap = await getDoc(doc(db, 'settings', 'general'));
+            return snap.exists() ? snap.data() : null;
+        });
+        render();
+    </script>
+</body>
+</html>

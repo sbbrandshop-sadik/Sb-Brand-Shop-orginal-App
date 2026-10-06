@@ -1,0 +1,9 @@
+{
+  "appId": "com.sbbrandshop.app",
+  "appName": "SB BRAND SHOP",
+  "webDir": "www",
+  "server": {
+    "url": "https://sb-brand-shop-426a4.web.app",
+    "androidScheme": "https"
+  }
+}

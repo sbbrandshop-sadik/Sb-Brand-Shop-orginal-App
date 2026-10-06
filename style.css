@@ -1,0 +1,377 @@
+/* বেসিক রিসেট ও গ্লোবাল স্টাইল */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f7f8fa;
+    color: #333;
+    padding-bottom: 80px;
+}
+
+/* ১. টপ হেডার */
+.top-header {
+    background-color: #006643;
+    color: white;
+    padding: 15px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+.search-container {
+    display: flex;
+    background: white;
+    border-radius: 25px;
+    overflow: hidden;
+}
+
+.search-container input {
+    flex: 1;
+    border: none;
+    padding: 11px 15px;
+    outline: none;
+    font-size: 14px;
+}
+
+.search-container button {
+    background: #ffc107;
+    border: none;
+    padding: 0 20px;
+    cursor: pointer;
+    color: #111;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.search-container button:hover {
+    background: #e0a800;
+}
+
+/* মেইন কন্টেন্ট */
+.main-content {
+    padding: 12px;
+}
+
+/* ২. ব্যানার */
+.banner-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.banner-box {
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.banner-box img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    height: 120px;
+}
+
+/* সেকশন টাইটেল */
+.section-title {
+    font-size: 16px;
+    margin-bottom: 15px;
+    border-left: 4px solid #006643;
+    padding-left: 8px;
+    color: #006643;
+    font-weight: bold;
+}
+
+/* ৩. ক্যাটাগরি */
+.category-section {
+    margin-bottom: 25px;
+}
+
+.category-grid {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 5px 5px 15px 5px;
+}
+
+.category-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.category-item {
+    min-width: 85px;
+    text-align: center;
+    background: #ffffff;
+    padding: 12px 8px;
+    border-radius: 14px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.category-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 14px rgba(0, 102, 67, 0.15);
+    border-color: #006643;
+}
+
+.category-item img {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #006643;
+}
+
+.category-item p {
+    font-size: 12px;
+    margin-top: 7px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* ৪. প্রোডাক্ট গ্রিড */
+.product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 12px;
+    padding: 12px;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: 0.2s;
+}
+
+.product-card:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.product-card img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.product-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    cursor: pointer;
+}
+
+.product-card h3 {
+    font-size: 13px;
+    margin: 5px 0;
+    color: #444;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.price {
+    font-size: 15px;
+    color: #d9534f;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: #aaa;
+    font-size: 12px;
+    margin-right: 4px;
+}
+
+.badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #d9534f;
+    color: white;
+    font-size: 10px;
+    padding: 3px 7px;
+    border-radius: 5px;
+    font-weight: bold;
+    z-index: 5;
+}
+
+/* কার্ট বাটন */
+.cart-btn {
+    background: #ffc107;
+    color: #111;
+    border: none;
+    width: 100%;
+    padding: 9px 0;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 7px;
+    transition: 0.2s;
+}
+
+.cart-btn:hover {
+    background: #e0a800;
+}
+
+/* অর্ডার বাটন */
+.buy-btn {
+    background: #006643;
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 9px 0;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.buy-btn:hover {
+    background: #004d33;
+}
+
+/* ৫. বটম নেভ */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    box-shadow: 0 -3px 10px rgba(0,0,0,0.08);
+    z-index: 1000;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: #888;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 500;
+    position: relative;
+}
+
+.nav-item i {
+    font-size: 20px;
+    margin-bottom: 3px;
+}
+
+.nav-item.active {
+    color: #006643;
+}
+
+/* Cart Badge */
+.cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background: #d9534f;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #333;
+    color: white;
+    padding: 12px 22px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 9999;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Loading Text */
+.loading-text {
+    text-align: center;
+    padding: 20px;
+    color: #aaa;
+    font-size: 14px;
+    grid-column: 1 / -1;
+}
+
+/* Empty message */
+.empty-msg {
+    text-align: center;
+    padding: 25px;
+    color: #aaa;
+    font-size: 14px;
+    grid-column: 1 / -1;
+}
+
+/* রেসপনসিভ */
+@media (min-width: 600px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 900px) {
+    .product-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .banner-section {
+        gap: 20px;
+    }
+    .banner-box img {
+        height: 200px;
+    }
+    .main-content {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+}

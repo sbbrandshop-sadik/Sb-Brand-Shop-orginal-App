@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - SB BRAND SHOP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="lang.js"></script>
+    <style>
+        .pd-wrap { max-width: 650px; margin: 0 auto; padding-bottom: 20px; }
+
+        /* Header back button */
+        .pd-header { display: flex; align-items: center; gap: 12px; }
+        .pd-back { color: white; font-size: 18px; text-decoration: none; flex-shrink: 0; }
+        .pd-title { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* Image gallery */
+        .gallery-wrap { background: white; }
+        .main-img-box { width: 100%; aspect-ratio: 1; background: #f5f5f5; overflow: hidden; position: relative; }
+        .main-img-box img { width: 100%; height: 100%; object-fit: contain; }
+        .badge-discount { position: absolute; top: 14px; left: 14px; background: #d9534f; color: white; font-size: 13px; padding: 5px 12px; border-radius: 6px; font-weight: bold; z-index: 5; }
+        .thumb-row { display: flex; gap: 8px; padding: 12px; overflow-x: auto; }
+        .thumb-row::-webkit-scrollbar { display: none; }
+        .thumb-item { width: 64px; height: 64px; border-radius: 8px; overflow: hidden; border: 2px solid #e5e5e5; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
+        .thumb-item img { width: 100%; height: 100%; object-fit: cover; }
+        .thumb-item.active { border-color: #006643; }
+
+        /* Info section */
+        .pd-info { background: white; margin-top: 10px; padding: 18px; }
+        .pd-name { font-size: 19px; font-weight: 700; color: #222; margin-bottom: 10px; line-height: 1.4; }
+        .pd-price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
+        .pd-price { font-size: 24px; font-weight: bold; color: #d9534f; }
+        .pd-old-price { font-size: 15px; color: #aaa; text-decoration: line-through; }
+        .pd-discount-tag { background: #fff0ef; color: #d9534f; font-size: 12px; font-weight: bold; padding: 3px 8px; border-radius: 5px; }
+        .pd-delivery-tag { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 13px; color: #006643; font-weight: 600; background: #f0fff8; padding: 6px 12px; border-radius: 8px; }
+
+        /* Section blocks */
+        .pd-section { background: white; margin-top: 10px; padding: 18px; }
+        .pd-section h3 { font-size: 15px; font-weight: 700; color: #006643; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .pd-section p, .pd-section div { font-size: 14px; color: #555; line-height: 1.8; white-space: pre-line; }
+
+        .spec-list { list-style: none; }
+        .spec-list li { display: flex; padding: 8px 0; border-bottom: 1px solid #f2f2f2; font-size: 14px; }
+        .spec-list li:last-child { border-bottom: none; }
+        .spec-key { color: #888; min-width: 110px; flex-shrink: 0; }
+        .spec-val { color: #333; font-weight: 500; }
+
+        /* Sticky bottom bar */
+        .pd-action-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: white; padding: 12px 15px;
+            box-shadow: 0 -3px 12px rgba(0,0,0,0.08);
+            display: flex; gap: 10px; z-index: 1000;
+        }
+        .pd-cart-btn, .pd-order-btn {
+            flex: 1; padding: 14px 0; border: none; border-radius: 12px;
+            font-size: 15px; font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: 0.2s;
+        }
+        .pd-cart-btn { background: #ffc107; color: #111; }
+        .pd-cart-btn:hover { background: #e0a800; }
+        .pd-order-btn { background: #006643; color: white; }
+        .pd-order-btn:hover { background: #004d33; }
+
+        .pd-skeleton { text-align: center; padding: 60px 20px; color: #aaa; }
+
+        /* Toast reuse */
+        .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); background: #333; color: white; padding: 12px 22px; border-radius: 25px; font-size: 14px; font-weight: 500; opacity: 0; transition: all 0.3s ease; z-index: 9999; white-space: nowrap; pointer-events: none; }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        body { padding-bottom: 80px; }
+    </style>
+</head>
+<body>
+    <header class="top-header">
+        <div class="pd-header">
+            <a href="javascript:history.back()" class="pd-back"><i class="fa-solid fa-arrow-left"></i></a>
+            <div class="pd-title" data-i18n="pdTitle">Product Details</div>
+        </div>
+    </header>
+
+    <div class="pd-wrap" id="pdRoot">
+        <div class="pd-skeleton" data-i18n="loading">Loading...</div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script type="module">
+        import { db } from './firebase-config.js';
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const { t, applyI18n, initShopLang, currentLang } = window.APP_I18N;
+        applyI18n();
+
+        const params = new URLSearchParams(window.location.search);
+        const productId = params.get('id');
+
+        function showToast(msg) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 2500);
+        }
+
+        function getCart() { return JSON.parse(localStorage.getItem('sb_cart') || '[]'); }
+        function saveCart(c) { localStorage.setItem('sb_cart', JSON.stringify(c)); }
+
+        window.addToCartPD = function() {
+            const cart = getCart();
+            const found = cart.find(i => i.id === window.__product.id);
+            if (found) found.quantity += 1;
+            else cart.push({
+                id: window.__product.id, name: window.__product.name,
+                price: window.__product.price, imageUrl: window.__product.imageUrl,
+                quantity: 1
+            });
+            saveCart(cart);
+            showToast(t('addedToCart'));
+        };
+
+        window.orderNowPD = function() {
+            const p = window.__product;
+            const q = new URLSearchParams({
+                id: p.id,
+                name: encodeURIComponent(p.name),
+                price: p.price,
+                oldPrice: p.oldPrice || '',
+                img: encodeURIComponent(p.imageUrl || ''),
+                freeDelivery: p.freeDelivery ? '1' : '0'
+            });
+            window.location.href = 'order.html?' + q.toString();
+        };
+
+        window.switchMainImg = function(url, el) {
+            document.getElementById('mainImg').src = url;
+            document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+        };
+
+        async function loadProduct() {
+            const root = document.getElementById('pdRoot');
+            if (!productId) {
+                root.innerHTML = `<div class="pd-skeleton">${t('pdNotFound')}</div>`;
+                return;
+            }
+            try {
+                const snap = await getDoc(doc(db, 'products', productId));
+                if (!snap.exists()) {
+                    root.innerHTML = `<div class="pd-skeleton">${t('pdNotFound')}</div>`;
+                    return;
+                }
+                const p = { id: snap.id, ...snap.data() };
+
+                // 🔑 pending/rejected product কাস্টমার দেখতে পাবে না
+                if (p.status === 'pending' || p.status === 'rejected') {
+                    root.innerHTML = `<div class="pd-skeleton">${t('pdPending')}</div>`;
+                    return;
+                }
+
+                window.__product = p;
+
+                const images = (p.images && p.images.length > 0) ? p.images : [p.imageUrl || 'https://via.placeholder.com/400'];
+
+                // Specification parse (key: value প্রতি লাইনে)
+                let specHTML = '';
+                if (p.specification) {
+                    const lines = p.specification.split('\n').filter(l => l.trim());
+                    specHTML = '<ul class="spec-list">' + lines.map(line => {
+                        const idx = line.indexOf(':');
+                        if (idx > -1) {
+                            const key = line.substring(0, idx).trim();
+                            const val = line.substring(idx + 1).trim();
+                            return `<li><span class="spec-key">${key}</span><span class="spec-val">${val}</span></li>`;
+                        }
+                        return `<li><span class="spec-val">${line}</span></li>`;
+                    }).join('') + '</ul>';
+                }
+
+                const isBn = currentLang() === 'bn';
+                const discTag = p.discount ? `<span class="pd-discount-tag">${p.discount}% ${isBn ? 'ছাড়' : 'OFF'}</span>` : '';
+
+                root.innerHTML = `
+                    <div class="gallery-wrap">
+                        <div class="main-img-box">
+                            ${p.discount ? `<span class="badge-discount">-${p.discount}%</span>` : ''}
+                            <img id="mainImg" src="${images[0]}" alt="${p.name}">
+                        </div>
+                        ${images.length > 1 ? `
+                        <div class="thumb-row">
+                            ${images.map((img, i) => `
+                                <div class="thumb-item ${i===0?'active':''}" onclick="switchMainImg('${img}', this)">
+                                    <img src="${img}" alt="thumb-${i+1}">
+                                </div>`).join('')}
+                        </div>` : ''}
+                    </div>
+
+                    <div class="pd-info">
+                        <div class="pd-name">${p.name}</div>
+                        <div class="pd-price-row">
+                            <span class="pd-price">৳${p.price}</span>
+                            ${p.oldPrice ? `<span class="pd-old-price">৳${p.oldPrice}</span>` : ''}
+                            ${discTag}
+                        </div>
+                        ${p.freeDelivery ? `<div class="pd-delivery-tag"><i class="fa-solid fa-truck-fast"></i> ${t('freeDelivery')}</div>` : ''}
+                    </div>
+
+                    ${specHTML ? `
+                    <div class="pd-section">
+                        <h3><i class="fa-solid fa-list-check"></i> ${t('specTitle')}</h3>
+                        ${specHTML}
+                    </div>` : ''}
+
+                    ${p.description ? `
+                    <div class="pd-section">
+                        <h3><i class="fa-solid fa-align-left"></i> ${t('descTitle')}</h3>
+                        <p>${p.description}</p>
+                    </div>` : ''}
+
+                    <div class="pd-action-bar">
+                        <button class="pd-cart-btn" onclick="addToCartPD()">
+                            <i class="fa-solid fa-cart-plus"></i> ${t('addToCart')}
+                        </button>
+                        <button class="pd-order-btn" onclick="orderNowPD()">
+                            <i class="fa-solid fa-bolt"></i> ${t('buyNow')}
+                        </button>
+                    </div>
+                `;
+            } catch(e) {
+                root.innerHTML = `<div class="pd-skeleton">${t('loadFailed')}</div>`;
+            }
+        }
+
+        await initShopLang(async () => {
+            const s = await getDoc(doc(db, 'settings', 'general'));
+            return s.exists() ? s.data() : null;
+        });
+        loadProduct();
+    </script>
+</body>
+</html>

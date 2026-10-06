@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - SB BRAND SHOP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="lang.js"></script>
+    <style>
+        .profile-wrap { max-width: 500px; margin: 0 auto; padding: 15px 15px 100px; }
+
+        /* Header-এ ডানপাশের সবুজ buttons */
+        .corner-btns { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+        .corner-btn {
+            display: inline-flex; align-items: center; gap: 7px;
+            background: #22c55e; color: white; text-decoration: none;
+            padding: 8px 13px; border-radius: 9px;
+            font-size: 13px; font-weight: bold; white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            cursor: pointer; border: none; font-family: inherit;
+            transition: 0.2s;
+        }
+        .corner-btn:hover { background: #16a34a; }
+        @media (max-width: 520px) {
+            .top-header { align-items: flex-start; }
+            .corner-btns { width: 100%; justify-content: flex-end; }
+            .corner-btn { padding: 6px 10px; font-size: 12px; gap: 5px; }
+        }
+
+        /* Profile card */
+        .profile-card { background: white; border-radius: 14px; padding: 30px 25px; text-align: center; margin-bottom: 15px; box-shadow: 0 3px 12px rgba(0,0,0,0.06); }
+        .avatar-circle { width: 84px; height: 84px; border-radius: 50%; background: linear-gradient(135deg, #006643, #00a67e); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
+        .avatar-circle i { font-size: 40px; color: white; }
+        .profile-card h2 { font-size: 19px; color: #333; margin-bottom: 4px; }
+        .profile-card .email { font-size: 13px; color: #999; }
+
+        /* Logout — profile-র নিচে এই একটাই button */
+        .logout-btn { width: 100%; padding: 14px; border-radius: 11px; border: 1.5px solid #ffcdd2; background: #fff5f5; color: #c62828; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        .logout-btn:hover { background: #ffebee; }
+
+        /* Customer-এর order list */
+        .orders-title { font-size: 15px; font-weight: 700; color: #006643; margin: 22px 0 12px; }
+        .order-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .order-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .order-id { font-size: 12px; color: #aaa; font-family: monospace; }
+        .order-date { font-size: 12px; color: #aaa; }
+        .status-badge { font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: 600; white-space: nowrap; }
+        .s-pending { background: #fff3cd; color: #856404; }
+        .s-processing { background: #cfe2ff; color: #084298; }
+        .s-delivered { background: #d1e7dd; color: #0a3622; }
+        .s-cancelled { background: #f8d7da; color: #842029; }
+        .order-items-list { font-size: 13px; color: #666; margin-bottom: 6px; line-height: 1.6; }
+        .order-total { font-size: 15px; font-weight: bold; color: #006643; }
+
+        /* Logged out state */
+        .logged-out { text-align: center; padding: 60px 20px; }
+        .logged-out i { font-size: 70px; color: #ddd; display: block; margin-bottom: 15px; }
+        .logged-out p { color: #999; margin-bottom: 20px; font-size: 16px; }
+        .login-cta { background: #006643; color: white; padding: 13px 30px; border-radius: 11px; text-decoration: none; font-weight: bold; }
+
+        /* Merchant modal */
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 9999; align-items: center; justify-content: center; padding: 15px; }
+        .overlay.show { display: flex; }
+        .modal { background: white; border-radius: 16px; padding: 25px; width: 100%; max-width: 440px; max-height: 92vh; overflow-y: auto; }
+        .modal-title { font-size: 17px; font-weight: bold; color: #006643; margin-bottom: 6px; }
+        .modal-sub { font-size: 13px; color: #777; margin-bottom: 16px; line-height: 1.6; }
+        .m-group { margin-bottom: 13px; }
+        .m-group label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 5px; }
+        .m-group input, .m-group textarea { width: 100%; padding: 11px 14px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 14px; outline: none; }
+        .m-group input:focus, .m-group textarea:focus { border-color: #006643; }
+
+        /* NID uploads */
+        .nid-row { display: flex; gap: 10px; }
+        .nid-box { flex: 1; }
+        .nid-box .nid-label { font-size: 12px; font-weight: 700; color: #555; text-align: center; margin-bottom: 5px; }
+        .nid-upload { border: 2px dashed #ccc; border-radius: 10px; padding: 12px 8px; text-align: center; cursor: pointer; transition: 0.2s; min-height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .nid-upload:hover { border-color: #006643; }
+        .nid-upload.has-img { border-style: solid; border-color: #006643; padding: 4px; }
+        .nid-upload i { font-size: 22px; color: #bbb; }
+        .nid-upload .nid-hint { font-size: 10px; color: #aaa; margin-top: 3px; }
+        .nid-upload img { max-width: 100%; max-height: 82px; object-fit: contain; border-radius: 6px; }
+        .nid-note { font-size: 11px; color: #e65100; background: #fff3e0; padding: 8px 10px; border-radius: 8px; margin-bottom: 12px; line-height: 1.5; }
+
+        .modal-btns { display: flex; gap: 10px; margin-top: 15px; }
+        .modal-btns button { flex: 1; padding: 13px; border: none; border-radius: 10px; font-weight: bold; font-size: 15px; cursor: pointer; }
+        .save-btn { background: #006643; color: white; }
+        .save-btn:hover { background: #004d33; }
+        .save-btn:disabled { background: #aaa; cursor: not-allowed; }
+        .cancel-btn { background: #f0f0f0; color: #444; }
+
+        .toast { position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%) translateY(20px); background: #333; color: white; padding: 12px 22px; border-radius: 25px; font-size: 14px; opacity: 0; transition: all 0.3s ease; z-index: 9999; pointer-events: none; white-space: nowrap; }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+    <header class="top-header" style="display:flex;align-items:center;">
+        <div class="logo">
+            <a href="index.html" style="color:white;margin-right:10px;"><i class="fa-solid fa-arrow-left"></i></a>
+            <span data-i18n="profileTitle">My Profile</span>
+        </div>
+        <!-- ডানপাশের কোণায় সবুজ buttons (Admin Panel / Merchant) -->
+        <div class="corner-btns" id="cornerBtns"></div>
+    </header>
+
+    <div class="profile-wrap" id="profileRoot"></div>
+
+    <!-- Merchant Register Modal -->
+    <div class="overlay" id="merchantModal">
+        <div class="modal">
+            <div class="modal-title">🏪 Become a Merchant</div>
+            <div class="modal-sub">
+                নিজের দোকান খুলুন, প্রোডাক্ট যোগ করুন, অর্ডার পেয়ে ইনকাম করুন!<br>
+                <small>(প্রোডাক্ট যোগ করার আগে অ্যাডমিন আপনার NID দেখে অনুমোদন দেবেন)</small>
+            </div>
+            <div class="m-group">
+                <label>নাম / দোকানের নাম *</label>
+                <input type="text" id="mName" placeholder="আপনার নাম বা দোকানের নাম">
+            </div>
+            <div class="m-group">
+                <label>ঠিকানা *</label>
+                <textarea id="mAddress" rows="2" placeholder="বাসা/দোকান, রোড, এলাকা, জেলা"></textarea>
+            </div>
+            <div class="m-group">
+                <label>মোবাইল নম্বর *</label>
+                <input type="tel" id="mPhone" placeholder="01XXXXXXXXX">
+            </div>
+            <div class="m-group">
+                <label>ইমেইল *</label>
+                <input type="email" id="mEmail" placeholder="example@gmail.com">
+            </div>
+            <div class="nid-note">
+                ⚠️ <b>বাংলাদেশ জাতীয় পরিচয়পত্র (NID)</b> এর দুই পাশের ছবি দিন —
+                সামনে (উপরের) ও পিছনের (নিচের) অংশ। অন্য কোনো ছবি দিলে রিজিস্ট্রেশন হবে না।
+            </div>
+            <div class="nid-row">
+                <div class="nid-box">
+                    <div class="nid-label">NID — সামনের অংশ (Front)</div>
+                    <div class="nid-upload" id="nidFrontBox" onclick="document.getElementById('mNidFront').click()">
+                        <i class="fa-solid fa-id-card"></i>
+                        <div class="nid-hint">ছবি বাছাই করুন</div>
+                    </div>
+                    <input type="file" id="mNidFront" accept="image/*" style="display:none;">
+                </div>
+                <div class="nid-box">
+                    <div class="nid-label">NID — পিছনের অংশ (Back)</div>
+                    <div class="nid-upload" id="nidBackBox" onclick="document.getElementById('mNidBack').click()">
+                        <i class="fa-solid fa-id-card"></i>
+                        <div class="nid-hint">ছবি বাছাই করুন</div>
+                    </div>
+                    <input type="file" id="mNidBack" accept="image/*" style="display:none;">
+                </div>
+            </div>
+            <div class="modal-btns">
+                <button class="cancel-btn" onclick="closeMerchantModal()">বাতিল</button>
+                <button class="save-btn" id="mSaveBtn">✅ রিজিস্টার করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span data-i18n="navHome">Home</span></a>
+        <a href="#" class="nav-item"><i class="fa-solid fa-clapperboard"></i><span data-i18n="navReels">Reels</span></a>
+        <a href="cart.html" class="nav-item"><i class="fa-solid fa-cart-shopping"></i><span data-i18n="navCart">Cart</span></a>
+        <a href="profile.html" class="nav-item active"><i class="fa-solid fa-user"></i><span data-i18n="navProfile">Profile</span></a>
+    </nav>
+
+    <script type="module">
+        import { auth, db } from './firebase-config.js';
+        import { doc, getDoc, setDoc, serverTimestamp,
+            collection, query, where, getDocs }
+            from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { onAuthStateChanged, signOut }
+            from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+        const { t, applyI18n, initShopLang } = window.APP_I18N;
+        applyI18n();
+
+        // ⚠️ মূল Admin-এর email
+        const ADMIN_EMAIL = 'sadikul.pcml@gmail.com';
+
+        let currentUser = null;
+        let merchantData = null;
+
+        function showToast(msg) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 2500);
+        }
+
+        function fileToDataURL(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        let nidFrontData = '', nidBackData = '';
+
+        window.pickNid = async function(which, inputEl, boxEl) {
+            const file = inputEl.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('image/')) { showToast('শুধু ছবি ফাইল দিন'); return; }
+            if (file.size > 5 * 1024 * 1024) { showToast('ছবি ৫MB-এর বেশি! ছোট ছবি দিন'); return; }
+            const data = await fileToDataURL(file);
+            if (which === 'front') nidFrontData = data; else nidBackData = data;
+            boxEl.innerHTML = `<img src="${data}" alt="NID ${which}">`;
+            boxEl.classList.add('has-img');
+        };
+        document.getElementById('mNidFront').addEventListener('change', e => pickNid('front', e.target, document.getElementById('nidFrontBox')));
+        document.getElementById('mNidBack').addEventListener('change', e => pickNid('back', e.target, document.getElementById('nidBackBox')));
+
+        window.openMerchantModal = function() {
+            if (!currentUser) return;
+            getDoc(doc(db, 'merchants', currentUser.uid)).then(snap => {
+                if (snap.exists()) {
+                    const m = snap.data();
+                    document.getElementById('mName').value = m.name || '';
+                    document.getElementById('mAddress').value = m.address || '';
+                    document.getElementById('mPhone').value = m.phone || '';
+                    document.getElementById('mEmail').value = m.email || currentUser.email || '';
+                    if (m.nidFront) {
+                        nidFrontData = m.nidFront;
+                        document.getElementById('nidFrontBox').innerHTML = `<img src="${m.nidFront}" alt="NID front">`;
+                        document.getElementById('nidFrontBox').classList.add('has-img');
+                    }
+                    if (m.nidBack) {
+                        nidBackData = m.nidBack;
+                        document.getElementById('nidBackBox').innerHTML = `<img src="${m.nidBack}" alt="NID back">`;
+                        document.getElementById('nidBackBox').classList.add('has-img');
+                    }
+                    // legacy single NID → front-এ রাখি
+                    if (!m.nidFront && m.nidImage) {
+                        nidFrontData = m.nidImage;
+                        document.getElementById('nidFrontBox').innerHTML = `<img src="${m.nidImage}" alt="NID">`;
+                        document.getElementById('nidFrontBox').classList.add('has-img');
+                    }
+                } else {
+                    document.getElementById('mEmail').value = currentUser.email || '';
+                }
+            });
+            document.getElementById('merchantModal').classList.add('show');
+        };
+        window.closeMerchantModal = function() {
+            document.getElementById('merchantModal').classList.remove('show');
+        };
+
+        // Merchant save
+        document.getElementById('mSaveBtn').addEventListener('click', async () => {
+            const name = document.getElementById('mName').value.trim();
+            const address = document.getElementById('mAddress').value.trim();
+            const phone = document.getElementById('mPhone').value.trim();
+            const email = document.getElementById('mEmail').value.trim();
+            if (!name) { showToast('নাম দিন'); return; }
+            if (!address) { showToast('ঠিকানা দিন'); return; }
+            if (!phone || phone.length < 11) { showToast('সঠিক মোবাইল নম্বর দিন'); return; }
+            if (!email) { showToast('ইমেইল দিন'); return; }
+            if (!nidFrontData) { showToast('NID সামনের ছবি দিন'); return; }
+            if (!nidBackData) { showToast('NID পিছনের ছবি দিন'); return; }
+
+            const btn = document.getElementById('mSaveBtn');
+            btn.disabled = true;
+            btn.textContent = 'সেভ হচ্ছে...';
+            try {
+                await setDoc(doc(db, 'merchants', currentUser.uid), {
+                    userId: currentUser.uid,
+                    name, address, phone, email,
+                    nidFront: nidFrontData,
+                    nidBack: nidBackData,
+                    status: 'active',
+                    updatedAt: serverTimestamp()
+                }, { merge: true });
+                closeMerchantModal();
+                showToast('✅ মার্চেন্ট হিসেবে রিজিস্টার সফল!');
+                nidFrontData = ''; nidBackData = '';
+                // নিবন্ধন সম্পন্ন → সরাসরি merchant panel-এ
+                setTimeout(() => { window.location.href = 'merchant.html'; }, 900);
+            } catch(e) {
+                showToast('সেভে সমস্যা! ' + e.code);
+            }
+            btn.disabled = false;
+            btn.textContent = '✅ রিজিস্টার করুন';
+        });
+
+        window.logout = async function() {
+            if (confirm('Logout করতে চান?')) {
+                await signOut(auth);
+                window.location.href = 'index.html';
+            }
+        };
+
+        async function loadProfile() {
+            const root = document.getElementById('profileRoot');
+            const corner = document.getElementById('cornerBtns');
+
+            if (!currentUser) {
+                corner.innerHTML = '';
+                root.innerHTML = `
+                    <div class="logged-out">
+                        <i class="fa-solid fa-user-circle"></i>
+                        <p>${t('loginToProfile')}</p>
+                        <a href="login.html" class="login-cta">${t('loginBtn')}</a>
+                    </div>`;
+                return;
+            }
+
+            // ===== Profile card + শুধু Logout (একদম আগেই দেখানো) =====
+            root.innerHTML = `
+                <div class="profile-card">
+                    <div class="avatar-circle"><i class="fa-solid fa-user"></i></div>
+                    <h2>${currentUser.displayName || 'User'}</h2>
+                    <div class="email">${currentUser.email}</div>
+                </div>
+                <button class="logout-btn" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+                <h2 class="orders-title">📦 ${t('myOrders')}</h2>
+                <div id="ordersList"><div style="text-align:center;color:#aaa;font-size:14px;">${t('loading')}</div></div>`;
+
+            // ===== ডানপাশের কোণায় সবুজ buttons (merchant check-এর পর) =====
+            let cornerHTML = '';
+            // মূল Admin → Admin Panel button (আগের মতোই ফিরিয়ে এনেছি)
+            if (currentUser.email === ADMIN_EMAIL) {
+                cornerHTML += `<a href="admin.html" class="corner-btn admin"><i class="fa-solid fa-screwdriver-wrench"></i> Admin Panel</a>`;
+            }
+            // merchant check
+            try {
+                const mSnap = await getDoc(doc(db, 'merchants', currentUser.uid));
+                merchantData = mSnap.exists() ? mSnap.data() : null;
+            } catch(e) { merchantData = null; }
+
+            if (merchantData) {
+                // রেজিস্টার করা মার্চেন্ট → তার নাম দিয়ে সবুজ button
+                cornerHTML += `<a href="merchant.html" class="corner-btn"><i class="fa-solid fa-store"></i> ${merchantData.name || 'আমার স্টোর'}</a>`;
+            } else {
+                cornerHTML += `<button class="corner-btn" onclick="openMerchantModal()"><i class="fa-solid fa-store"></i> Merchant হন</button>`;
+            }
+            corner.innerHTML = cornerHTML;
+
+            // ===== Customer-এর নিজের order list (আগের design-এই ফিরিয়ে আনা) =====
+            loadOrders();
+        }
+
+        const orderStatusMap = {
+            pending:    { label: 'statusPending',    cls: 's-pending' },
+            processing: { label: 'statusProcessing', cls: 's-processing' },
+            delivered:  { label: 'statusDelivered',  cls: 's-delivered' },
+            cancelled:  { label: 'statusCancelled',  cls: 's-cancelled' }
+        };
+
+        async function loadOrders() {
+            const box = document.getElementById('ordersList');
+            if (!box) return;
+            try {
+                const snap = await getDocs(
+                    query(collection(db, 'orders'), where('userId', '==', currentUser.uid))
+                );
+                if (snap.empty) {
+                    box.innerHTML = `<div style="text-align:center;color:#aaa;font-size:14px;padding:18px 0;">${t('noOrders')}</div>`;
+                    return;
+                }
+                const orders = [];
+                snap.forEach(d => orders.push({ id: d.id, ...d.data() }));
+                orders.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+                box.innerHTML = orders.map(o => {
+                    const st = orderStatusMap[o.status] || orderStatusMap.pending;
+                    const items = (o.items || []).map(i => `${i.name} ×${i.quantity}`).join(', ');
+                    const date = o.createdAt?.toDate ? o.createdAt.toDate().toLocaleDateString('bn-BD') : '';
+                    return `
+                    <div class="order-card">
+                        <div class="order-top">
+                            <span class="order-id">#${o.id.substring(0,8).toUpperCase()}</span>
+                            <span class="status-badge ${st.cls}">${t(st.label)}</span>
+                        </div>
+                        <div class="order-items-list">${items || '—'}</div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span class="order-total">৳${(o.total || 0).toLocaleString('bn-BD')}</span>
+                            <span class="order-date">${date}</span>
+                        </div>
+                    </div>`;
+                }).join('');
+            } catch(e) {
+                box.innerHTML = `<div style="text-align:center;color:#d9534f;font-size:14px;padding:18px 0;">${t('ordersLoadFail')}</div>`;
+            }
+        }
+
+        onAuthStateChanged(auth, user => {
+            currentUser = user;
+            merchantData = null;
+            loadProfile();
+        });
+
+        await initShopLang(async () => {
+            const snap = await getDoc(doc(db, 'settings', 'general'));
+            return snap.exists() ? snap.data() : null;
+        });
+    </script>
+</body>
+</html>

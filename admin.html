@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - SB BRAND SHOP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ===== Admin layout ===== */
+        .admin-layout { display: flex; align-items: stretch; }
+        .admin-sidebar {
+            width: 215px; flex-shrink: 0; background: white;
+            border-right: 1.5px solid #eee;
+            padding: 15px 10px;
+            position: sticky; top: 54px;
+            height: calc(100vh - 54px);
+            overflow-y: auto;
+        }
+        .side-brand { font-size: 13px; font-weight: 700; color: #006643; padding: 0 14px 12px; border-bottom: 1.5px solid #f0f0f0; margin-bottom: 10px; }
+        .side-sep { border: none; border-top: 1.5px solid #f0f0f0; margin: 10px 8px; }
+        .side-item {
+            display: flex; align-items: center; gap: 11px; width: 100%;
+            padding: 12px 14px; margin-bottom: 6px; border: 1.5px solid transparent;
+            background: none; border-radius: 10px; font-size: 14px; font-weight: 600;
+            color: #555; cursor: pointer; text-align: left; transition: 0.2s; font-family: inherit;
+        }
+        .side-item i { width: 20px; text-align: center; font-size: 16px; }
+        .side-item:hover { background: #f0fff8; color: #006643; }
+        .side-item.active { background: #006643; color: white; border-color: #006643; }
+        .side-item .badge-count {
+            margin-left: auto; background: #d9534f; color: white; font-size: 10px; font-weight: 700;
+            min-width: 18px; height: 18px; border-radius: 9px; display: none;
+            align-items: center; justify-content: center; padding: 0 5px;
+        }
+        .admin-content { flex: 1; padding: 15px; min-width: 0; max-width: 900px; }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+
+        @media (max-width: 768px) {
+            .admin-layout { flex-direction: column; }
+            .admin-sidebar {
+                width: 100%; height: auto; position: sticky; top: 54px; z-index: 90;
+                display: flex; overflow-x: auto; gap: 8px; padding: 10px;
+                border-right: none; border-bottom: 1.5px solid #eee;
+            }
+            .admin-sidebar::-webkit-scrollbar { display: none; }
+            .side-brand, .side-sep { display: none; }
+            .side-item { white-space: nowrap; width: auto; margin-bottom: 0; padding: 9px 14px; border-radius: 20px; border: 1.5px solid #ddd; background: white; font-size: 13px; }
+            .side-item.active { background: #006643; color: white; border-color: #006643; }
+            .side-item .badge-count { display: none !important; }
+            .admin-content { max-width: 100%; }
+        }
+
+        /* Dashboard stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        @media (min-width: 700px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+        .stat-box { background: white; border-radius: 14px; padding: 18px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+        .stat-num { font-size: 26px; font-weight: bold; color: #006643; }
+        .stat-lbl { font-size: 12px; color: #999; margin-top: 4px; }
+
+        /* Forms */
+        .a-form { background: white; border-radius: 14px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+        .a-form h3 { font-size: 16px; color: #006643; margin-bottom: 16px; }
+        .pane-title { font-size: 15px; color: #006643; margin: 20px 0 12px; }
+        .f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .f-group { margin-bottom: 13px; }
+        .f-group label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 5px; }
+        .f-group input, .f-group select, .f-group textarea {
+            width: 100%; padding: 11px 13px; border: 1.5px solid #e0e0e0;
+            border-radius: 10px; font-size: 14px; outline: none; transition: 0.2s;
+        }
+        .f-group input:focus, .f-group select:focus, .f-group textarea:focus { border-color: #006643; }
+
+        /* Upload */
+        .upload-zone { border: 2px dashed #ccc; border-radius: 10px; padding: 22px; text-align: center; cursor: pointer; color: #aaa; transition: 0.2s; }
+        .upload-zone:hover { border-color: #006643; color: #006643; }
+        .upload-zone i { font-size: 28px; display: block; margin-bottom: 6px; }
+        .img-preview { max-width: 100px; margin-top: 10px; border-radius: 8px; display: none; }
+        .upload-status { font-size: 12px; color: #006643; margin-top: 6px; }
+        .img-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; }
+        .img-grid-item { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; border: 1.5px solid #eee; }
+        .img-grid-item img { width: 100%; height: 100%; object-fit: cover; }
+        .img-grid-item .img-num { position: absolute; top: 2px; left: 2px; background: rgba(0,102,67,0.85); color: white; font-size: 10px; padding: 1px 5px; border-radius: 4px; }
+        .a-check { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+        .a-check input { width: 18px; height: 18px; cursor: pointer; }
+
+        .save-btn { width: 100%; padding: 14px; background: #006643; color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 5px; transition: 0.2s; }
+        .save-btn:hover { background: #004d33; }
+        .save-btn:disabled { background: #aaa; cursor: not-allowed; }
+
+        /* Product items */
+        .p-item { display: flex; align-items: center; gap: 12px; background: white; border-radius: 12px; padding: 12px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .p-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+        .p-info { flex: 1; min-width: 0; }
+        .p-info h4 { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+        .p-info span { font-size: 13px; color: #d9534f; font-weight: bold; }
+        .p-info small { font-size: 12px; color: #aaa; margin-left: 8px; }
+        .p-actions { display: flex; flex-direction: column; gap: 4px; align-items: center; flex-shrink: 0; }
+        .del-btn { background: none; border: none; color: #d9534f; cursor: pointer; font-size: 20px; padding: 5px; }
+        .edit-btn { background: none; border: none; color: #0d6efd; cursor: pointer; font-size: 20px; padding: 5px; }
+        .no-data { text-align: center; padding: 30px; color: #aaa; font-size: 15px; }
+
+        /* Status badges */
+        .status-badge { font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 700; white-space: nowrap; }
+        .s-pending { background: #fff3cd; color: #856404; }
+        .s-approved { background: #d1e7dd; color: #0a3622; }
+        .s-rejected { background: #f8d7da; color: #842029; }
+        .s-paid { background: #d1e7dd; color: #0a3622; }
+
+        /* Order cards */
+        .o-card { background: white; border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .o-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+        .o-id { font-size: 12px; color: #999; font-weight: 700; }
+        .o-total { font-size: 16px; font-weight: bold; color: #006643; }
+        .o-info p { font-size: 13px; color: #555; margin: 4px 0; line-height: 1.5; }
+        .o-item-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #666; padding: 3px 0; }
+        .o-item-row img { width: 34px; height: 34px; object-fit: cover; border-radius: 6px; }
+        .status-sel { width: 100%; padding: 10px; border: 1.5px solid #e0e0e0; border-radius: 8px; margin-top: 10px; font-size: 13px; }
+        .upd-btn { width: 100%; padding: 10px; background: #006643; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; margin-top: 6px; }
+
+        /* Category items */
+        .c-item { display: flex; align-items: center; gap: 10px; background: white; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+        .c-item img { width: 40px; height: 40px; object-fit: cover; border-radius: 8px; }
+        .c-name { flex: 1; font-size: 14px; font-weight: 600; }
+        .c-order { font-size: 12px; color: #999; margin-right: 6px; }
+
+        /* Request cards (category / product / payment) */
+        .req-card { background: white; border-radius: 12px; padding: 14px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .req-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+        .req-head img { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; border: 1px solid #eee; }
+        .req-head .img-ph { width: 44px; height: 44px; border-radius: 8px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #bbb; flex-shrink: 0; }
+        .req-head h4 { font-size: 15px; flex: 1; min-width: 120px; }
+        .req-card p { font-size: 13px; color: #666; margin: 3px 0; }
+        .req-btns { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+        .req-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; min-width: 120px; }
+        .req-btn.approve { background: #006643; color: white; }
+        .req-btn.approve:hover { background: #004d33; }
+        .req-btn.reject { background: #fdecea; color: #c62828; border: 1px solid #ffcdd2; }
+        .req-btn.reject:hover { background: #fbd3cf; }
+
+        .nid-mini { display: flex; gap: 5px; align-items: center; margin-top: 4px; }
+        .nid-mini img { width: 52px; height: 34px; object-fit: cover; border-radius: 5px; border: 1px solid #ddd; cursor: pointer; transition: 0.2s; }
+        .nid-mini img:hover { border-color: #006643; transform: scale(1.05); }
+        .nid-mini .nid-none { font-size: 11px; color: #bbb; }
+
+        /* Merchant cards */
+        .m-card { display: flex; gap: 14px; background: white; border-radius: 12px; padding: 14px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: center; }
+        .m-nid { width: 72px; height: 92px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 1.5px solid #eee; flex-shrink: 0; }
+        .m-nid-pair { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+        .m-nid-pair img { width: 72px; height: 48px; object-fit: cover; border-radius: 6px; cursor: pointer; border: 1.5px solid #eee; }
+        .m-nid-pair .nid-missing { width: 72px; height: 48px; border-radius: 6px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; color: #ccc; font-size: 10px; }
+        .m-info { flex: 1; min-width: 0; }
+        .m-info h4 { font-size: 15px; cursor: pointer; color: #0d6efd; text-decoration: underline dotted; }
+        .m-info h4:hover { color: #0a58ca; }
+        .m-info p { font-size: 13px; color: #666; margin: 3px 0; }
+        .m-badge { font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 600; margin-right: 5px; }
+        .m-badge.active { background: #d1e7dd; color: #0a3622; }
+        .m-badge.blocked { background: #f8d7da; color: #842029; }
+        .m-badge.prods { background: #e7f1ff; color: #0d6efd; }
+        .m-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+        .m-toggle-btn { padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; border: none; }
+        .m-toggle-btn.block { background: #fff3cd; color: #856404; }
+        .m-toggle-btn.unblock { background: #d1e7dd; color: #0a3622; }
+        .m-toggle-btn.danger { background: #fdecea; color: #c62828; }
+
+        /* Lightbox */
+        .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; cursor: zoom-out; }
+        .lightbox.open { display: flex; }
+        .lightbox img { max-width: 92%; max-height: 92%; border-radius: 10px; }
+
+        /* Edit Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.55); z-index: 999; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 30px 12px; }
+        .modal-overlay.open { display: flex; }
+        .modal-box { background: white; border-radius: 16px; padding: 22px; width: 100%; max-width: 520px; }
+        .modal-box h3 { color: #006643; margin-bottom: 16px; font-size: 16px; }
+        .modal-close { float: right; background: none; border: none; font-size: 20px; color: #999; cursor: pointer; }
+
+        /* Merchant detail modal */
+        .md-row { display: flex; justify-content: space-between; font-size: 14px; padding: 9px 0; border-bottom: 1px dashed #f0f0f0; }
+        .md-row:last-child { border-bottom: none; }
+        .md-row .k { color: #777; }
+        .md-row .v { font-weight: 700; color: #333; }
+        .md-row.balance { background: #006643; border-radius: 10px; padding: 13px 15px; margin-top: 10px; }
+        .md-row.balance .k, .md-row.balance .v { color: white; }
+        .md-row.balance .v { color: #7CFC00; font-size: 19px; }
+        .md-head { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; }
+        .md-head .avatar { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg,#006643,#00a67e); color: white; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+
+        .access-denied { text-align: center; padding: 80px 20px; }
+        .access-denied i { font-size: 70px; color: #ddd; display: block; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <header class="top-header">
+        <div class="logo">
+            <a href="index.html" style="color:white;margin-right:10px;"><i class="fa-solid fa-arrow-left"></i></a>
+            🛡️ Admin Panel
+        </div>
+    </header>
+
+    <div id="adminRoot"><div id="adminLoading" class="no-data" style="padding:60px;">লোড হচ্ছে...</div></div>
+
+    <script>
+        // সুরক্ষা: ১২ সেকেন্ড পরও প্রাথমিক loading টি (#adminLoading) থাকলেই সমস্যা।
+        // (শুধু #adminLoading check করা হয় — hidden tab-এর "লোড হচ্ছে..." placeholder-এর সাথে match করে ভুলে panel-টা মুছে ফেলবে না)
+        setTimeout(function() {
+            var loading = document.getElementById('adminLoading');
+            if (loading) {
+                loading.outerHTML = '<div style="text-align:center;padding:50px 20px;color:#c62828;font-size:15px;line-height:1.8;">' +
+                    '⚠️ Admin panel লোড হচ্ছে না।<br><br>' +
+                    '<b>Ctrl+Shift+R</b> চেপে একবার hard refresh করুন।<br>' +
+                    'আবার না হলে <b>F12</b> → Console tab-এ লাল error টা দেখে screenshot পাঠান।</div>';
+            }
+        }, 12000);
+    </script>
+
+    <!-- NID Lightbox -->
+    <div class="lightbox" id="nidLightbox" onclick="closeNidLightbox()">
+        <img id="nidLightboxImg" src="" alt="NID">
+    </div>
+
+    <script type="module">
+        import { db, auth } from './firebase-config.js';
+        import {
+            collection, doc, setDoc, getDoc, getDocs, addDoc,
+            updateDoc, deleteDoc, serverTimestamp, query, where, orderBy,
+            deleteField
+        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+        const CLOUDINARY_CLOUD = 'difqe10gj';
+        const CLOUDINARY_PRESET = 'sb brand shop';
+        const ADMIN_EMAIL = 'sadikul.pcml@gmail.com';
+        const COMMISSION_RATE = 0.05;
+
+        const $ = id => document.getElementById(id);
+
+        onAuthStateChanged(auth, user => {
+            if (!user || user.email !== ADMIN_EMAIL) {
+                $('adminRoot').innerHTML = `
+                    <div class="access-denied">
+                        <i class="fa-solid fa-lock"></i>
+                        <h2>আস্বাগতম, ${user ? user.email : 'Guest'}</h2>
+                        <p style="color:#888;margin-top:8px;">এই প্যানেলটি শুধুমাত্র মূল অ্যাডমিনের জন্য।<br>আপনার নিজের প্যানেল:</p>
+                        <a href="merchant.html" style="display:inline-block;margin-top:15px;background:#006643;color:white;padding:12px 25px;border-radius:10px;text-decoration:none;font-weight:bold;">🏪 আমার স্টোর (Merchant)</a>
+                    </div>`;
+                return;
+            }
+            buildAdmin();
+        });
+
+        function buildAdmin() {
+            $('adminRoot').innerHTML = `
+            <div class="admin-layout">
+                <aside class="admin-sidebar">
+                    <div class="side-brand">⚙️ মূল অ্যাডমিন</div>
+                    <button class="side-item active" data-tab="dashboard"><i class="fa-solid fa-gauge-high"></i> ড্যাশবোর্ড</button>
+                    <button class="side-item" data-tab="addProduct"><i class="fa-solid fa-plus"></i> প্রোডাক্ট যোগ</button>
+                    <button class="side-item" data-tab="prodRequest"><i class="fa-solid fa-hourglass-half"></i> প্রোডাক্ট রিকোয়েস্ট<span class="badge-count" id="prBadge"></span></button>
+                    <button class="side-item" data-tab="products"><i class="fa-solid fa-box-archive"></i> প্রোডাক্ট লিস্ট</button>
+                    <button class="side-item" data-tab="orders"><i class="fa-solid fa-cart-shopping"></i> অর্ডার সমূহ</button>
+                    <hr class="side-sep">
+                    <button class="side-item" data-tab="banners"><i class="fa-solid fa-image"></i> ব্যানার</button>
+                    <button class="side-item" data-tab="categories"><i class="fa-solid fa-folder-open"></i> ক্যাটাগরি</button>
+                    <hr class="side-sep">
+                    <button class="side-item" data-tab="catRequest"><i class="fa-solid fa-tags"></i> ক্যাটাগরি রিকোয়েস্ট<span class="badge-count" id="crBadge"></span></button>
+                    <button class="side-item" data-tab="payRequest"><i class="fa-solid fa-money-check-dollar"></i> পেমেন্ট রিকোয়েস্ট<span class="badge-count" id="payBadge"></span></button>
+                    <button class="side-item" data-tab="merchants"><i class="fa-solid fa-store"></i> All Merchants</button>
+                    <button class="side-item" data-tab="settings"><i class="fa-solid fa-gear"></i> Settings</button>
+                </aside>
+
+                <main class="admin-content">
+                    <!-- DASHBOARD -->
+                    <div class="tab-pane active" id="tab-dashboard">
+                        <div class="stats-grid">
+                            <div class="stat-box"><div class="stat-num" id="s-products">-</div><div class="stat-lbl">মোট প্রোডাক্ট</div></div>
+                            <div class="stat-box"><div class="stat-num" id="s-orders">-</div><div class="stat-lbl">মোট অর্ডার</div></div>
+                            <div class="stat-box"><div class="stat-num" id="s-pending">-</div><div class="stat-lbl">অপেক্ষমান অর্ডার</div></div>
+                            <div class="stat-box"><div class="stat-num" id="s-revenue">-</div><div class="stat-lbl">মোট আয় (৳) শুধু প্রোডাক্ট</div></div>
+                            <div class="stat-box"><div class="stat-num" id="s-delivery">-</div><div class="stat-lbl">ডেলিভারি আয় (৳)</div></div>
+                            <div class="stat-box"><div class="stat-num" id="s-merchants">-</div><div class="stat-lbl">মোট মার্চেন্ট</div></div>
+                            <div class="stat-box"><div class="stat-num" id="s-prodreq" style="color:#e65100;">-</div><div class="stat-lbl">পেন্ডিং প্রোডাক্ট রিকোয়েস্ট</div></div>
+                            <div class="stat-box"><div class="stat-num" id="s-payreq" style="color:#e65100;">-</div><div class="stat-lbl">পেন্ডিং পেমেন্ট রিকোয়েস্ট</div></div>
+                        </div>
+                    </div>
+
+                    <!-- ADD PRODUCT -->
+                    <div class="tab-pane" id="tab-addProduct">
+                        <div class="a-form">
+                            <h3>➕ নতুন প্রোডাক্ট যোগ করুন</h3>
+                            <p style="font-size:12px;color:#888;margin-top:-10px;margin-bottom:14px;">(অ্যাডমিন যোগ করা প্রোডাক্ট সরাসরি শপে দেখাবে)</p>
+                            <div class="f-group">
+                                <label>প্রোডাক্টের ছবি * (কমপক্ষে ২টি, সর্বোচ্চ ৫টি)</label>
+                                <div class="upload-zone" onclick="document.getElementById('pImg').click()">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                    ২-৫টি ছবি একসাথে বেছে নিন (Ctrl চেপে multiple select করুন)
+                                </div>
+                                <input type="file" id="pImg" accept="image/*" multiple style="display:none">
+                                <div class="img-grid" id="pImgGrid"></div>
+                                <div class="upload-status" id="uploadStatus"></div>
+                            </div>
+                            <div class="f-group">
+                                <label>প্রোডাক্টের নাম *</label>
+                                <input type="text" id="pName" placeholder="যেমন: স্টাইলিশ লেদার ব্যাগ">
+                            </div>
+                            <div class="f-row">
+                                <div class="f-group">
+                                    <label>বিক্রয় মূল্য (৳) *</label>
+                                    <input type="number" id="pPrice" placeholder="৮৫০">
+                                </div>
+                                <div class="f-group">
+                                    <label>আগের মূল্য (৳)</label>
+                                    <input type="number" id="pOldPrice" placeholder="১০০০">
+                                </div>
+                            </div>
+                            <div class="f-row">
+                                <div class="f-group">
+                                    <label>ডিসকাউন্ট (%)</label>
+                                    <input type="number" id="pDiscount" placeholder="১৫">
+                                </div>
+                                <div class="f-group">
+                                    <label>ক্যাটাগরি *</label>
+                                    <select id="pCategory"><option value="">বেছে নিন</option></select>
+                                </div>
+                            </div>
+                            <div class="f-group">
+                                <label>স্পেসিফিকেশন (প্রতি লাইনে একটি করে লিখুন)</label>
+                                <textarea id="pSpec" rows="4" placeholder="রং: কালো&#10;ম্যাটেরিয়াল: লেদার&#10;সাইজ: মিডিয়াম"></textarea>
+                            </div>
+                            <div class="f-group">
+                                <label>বিস্তারিত বিবরণ (Description)</label>
+                                <textarea id="pDesc" rows="4" placeholder="প্রোডাক্ট সম্পর্কে বিস্তারিত লিখুন..."></textarea>
+                            </div>
+                            <div class="f-group">
+                                <label class="a-check">
+                                    <input type="checkbox" id="pIsOffer">
+                                    অফার সেকশনে দেখাবে (বিশেষ মূল্য ছাড়)
+                                </label>
+                            </div>
+                            <div class="f-group">
+                                <label class="a-check">
+                                    <input type="checkbox" id="pFreeDelivery">
+                                    এই প্রোডাক্টে ফ্রি ডেলিভারি
+                                </label>
+                            </div>
+                            <button class="save-btn" id="saveProductBtn">
+                                <i class="fa-solid fa-floppy-disk"></i> প্রোডাক্ট সেভ করুন
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PRODUCT REQUEST (NEW) -->
+                    <div class="tab-pane" id="tab-prodRequest">
+                        <div class="a-form" style="padding:14px 18px;">
+                            <h3 style="margin-bottom:4px;">🕓 মার্চেন্টের প্রোডাক্ট রিকোয়েস্ট</h3>
+                            <p style="font-size:13px;color:#888;margin-bottom:0;">প্রথমে মার্চেন্টের <b>NID ছবি দুটো</b> ভালোভাবে দেখুন — বাংলাদেশের NID কিনা, নাম মিলছে কিনা। তারপর অনুমোদন দিন। অনুমোদন দিলে প্রোডাক্টটি শপে দেখা যাবে।</p>
+                        </div>
+                        <div id="productRequestList"><div class="no-data">লোড হচ্ছে...</div></div>
+                    </div>
+
+                    <!-- PRODUCTS LIST -->
+                    <div class="tab-pane" id="tab-products">
+                        <div id="productList"><div class="no-data">লোড হচ্ছে...</div></div>
+                    </div>
+
+                    <!-- ORDERS -->
+                    <div class="tab-pane" id="tab-orders">
+                        <div id="orderList"><div class="no-data">লোড হচ্ছে...</div></div>
+                    </div>
+
+                    <!-- BANNERS -->
+                    <div class="tab-pane" id="tab-banners">
+                        <div class="a-form">
+                            <h3>🖼️ নতুন ব্যানার যোগ করুন</h3>
+                            <div class="f-group">
+                                <label>ব্যানার ছবি *</label>
+                                <div class="upload-zone" onclick="document.getElementById('bImg').click()">
+                                    <i class="fa-solid fa-image"></i>
+                                    ব্যানার ছবি আপলোড করুন (600×200 বা বড়)
+                                </div>
+                                <input type="file" id="bImg" accept="image/*" style="display:none">
+                                <img id="bImgPrev" class="img-preview">
+                            </div>
+                            <div class="f-group">
+                                <label>ক্রম নম্বর (১ = প্রথমে দেখাবে)</label>
+                                <input type="number" id="bOrder" value="1" min="1">
+                            </div>
+                            <button class="save-btn" id="saveBannerBtn">
+                                <i class="fa-solid fa-floppy-disk"></i> ব্যানার সেভ করুন
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- CATEGORIES -->
+                    <div class="tab-pane" id="tab-categories">
+                        <div class="a-form">
+                            <h3>🗂️ নতুন ক্যাটাগরি যোগ করুন</h3>
+                            <div class="f-group">
+                                <label>ক্যাটাগরি আইকন/ছবি *</label>
+                                <div class="upload-zone" onclick="document.getElementById('cImg').click()">
+                                    <i class="fa-solid fa-image"></i>
+                                    ছবি আপলোড করতে এখানে ক্লিক করুন
+                                </div>
+                                <input type="file" id="cImg" accept="image/*" style="display:none">
+                                <img id="cImgPrev" class="img-preview">
+                            </div>
+                            <div class="f-group">
+                                <label>ক্যাটাগরির নাম *</label>
+                                <input type="text" id="cName" placeholder="যেমন: ব্যাগস">
+                            </div>
+                            <div class="f-group">
+                                <label>ক্রম নম্বর (১ = প্রথমে দেখাবে)</label>
+                                <input type="number" id="cOrder" value="1" min="1">
+                            </div>
+                            <button class="save-btn" id="saveCategoryBtn">
+                                <i class="fa-solid fa-floppy-disk"></i> ক্যাটাগরি সেভ করুন
+                            </button>
+                        </div>
+
+                        <h3 class="pane-title" style="margin-top:0;">📋 বিদ্যমান ক্যাটাগরি সমূহ</h3>
+                        <div id="categoryList"><div class="no-data">লোড হচ্ছে...</div></div>
+                    </div>
+
+                    <!-- CATEGORY REQUEST (NEW tab) -->
+                    <div class="tab-pane" id="tab-catRequest">
+                        <div class="a-form" style="padding:14px 18px;">
+                            <h3 style="margin-bottom:4px;">🗂️ মার্চেন্টের ক্যাটাগরি রিকোয়েস্ট</h3>
+                            <p style="font-size:13px;color:#888;margin-bottom:0;">মার্চেন্টরা নতুন ক্যাটাগরি চেয়ে রিকোয়েস্ট পাঠায়। অনুমোদন দিলে শপে ক্যাটাগরিটি যুক্ত হবে।</p>
+                        </div>
+                        <div id="catRequestList"><div class="no-data">লোড হচ্ছে...</div></div>
+                    </div>
+
+                    <!-- PAYMENT REQUEST (NEW) -->
+                    <div class="tab-pane" id="tab-payRequest">
+                        <div class="a-form" style="padding:14px 18px;">
+                            <h3 style="margin-bottom:4px;">💸 মার্চেন্টের পেমেন্ট রিকোয়েস্ট</h3>
+                            <p style="font-size:13px;color:#888;margin-bottom:0;">বিকাশ/নগদ/ব্যাংকে টাকা পাঠানোর <b>পর</b> "✅ সফল" করে দিন। ব্যর্থ হলে "❌ বাতিল"।</p>
+                        </div>
+                        <div id="payRequestList"><div class="no-data">লোড হচ্ছে...</div></div>
+                    </div>
+
+                    <!-- ALL MERCHANTS -->
+                    <div class="tab-pane" id="tab-merchants">
+                        <div class="a-form" style="padding:14px 18px;">
+                            <h3 style="margin-bottom:4px;">🏪 সব মার্চেন্ট</h3>
+                            <p style="font-size:13px;color:#888;margin-bottom:0;">NID ছবিতে ক্লিক করে বড় করে দেখা যাবে। <b>মার্চেন্টের নামে ক্লিক করলে</b> তার ব্যালেন্স, মোট অর্ডার, মোট প্রোডাক্ট ইত্যাদি দেখা যাবে। ব্লক করলে সেই মার্চেন্ট তার প্যানেলে ঢুকতে পারবে না।</p>
+                        </div>
+                        <div id="merchantList"><div class="no-data">লোড হচ্ছে...</div></div>
+                    </div>
+
+                    <!-- SETTINGS -->
+                    <div class="tab-pane" id="tab-settings">
+                        <div class="a-form">
+                            <h3>🌐 ভাষা (Language)</h3>
+                            <p style="font-size:13px;color:#888;margin-bottom:14px;">কাস্টমাররা যে ভাষায় শপ দেখবে। ডিফল্ট <b>English</b> — যারা বাংলা চায় তারা Settings থেকে সুইচ করে নিতে পারবে।</p>
+                            <div class="f-group">
+                                <label>শপের ভাষা</label>
+                                <select id="setLanguage">
+                                    <option value="en">English (ডিফল্ট)</option>
+                                    <option value="bn">বাংলা (Bangla)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="a-form">
+                            <h3>🚚 ডেলিভারি চার্জ</h3>
+                            <p style="font-size:13px;color:#888;margin-bottom:14px;">এই চার্জ অর্ডার পেজে কাস্টমার দেখবে ও পেমেন্ট করবে।</p>
+                            <div class="f-row">
+                                <div class="f-group">
+                                    <label>ঢাকা জেলার ভিতরে (৳)</label>
+                                    <input type="number" id="setDhaka" min="0" placeholder="80">
+                                </div>
+                                <div class="f-group">
+                                    <label>ঢাকা জেলার বাইরে (৳)</label>
+                                    <input type="number" id="setOutside" min="0" placeholder="130">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="a-form">
+                            <h3>📞 যোগাযোগ ও শপ তথ্য</h3>
+                            <div class="f-group">
+                                <label>শপ ফোন নম্বর (হেল্পলাইন)</label>
+                                <input type="tel" id="setPhone" placeholder="01XXXXXXXXX">
+                            </div>
+                            <div class="f-group">
+                                <label>ইমেইল</label>
+                                <input type="email" id="setEmail" placeholder="shop@gmail.com">
+                            </div>
+                            <div class="f-group">
+                                <label>ফেসবুক পেজ লিংক</label>
+                                <input type="url" id="setFacebook" placeholder="https://facebook.com/...">
+                            </div>
+                            <div class="f-group">
+                                <label>ঠিকানা</label>
+                                <textarea id="setAddress" rows="2" placeholder="বিজনেস এড্রেস"></textarea>
+                            </div>
+                            <button class="save-btn" id="saveSettingsBtn">
+                                <i class="fa-solid fa-floppy-disk"></i> সেটিংস সেভ করুন
+                            </button>
+                        </div>
+                    </div>
+                </main>
+            </div>
+
+            <!-- Edit Product Modal -->
+            <div class="modal-overlay" id="editModal">
+                <div class="modal-box">
+                    <button class="modal-close" onclick="closeEditModal()"><i class="fa-solid fa-xmark"></i></button>
+                    <h3>✏️ প্রোডাক্ট এডিট করুন</h3>
+                    <div class="f-group"><label>নাম</label><input type="text" id="eName"></div>
+                    <div class="f-row">
+                        <div class="f-group"><label>বিক্রয় মূল্য (৳)</label><input type="number" id="ePrice"></div>
+                        <div class="f-group"><label>আগের মূল্য (৳)</label><input type="number" id="eOldPrice"></div>
+                    </div>
+                    <div class="f-row">
+                        <div class="f-group"><label>ডিসকাউন্ট (%)</label><input type="number" id="eDiscount"></div>
+                        <div class="f-group"><label>ক্যাটাগরি</label><select id="eCategory"></select></div>
+                    </div>
+                    <div class="f-group">
+                        <label>স্ট্যাটাস</label>
+                        <select id="eStatus">
+                            <option value="">— (ডিফল্ট: সরাসরি লাইভ)</option>
+                            <option value="approved">✅ অনুমোদিত (লাইভ)</option>
+                            <option value="pending">⏳ অপেক্ষমাণ</option>
+                            <option value="rejected">❌ বাতিল</option>
+                        </select>
+                    </div>
+                    <div class="f-row">
+                        <div class="a-check"><input type="checkbox" id="eIsOffer"><span>🏷️ অফার</span></div>
+                        <div class="a-check"><input type="checkbox" id="eFreeDelivery"><span>🚚 ফ্রি ডেলিভারি</span></div>
+                    </div>
+                    <div class="f-group">
+                        <label>বর্তমান ছবি</label>
+                        <div id="eImgGrid" class="img-grid"></div>
+                    </div>
+                    <div class="f-group">
+                        <label>নতুন ছবি (যোগ করতে চাইলে)</label>
+                        <input type="file" id="eImg" accept="image/*" multiple style="display:none">
+                        <div class="upload-zone" style="padding:14px;" onclick="document.getElementById('eImg').click()"><i class="fa-solid fa-plus"></i> নতুন ছবি যোগ করুন</div>
+                        <div id="editUploadStatus" class="upload-status"></div>
+                        <div id="eImgNewGrid" class="img-grid"></div>
+                    </div>
+                    <div class="f-group"><label>স্পেসিফিকেশন</label><textarea id="eSpec" rows="3"></textarea></div>
+                    <div class="f-group"><label>বিস্তারিত বিবরণ</label><textarea id="eDesc" rows="3"></textarea></div>
+                    <button class="save-btn" id="saveEditBtn"><i class="fa-solid fa-floppy-disk"></i> পরিবর্তন সেভ করুন</button>
+                </div>
+            </div>
+
+            <!-- Merchant Detail Modal -->
+            <div class="modal-overlay" id="merchantDetailModal">
+                <div class="modal-box">
+                    <button class="modal-close" onclick="closeMerchantDetail()"><i class="fa-solid fa-xmark"></i></button>
+                    <h3>👤 মার্চেন্টের তথ্য</h3>
+                    <div id="merchantDetailBody"><div class="no-data">লোড হচ্ছে...</div></div>
+                </div>
+            </div>`;
+
+            // ===== Tab switching =====
+            document.querySelectorAll('.side-item').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.side-item').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+                    this.classList.add('active');
+                    $('tab-' + this.dataset.tab).classList.add('active');
+                    const tab = this.dataset.tab;
+                    if (tab === 'products') loadProductList();
+                    if (tab === 'orders') loadOrderList();
+                    if (tab === 'categories') loadCategoryList();
+                    if (tab === 'prodRequest') loadProductRequests();
+                    if (tab === 'catRequest') loadCatRequests();
+                    if (tab === 'payRequest') loadPayRequests();
+                    if (tab === 'merchants') loadMerchantList();
+                });
+            });
+
+            // ===== Image preview =====
+            $('pImg').addEventListener('change', function() { previewMultiImg(this, 'pImgGrid'); });
+            $('bImg').addEventListener('change', function() { previewImg(this, 'bImgPrev'); });
+            $('cImg').addEventListener('change', function() { previewImg(this, 'cImgPrev'); });
+            $('eImg').addEventListener('change', function() { previewMultiImg(this, 'eImgNewGrid', 'editUploadStatus'); });
+
+            // ===== Buttons =====
+            $('saveProductBtn').addEventListener('click', saveProduct);
+            $('saveBannerBtn').addEventListener('click', saveBanner);
+            $('saveCategoryBtn').addEventListener('click', saveCategory);
+            $('saveEditBtn').addEventListener('click', saveEditProduct);
+            $('saveSettingsBtn').addEventListener('click', saveSettings);
+
+            loadDashboard();
+            loadCategoryDropdown();
+            loadSettings();
+        }
+
+        function previewImg(input, previewId) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                const img = $(previewId);
+                img.src = e.target.result;
+                img.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function previewMultiImg(input, gridId, statusId) {
+            const files = Array.from(input.files);
+            const grid = $(gridId);
+            const status = $(statusId || 'uploadStatus');
+            grid.innerHTML = '';
+            if (files.length === 0) { status.textContent = ''; return; }
+            status.textContent = `✅ ${files.length}টি ছবি নির্বাচিত হয়েছে`;
+            status.style.color = '#006643';
+            files.slice(0, 5).forEach((file, i) => {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const div = document.createElement('div');
+                    div.className = 'img-grid-item';
+                    div.innerHTML = `<span class="img-num">${i+1}</span><img src="${e.target.result}">`;
+                    grid.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function uploadImage(file) {
+            const fd = new FormData();
+            fd.append('file', file);
+            fd.append('upload_preset', CLOUDINARY_PRESET);
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, { method: 'POST', body: fd });
+            const data = await res.json();
+            if (!data.secure_url) throw new Error('Upload failed');
+            return data.secure_url;
+        }
+
+        function fmtDate(ts) {
+            if (!ts) return '';
+            const d = ts.toDate ? ts.toDate() : new Date(ts);
+            return d.toLocaleDateString('bn-BD', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        // ========== DASHBOARD (8 stats, revenue = product only) ==========
+        async function loadDashboard() {
+            try {
+                const [pSnap, oSnap, mSnap, rSnap, prSnap] = await Promise.all([
+                    getDocs(collection(db, 'products')),
+                    getDocs(collection(db, 'orders')),
+                    getDocs(collection(db, 'merchants')),
+                    getDocs(collection(db, 'categoryRequests')),
+                    getDocs(collection(db, 'paymentRequests'))
+                ]);
+                let pending = 0, revenue = 0, deliveryRevenue = 0, pendReq = 0, pendProdReq = 0, pendPayReq = 0;
+                oSnap.forEach(d => {
+                    const o = d.data();
+                    if (o.status === 'pending') pending++;
+                    if (o.status === 'delivered') {
+                        // 🔑 মোট আয় = শুধু প্রোডাক্টের দাম (ডেলিভারি চার্জ বাদ)
+                        const itemsTotal = (o.items || []).reduce((s, i) => s + (i.price || 0) * (i.quantity || 1), 0);
+                        revenue += itemsTotal;
+                        // ডেলিভারি আয় আলাদা
+                        deliveryRevenue += (o.deliveryCharge || 0);
+                    }
+                });
+                rSnap.forEach(d => { if (d.data().status === 'pending') pendReq++; });
+                prSnap.forEach(d => { if (d.data().status === 'pending' || !d.data().status) pendPayReq++; });
+                pSnap.forEach(d => { if (d.data().status === 'pending') pendProdReq++; });
+
+                $('s-products').textContent = pSnap.size;
+                $('s-orders').textContent = oSnap.size;
+                $('s-pending').textContent = pending;
+                $('s-revenue').textContent = revenue.toLocaleString('bn-BD');
+                $('s-delivery').textContent = deliveryRevenue.toLocaleString('bn-BD');
+                $('s-merchants').textContent = mSnap.size;
+                $('s-prodreq').textContent = pendProdReq;
+                $('s-payreq').textContent = pendPayReq;
+
+                setBadge('prBadge', pendProdReq);
+                setBadge('crBadge', pendReq);
+                setBadge('payBadge', pendPayReq);
+            } catch(e) { console.log(e); }
+        }
+        function setBadge(id, n) {
+            const b = $(id);
+            if (!b) return;
+            b.textContent = n;
+            b.style.display = n > 0 ? 'flex' : 'none';
+        }
+
+        // ========== SAVE PRODUCT (admin → live, no status) ==========
+        async function saveProduct() {
+            const name = $('pName').value.trim();
+            const price = parseFloat($('pPrice').value);
+            const oldPrice = parseFloat($('pOldPrice').value) || null;
+            const discount = parseInt($('pDiscount').value) || 0;
+            const category = $('pCategory').value;
+            const isOffer = $('pIsOffer').checked;
+            const freeDelivery = $('pFreeDelivery').checked;
+            const specification = $('pSpec').value.trim();
+            const description = $('pDesc').value.trim();
+            const files = Array.from($('pImg').files);
+            const btn = $('saveProductBtn');
+            const status = $('uploadStatus');
+
+            if (!name || !price || !category) { alert('নাম, মূল্য এবং ক্যাটাগরি আবশ্যক!'); return; }
+            if (files.length < 2 || files.length > 5) { alert('কমপক্ষে ২টি এবং সর্বোচ্চ ৫টি ছবি দিতে হবে!'); return; }
+            btn.disabled = true;
+            try {
+                const images = [];
+                for (let i = 0; i < files.length; i++) {
+                    status.textContent = `📤 ছবি আপলোড হচ্ছে (${i+1}/${files.length})...`;
+                    status.style.color = '#006643';
+                    btn.textContent = `ছবি আপলোড হচ্ছে (${i+1}/${files.length})...`;
+                    images.push(await uploadImage(files[i]));
+                }
+                status.textContent = '💾 Database-এ সেভ হচ্ছে...';
+                btn.textContent = 'সেভ হচ্ছে...';
+                await addDoc(collection(db, 'products'), {
+                    name, price, oldPrice, discount, category, isOffer, freeDelivery,
+                    specification, description,
+                    images, imageUrl: images[0],
+                    createdAt: serverTimestamp()
+                });
+                alert('✅ প্রোডাক্ট সফলভাবে যোগ হয়েছে! (শপে সরাসরি দেখা যাবে)');
+                ['pName','pPrice','pOldPrice','pDiscount','pSpec','pDesc'].forEach(id => $(id).value = '');
+                $('pCategory').value = '';
+                $('pIsOffer').checked = false;
+                $('pFreeDelivery').checked = false;
+                $('pImg').value = '';
+                $('pImgGrid').innerHTML = '';
+                status.textContent = '';
+                loadDashboard();
+            } catch(e) {
+                alert('সেভ ব্যর্থ: ' + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> প্রোডাক্ট সেভ করুন';
+            }
+        }
+
+        // ========== PRODUCT REQUEST (approve / reject, with NID) ==========
+        async function loadProductRequests() {
+            const box = $('productRequestList');
+            box.innerHTML = '<div class="no-data">লোড হচ্ছে...</div>';
+            try {
+                const [pSnap, mSnap] = await Promise.all([
+                    getDocs(collection(db, 'products')),
+                    getDocs(collection(db, 'merchants'))
+                ]);
+                const merchants = {};
+                mSnap.forEach(d => merchants[d.id] = d.data());
+
+                const reqs = [];
+                pSnap.forEach(d => {
+                    const p = { id: d.id, ...d.data() };
+                    if (p.sellerId && p.status === 'pending') reqs.push(p);
+                });
+                reqs.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
+                // শেষে যাচাই করা (approved/rejected) — সর্বশেষ ১০টি
+                const done = [];
+                pSnap.forEach(d => {
+                    const p = { id: d.id, ...d.data() };
+                    if (p.sellerId && (p.status === 'approved' || p.status === 'rejected')) done.push(p);
+                });
+                done.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+                const doneList = done.slice(0, 10);
+
+                if (reqs.length === 0 && doneList.length === 0) {
+                    box.innerHTML = '<div class="no-data">কোনো মার্চেন্ট প্রোডাক্ট রিকোয়েস্ট নেই</div>';
+                    return;
+                }
+
+                let html = '';
+                reqs.forEach(p => {
+                    const m = merchants[p.sellerId] || {};
+                    const front = m.nidFront || m.nidImage || '';
+                    const back = m.nidBack || '';
+                    html += `
+                    <div class="req-card" style="border-left:4px solid #e65100;">
+                        <div class="req-head">
+                            <img src="${p.imageUrl || 'https://via.placeholder.com/44'}" alt="${p.name}">
+                            <h4>${p.name}<br><small style="color:#d9534f;font-weight:bold;">৳${p.price}</small></h4>
+                            <span class="status-badge s-pending">⏳ অপেক্ষমাণ</span>
+                        </div>
+                        <p>🏪 <b>${m.name || 'Merchant'}</b> (${m.phone || '—'}) | 🗂️ ${p.category || '—'} | 📅 ${fmtDate(p.createdAt)}</p>
+                        <p style="font-size:12px;color:#e65100;font-weight:600;">🪪 মার্চেন্টের NID (সতর্কতার সাথে দেখুন):</p>
+                        <div class="nid-mini">
+                            ${front ? `<img src="${front}" alt="NID front" onclick="showNid('${front}')" title="NID সামনে (ক্লিক করুন)">` : '<span class="nid-none">সামনের ছবি নেই ❌</span>'}
+                            ${back ? `<img src="${back}" alt="NID back" onclick="showNid('${back}')" title="NID পিছনে (ক্লিক করুন)">` : '<span class="nid-none">পিছনের ছবি নেই ❌</span>'}
+                        </div>
+                        ${p.description ? `<p style="margin-top:8px;">📝 ${p.description}</p>` : ''}
+                        <div class="req-btns">
+                            <button class="req-btn approve" onclick="approveProductRequest('${p.id}')">✅ অনুমোদন করুন (শপে দেখাবে)</button>
+                            <button class="req-btn reject" onclick="rejectProductRequest('${p.id}')">❌ রিজেক্ট</button>
+                        </div>
+                    </div>`;
+                });
+
+                if (doneList.length > 0) {
+                    html += `<div class="pane-title">📋 সম্পন্ন রিকোয়েস্ট (সর্বশেষ ১০টি)</div>`;
+                    doneList.forEach(p => {
+                        const m = merchants[p.sellerId] || {};
+                        const badge = p.status === 'approved'
+                            ? '<span class="status-badge s-approved">✅ অনুমোদিত</span>'
+                            : '<span class="status-badge s-rejected">❌ রিজেক্ট</span>';
+                        html += `
+                        <div class="req-card" style="opacity:0.75;">
+                            <div class="req-head">
+                                <img src="${p.imageUrl || 'https://via.placeholder.com/44'}" alt="${p.name}">
+                                <h4>${p.name} <small style="color:#aaa;">৳${p.price}</small></h4>
+                                ${badge}
+                            </div>
+                            <p>🏪 ${m.name || 'Merchant'} | 📅 ${fmtDate(p.createdAt)}</p>
+                        </div>`;
+                    });
+                }
+                box.innerHTML = html;
+            } catch(e) { box.innerHTML = '<div class="no-data" style="color:red;">লোড ব্যর্থ</div>'; }
+        }
+
+        window.approveProductRequest = async function(id) {
+            if (!confirm('এই প্রোডাক্ট অনুমোদন দিবেন? অনুমোদনের পর এটি শপে দেখা যাবে।\n\nআপনি মার্চেন্টের NID দেখে নিশ্চিত হয়েছেন?')) return;
+            try {
+                await updateDoc(doc(db, 'products', id), { status: 'approved' });
+                alert('✅ প্রোডাক্ট অনুমোদিত! এখন শপে দেখা যাবে।');
+                loadProductRequests();
+                loadDashboard();
+            } catch(e) { alert('ব্যর্থ: ' + e.message); }
+        };
+
+        window.rejectProductRequest = async function(id) {
+            if (!confirm('এই প্রোডাক্ট রিজেক্ট করবেন? রিজেক্ট হলে এটি শপে দেখা যাবে না।')) return;
+            try {
+                await updateDoc(doc(db, 'products', id), { status: 'rejected' });
+                alert('❌ প্রোডাক্ট রিজেক্ট করা হয়েছে!');
+                loadProductRequests();
+                loadDashboard();
+            } catch(e) { alert('ব্যর্থ: ' + e.message); }
+        };
+
+        // ========== PRODUCT LIST ==========
+        async function loadProductList() {
+            const box = $('productList');
+            box.innerHTML = '<div class="no-data">লোড হচ্ছে...</div>';
+            try {
+                const snap = await getDocs(collection(db, 'products'));
+                if (snap.empty) { box.innerHTML = '<div class="no-data">কোনো প্রোডাক্ট নেই</div>'; return; }
+                let html = '';
+                snap.forEach(d => {
+                    const p = d.data();
+                    let stBadge = '';
+                    if (p.status === 'pending') stBadge = '<span class="status-badge s-pending" style="display:inline-block;margin-left:8px;">⏳ অপেক্ষমাণ</span>';
+                    else if (p.status === 'rejected') stBadge = '<span class="status-badge s-rejected" style="display:inline-block;margin-left:8px;">❌ বাতিল</span>';
+                    else if (p.status === 'approved') stBadge = '<span class="status-badge s-approved" style="display:inline-block;margin-left:8px;">✅ লাইভ</span>';
+                    html += `
+                    <div class="p-item">
+                        <img src="${p.imageUrl}" alt="${p.name}">
+                        <div class="p-info">
+                            <h4>${p.name}${stBadge}</h4>
+                            <span>৳${p.price}</span>
+                            <small>${p.category}</small>
+                            ${p.sellerId ? `<small style="color:#0d6efd;margin-left:4px;">🏪 ${p.sellerName || 'Merchant'}</small>` : ''}
+                            ${p.isOffer ? '<small style="color:#006643;margin-left:4px;">🏷️ Offer</small>' : ''}
+                            ${p.freeDelivery ? '<small style="color:#0d6efd;margin-left:4px;">🚚 Free Delivery</small>' : ''}
+                        </div>
+                        <div class="p-actions">
+                            <button class="edit-btn" onclick="openEditModal('${d.id}')" title="এডিট"><i class="fa-solid fa-pen"></i></button>
+                            <button class="del-btn" onclick="deleteProduct('${d.id}')" title="মুছুন"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>`;
+                });
+                box.innerHTML = html;
+            } catch(e) { box.innerHTML = '<div class="no-data" style="color:red;">লোড ব্যর্থ</div>'; }
+        }
+
+        window.deleteProduct = async function(id) {
+            if (!confirm('এই প্রোডাক্ট মুছে দেবেন?')) return;
+            await deleteDoc(doc(db, 'products', id));
+            loadProductList();
+            loadDashboard();
+        };
+
+        // ========== EDIT PRODUCT ==========
+        let currentEditId = null;
+
+        window.openEditModal = async function(id) {
+            currentEditId = id;
+            const modal = $('editModal');
+            const grid = $('eImgGrid');
+            grid.innerHTML = '<div class="no-data">লোড হচ্ছে...</div>';
+            $('eImgNewGrid').innerHTML = '';
+            $('editUploadStatus').textContent = '';
+            $('eImg').value = '';
+            modal.classList.add('open');
+            try {
+                const snap = await getDoc(doc(db, 'products', id));
+                if (!snap.exists()) { alert('প্রোডাক্ট পাওয়া যায়নি'); closeEditModal(); return; }
+                const p = snap.data();
+                const imgs = p.images && p.images.length ? p.images : (p.imageUrl ? [p.imageUrl] : []);
+                grid.innerHTML = imgs.map((url, i) => `<div class="img-grid-item"><span class="img-num">${i+1}</span><img src="${url}"></div>`).join('') || '<div class="no-data">কোনো ছবি নেই</div>';
+                await loadEditCategoryDropdown(p.category);
+                $('eName').value = p.name || '';
+                $('ePrice').value = p.price || '';
+                $('eOldPrice').value = p.oldPrice || '';
+                $('eDiscount').value = p.discount || '';
+                $('eSpec').value = p.specification || '';
+                $('eDesc').value = p.description || '';
+                $('eIsOffer').checked = !!p.isOffer;
+                $('eFreeDelivery').checked = !!p.freeDelivery;
+                $('eStatus').value = p.status || '';
+            } catch(e) {
+                alert('তথ্য লোড ব্যর্থ: ' + e.message);
+                closeEditModal();
+            }
+        };
+        window.closeEditModal = function() { $('editModal').classList.remove('open'); currentEditId = null; };
+
+        async function loadEditCategoryDropdown(selectedVal) {
+            const sel = $('eCategory');
+            try {
+                const snap = await getDocs(query(collection(db, 'categories'), orderBy('order')));
+                sel.innerHTML = '';
+                if (snap.empty) {
+                    ['ব্যাগস','ফ্যাশন','জুতো','ঘড়ি'].forEach(c => sel.innerHTML += `<option value="${c}">${c}</option>`);
+                } else {
+                    snap.forEach(d => sel.innerHTML += `<option value="${d.data().name}">${d.data().name}</option>`);
+                }
+                sel.value = selectedVal || '';
+            } catch(e) {}
+        }
+
+        async function saveEditProduct() {
+            if (!currentEditId) return;
+            const name = $('eName').value.trim();
+            const price = parseFloat($('ePrice').value);
+            const oldPrice = parseFloat($('eOldPrice').value) || null;
+            const discount = parseInt($('eDiscount').value) || 0;
+            const category = $('eCategory').value;
+            const isOffer = $('eIsOffer').checked;
+            const freeDelivery = $('eFreeDelivery').checked;
+            const status = $('eStatus').value;
+            const specification = $('eSpec').value.trim();
+            const description = $('eDesc').value.trim();
+            const files = Array.from($('eImg').files);
+            const btn = $('saveEditBtn');
+            const statusEl = $('editUploadStatus');
+
+            if (!name || !price || !category) { alert('নাম, মূল্য এবং ক্যাটাগরি আবশ্যক!'); return; }
+
+            btn.disabled = true;
+            try {
+                const updateData = { name, price, oldPrice, discount, category, isOffer, freeDelivery, specification, description };
+                // status: '' = field মুছে ফেলা (admin product → সরাসরি লাইভ)
+                if (status) updateData.status = status;
+                else updateData.status = deleteField();
+                if (files.length > 0) {
+                    const images = [];
+                    for (let i = 0; i < files.length; i++) {
+                        statusEl.textContent = `📤 ছবি আপলোড হচ্ছে (${i+1}/${files.length})...`;
+                        btn.textContent = `ছবি আপলোড হচ্ছে (${i+1}/${files.length})...`;
+                        images.push(await uploadImage(files[i]));
+                    }
+                    updateData.images = images;
+                    updateData.imageUrl = images[0];
+                }
+                statusEl.textContent = '💾 সেভ হচ্ছে...';
+                btn.textContent = 'সেভ হচ্ছে...';
+                await updateDoc(doc(db, 'products', currentEditId), updateData);
+                alert('✅ প্রোডাক্ট আপডেট হয়েছে!');
+                closeEditModal();
+                loadProductList();
+                loadDashboard();
+            } catch(e) {
+                alert('আপডেট ব্যর্থ: ' + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> পরিবর্তন সেভ করুন';
+            }
+        }
+
+        // ========== ORDER LIST ==========
+        async function loadOrderList() {
+            const box = $('orderList');
+            box.innerHTML = '<div class="no-data">লোড হচ্ছে...</div>';
+            try {
+                const snap = await getDocs(collection(db, 'orders'));
+                if (snap.empty) { box.innerHTML = '<div class="no-data">কোনো অর্ডার নেই</div>'; return; }
+                const orders = [];
+                snap.forEach(d => orders.push({ id: d.id, ...d.data() }));
+                orders.sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+                let html = '';
+                orders.forEach(o => {
+                    const itemsHtml = (o.items || []).map(i => `
+                        <div class="o-item-row">
+                            <img src="${i.imageUrl || 'https://via.placeholder.com/42'}" alt="${i.name}">
+                            <span>${i.name} ×${i.quantity}</span>
+                        </div>
+                    `).join('');
+                    html += `
+                    <div class="o-card">
+                        <div class="o-head">
+                            <span class="o-id">#${o.id.substring(0,8).toUpperCase()}</span>
+                            <span class="o-total">৳${o.total}</span>
+                        </div>
+                        <div class="o-info">
+                            <p>👤 <strong>${o.name}</strong> | 📞 ${o.phone}</p>
+                            <p>📍 ${o.address}</p>
+                            <div style="margin:8px 0;">${itemsHtml}</div>
+                            ${o.deliveryZoneLabel ? `<p>🚚 ${o.deliveryZoneLabel} ${o.deliveryCharge ? '(৳' + o.deliveryCharge + ')' : '(ফ্রি)'} ${o.paymentMethod ? '| 💳 ' + o.paymentMethod.toUpperCase() : ''}</p>` : ''}
+                        </div>
+                        <select class="status-sel" id="st-${o.id}">
+                            <option value="pending" ${o.status==='pending'?'selected':''}>⏳ অপেক্ষমান</option>
+                            <option value="processing" ${o.status==='processing'?'selected':''}>🔄 প্রক্রিয়াধীন</option>
+                            <option value="delivered" ${o.status==='delivered'?'selected':''}>✅ ডেলিভারি হয়েছে</option>
+                            <option value="cancelled" ${o.status==='cancelled'?'selected':''}>❌ বাতিল</option>
+                        </select>
+                        <button class="upd-btn" onclick="updateStatus('${o.id}')">স্ট্যাটাস আপডেট</button>
+                    </div>`;
+                });
+                box.innerHTML = html;
+            } catch(e) { box.innerHTML = '<div class="no-data" style="color:red;">লোড ব্যর্থ</div>'; }
+        }
+
+        window.updateStatus = async function(id) {
+            const status = $('st-' + id).value;
+            await updateDoc(doc(db, 'orders', id), { status });
+            alert('✅ স্ট্যাটাস আপডেট হয়েছে!');
+            loadDashboard();
+        };
+
+        // ========== BANNER ==========
+        async function saveBanner() {
+            const file = $('bImg').files[0];
+            const order = parseInt($('bOrder').value) || 1;
+            const btn = $('saveBannerBtn');
+            if (!file) { alert('ব্যানার ছবি দিন'); return; }
+            btn.disabled = true;
+            btn.textContent = 'আপলোড হচ্ছে...';
+            try {
+                const imageUrl = await uploadImage(file);
+                await addDoc(collection(db, 'banners'), { imageUrl, order, createdAt: serverTimestamp() });
+                alert('✅ ব্যানার যোগ হয়েছে!');
+                $('bImg').value = '';
+                $('bImgPrev').style.display = 'none';
+            } catch(e) {
+                alert('ব্যানার সেভ ব্যর্থ: ' + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> ব্যানার সেভ করুন';
+            }
+        }
+
+        // ========== CATEGORY ==========
+        async function saveCategory() {
+            const name = $('cName').value.trim();
+            const order = parseInt($('cOrder').value) || 1;
+            const file = $('cImg').files[0];
+            const btn = $('saveCategoryBtn');
+            if (!name || !file) { alert('ক্যাটাগরির নাম এবং ছবি আবশ্যক!'); return; }
+            btn.disabled = true;
+            btn.textContent = 'আপলোড হচ্ছে...';
+            try {
+                const imageUrl = await uploadImage(file);
+                btn.textContent = 'সেভ হচ্ছে...';
+                await addDoc(collection(db, 'categories'), { name, imageUrl, order, createdAt: serverTimestamp() });
+                alert('✅ ক্যাটাগরি যোগ হয়েছে!');
+                $('cName').value = '';
+                $('cOrder').value = '1';
+                $('cImg').value = '';
+                $('cImgPrev').style.display = 'none';
+                loadCategoryList();
+                loadCategoryDropdown();
+            } catch(e) {
+                alert('ক্যাটাগরি সেভ ব্যর্থ: ' + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> ক্যাটাগরি সেভ করুন';
+            }
+        }
+
+        async function loadCategoryList() {
+            const box = $('categoryList');
+            box.innerHTML = '<div class="no-data">লোড হচ্ছে...</div>';
+            try {
+                const snap = await getDocs(query(collection(db, 'categories'), orderBy('order')));
+                if (snap.empty) { box.innerHTML = '<div class="no-data">কোনো ক্যাটাগরি নেই</div>'; return; }
+                let html = '';
+                snap.forEach(d => {
+                    const c = d.data();
+                    html += `
+                    <div class="c-item">
+                        <img src="${c.imageUrl}" alt="${c.name}">
+                        <span class="c-name">${c.name}</span>
+                        <span class="c-order">ক্রম: ${c.order ?? '-'}</span>
+                        ${c.source === 'merchant-request' ? '<span class="c-order">🏪 মার্চেন্ট রিকোয়েস্ট</span>' : ''}
+                        <button class="del-btn" onclick="deleteCategory('${d.id}')"><i class="fa-solid fa-trash"></i></button>
+                    </div>`;
+                });
+                box.innerHTML = html;
+            } catch(e) { box.innerHTML = '<div class="no-data" style="color:red;">লোড ব্যর্থ</div>'; }
+        }
+
+        window.deleteCategory = async function(id) {
+            if (!confirm('এই ক্যাটাগরি মুছে দেবেন?')) return;
+            await deleteDoc(doc(db, 'categories', id));
+            loadCategoryList();
+            loadCategoryDropdown();
+        };
+
+        // ========== CATEGORY REQUESTS ==========
+        async function loadCatRequests() {
+            const box = $('catRequestList');
+            box.innerHTML = '<div class="no-data">লোড হচ্ছে...</div>';
+            try {
+                const snap = await getDocs(collection(db, 'categoryRequests'));
+                if (snap.empty) { box.innerHTML = '<div class="no-data">কোনো ক্যাটাগরি রিকোয়েস্ট নেই</div>'; return; }
+                const reqs = [];
+                snap.forEach(d => reqs.push({ id: d.id, ...d.data() }));
+                reqs.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+                const stMap = {
+                    pending:  { label: '⏳ অপেক্ষমান', cls: 's-pending' },
+                    approved: { label: '✅ অনুমোদিত',  cls: 's-approved' },
+                    rejected: { label: '❌ রিজেক্ট',    cls: 's-rejected' }
+                };
+                box.innerHTML = reqs.map(r => {
+                    const st = stMap[r.status] || stMap.pending;
+                    const date = fmtDate(r.createdAt);
+                    return `
+                    <div class="req-card">
+                        <div class="req-head">
+                            ${r.imageUrl ? `<img src="${r.imageUrl}" alt="${r.name}">` : '<div class="img-ph"><i class="fa-solid fa-folder"></i></div>'}
+                            <h4>${r.name}</h4>
+                            <span class="status-badge ${st.cls}">${st.label}</span>
+                        </div>
+                        <p>🏪 ${r.merchantName || 'Merchant'} | 📅 ${date}</p>
+                        ${r.note ? `<p>📝 ${r.note}</p>` : ''}
+                        ${r.status === 'pending' ? `
+                        <div class="req-btns">
+                            <button class="req-btn approve" onclick="approveCatRequest('${r.id}')">✅ অনুমোদন করুন</button>
+                            <button class="req-btn reject" onclick="rejectCatRequest('${r.id}')">❌ রিজেক্ট</button>
+                        </div>` : ''}
+                    </div>`;
+                }).join('');
+            } catch(e) { box.innerHTML = '<div class="no-data" style="color:red;">লোড ব্যর্থ</div>'; }
+        }
+
+        window.approveCatRequest = async function(id) {
+            try {
+                const snap = await getDoc(doc(db, 'categoryRequests', id));
+                if (!snap.exists()) return;
+                const r = snap.data();
+                const cSnap = await getDocs(collection(db, 'categories'));
+                const existingNames = [];
+                let maxOrder = 0;
+                cSnap.forEach(d => {
+                    const c = d.data();
+                    existingNames.push((c.name || '').trim().toLowerCase());
+                    if ((c.order || 0) > maxOrder) maxOrder = c.order;
+                });
+                if (existingNames.includes((r.name || '').trim().toLowerCase())) {
+                    alert('⚠️ এই নামের ক্যাটাগরি আগেই আছে!');
+                    return;
+                }
+                await addDoc(collection(db, 'categories'), {
+                    name: r.name, imageUrl: r.imageUrl || null,
+                    order: maxOrder + 1, source: 'merchant-request',
+                    createdAt: serverTimestamp()
+                });
+                await updateDoc(doc(db, 'categoryRequests', id), { status: 'approved' });
+                alert('✅ ক্যাটাগরি তৈরি হয়েছে! এখন শপে দেখা যাবে।');
+                loadCatRequests();
+                loadDashboard();
+                loadCategoryDropdown();
+            } catch(e) { alert('ব্যর্থ: ' + e.message); }
+        };
+
+        window.rejectCatRequest = async function(id) {
+            if (!confirm('এই রিকোয়েস্ট রিজেক্ট করবেন?')) return;
+            try {
+                await updateDoc(doc(db, 'categoryRequests', id), { status: 'rejected' });
+                alert('❌ রিকোয়েস্ট রিজেক্ট করা হয়েছে!');
+                loadCatRequests();
+                loadDashboard();
+            } catch(e) { alert('ব্যর্থ: ' + e.message); }
+        };
+
+        // ========== PAYMENT REQUESTS ==========
+        async function loadPayRequests() {
+            const box = $('payRequestList');
+            box.innerHTML = '<div class="no-data">লোড হচ্ছে...</div>';
+            try {
+                const snap = await getDocs(collection(db, 'paymentRequests'));
+                if (snap.empty) { box.innerHTML = '<div class="no-data">কোনো পেমেন্ট রিকোয়েস্ট নেই</div>'; return; }
+                const reqs = [];
+                snap.forEach(d => reqs.push({ id: d.id, ...d.data() }));
+                reqs.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+                const stMap = {
+                    pending: { label: '⏳ প্রসেসিং', cls: 's-pending' },
+                    paid: { label: '✅ সফল (দেওয়া হয়েছে)', cls: 's-paid' },
+                    rejected: { label: '❌ বাতিল', cls: 's-rejected' }
+                };
+                const methodIcon = { bkash: '📱', nagad: '📲', bank: '🏦' };
+                const methodLabel = { bkash: 'bKash', nagad: 'Nagad', bank: 'ব্যাংক' };
+                box.innerHTML = reqs.map(r => {
+                    const st = stMap[r.status] || stMap.pending;
+                    return `
+                    <div class="req-card" ${r.status === 'pending' ? 'style="border-left:4px solid #e65100;"' : 'style="opacity:0.75;"'}>
+                        <div class="req-head">
+                            <div class="img-ph">${methodIcon[r.method] || '💰'}</div>
+                            <h4>৳${(r.amount || 0).toLocaleString('bn-BD')} <small style="color:#aaa;">(${methodLabel[r.method] || r.method || '—'})</small></h4>
+                            <span class="status-badge ${st.cls}">${st.label}</span>
+                        </div>
+                        <p>🏪 <b>${r.merchantName || 'Merchant'}</b> | 📅 ${fmtDate(r.createdAt)}</p>
+                        <p>🔢 অ্যাকাউন্ট: <b>${r.accountNumber || '—'}</b> (${r.accountName || '—'})</p>
+                        ${r.note ? `<p>📝 ${r.note}</p>` : ''}
+                        ${r.status === 'pending' ? `
+                        <div class="req-btns">
+                            <button class="req-btn approve" onclick="markPayPaid('${r.id}')">✅ সফল (টাকা দেওয়া হয়েছে)</button>
+                            <button class="req-btn reject" onclick="markPayRejected('${r.id}')">❌ বাতিল</button>
+                        </div>` : ''}
+                    </div>`;
+                }).join('');
+            } catch(e) { box.innerHTML = '<div class="no-data" style="color:red;">লোড ব্যর্থ</div>'; }
+        }
+
+        window.markPayPaid = async function(id) {
+            if (!confirm('নিশ্চিত করুন: মার্চেন্টকে টাকা পাঠিয়ে ফেলেছেন?\n"সফল" করলে মার্চেন্টের ব্যালেন্স থেকে এই অংক কমে যাবে।')) return;
+            try {
+                await updateDoc(doc(db, 'paymentRequests', id), { status: 'paid' });
+                alert('✅ পেমেন্ট সফল!');
+                loadPayRequests();
+                loadDashboard();
+            } catch(e) { alert('ব্যর্থ: ' + e.message); }
+        };
+
+        window.markPayRejected = async function(id) {
+            if (!confirm('এই পেমেন্ট রিকোয়েস্ট বাতিল করবেন? বাতিল করলে অংকটি মার্চেন্টের ব্যালেন্সে ফিরে যাবে।')) return;
+            try {
+                await updateDoc(doc(db, 'paymentRequests', id), { status: 'rejected' });
+                alert('❌ পেমেন্ট রিকোয়েস্ট বাতিল করা হয়েছে!');
+                loadPayRequests();
+                loadDashboard();
+            } catch(e) { alert('ব্যর্থ: ' + e.message); }
+        };
+
+        // ========== ALL MERCHANTS ==========
+        window.showNid = function(url) {
+            $('nidLightboxImg').src = url;
+            $('nidLightbox').classList.add('open');
+        };
+        window.closeNidLightbox = function() {
+            $('nidLightbox').classList.remove('open');
+        };
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeNidLightbox();
+        });
+
+        async function loadMerchantList() {
+            const box = $('merchantList');
+            box.innerHTML = '<div class="no-data">লোড হচ্ছে...</div>';
+            try {
+                const [mSnap, pSnap] = await Promise.all([
+                    getDocs(collection(db, 'merchants')),
+                    getDocs(collection(db, 'products'))
+                ]);
+                if (mSnap.empty) { box.innerHTML = '<div class="no-data">এখনো কোনো মার্চেন্ট রেজিস্টার করেনি</div>'; return; }
+                const merchants = [];
+                mSnap.forEach(d => merchants.push({ id: d.id, ...d.data() }));
+                merchants.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
+                const countMap = {};
+                pSnap.forEach(d => {
+                    const s = d.data().sellerId;
+                    if (s) countMap[s] = (countMap[s] || 0) + 1;
+                });
+
+                let html = '';
+                merchants.forEach(m => {
+                    const date = fmtDate(m.createdAt) || '-';
+                    const blocked = m.status === 'blocked';
+                    const front = m.nidFront || m.nidImage || '';
+                    const back = m.nidBack || '';
+                    const nidHTML = (front || back) ? `
+                        <div class="m-nid-pair">
+                            ${front ? `<img src="${front}" alt="NID front" onclick="showNid('${front}')" title="NID সামনে">` : '<div class="nid-missing">সামনে নেই</div>'}
+                            ${back ? `<img src="${back}" alt="NID back" onclick="showNid('${back}')" title="NID পিছনে">` : '<div class="nid-missing">পিছনে নেই</div>'}
+                        </div>`
+                    : '<div style="width:72px;height:92px;border-radius:8px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;color:#ccc;flex-shrink:0;"><i class="fa-solid fa-id-card fa-2x"></i></div>';
+                    html += `
+                    <div class="m-card">
+                        ${nidHTML}
+                        <div class="m-info">
+                            <h4 onclick="openMerchantDetail('${m.id}')">${m.name || 'Merchant'} <small style="color:#aaa;font-weight:400;font-size:11px;">(বিস্তারিত দেখুন)</small></h4>
+                            <p>📞 ${m.phone || '-'}</p>
+                            <p>✉️ ${m.email || '-'}</p>
+                            <p>🏠 ${m.address || '-'}</p>
+                            <p>📅 যোগদান: ${date}</p>
+                            <div>
+                                <span class="m-badge ${blocked ? 'blocked' : 'active'}">${blocked ? '🚫 ব্লকড' : '✅ সক্রিয়'}</span>
+                                <span class="m-badge prods">📦 ${countMap[m.userId] || 0} টি প্রোডাক্ট</span>
+                            </div>
+                        </div>
+                        <div class="m-actions">
+                            <button class="m-toggle-btn ${blocked ? 'unblock' : 'block'}" onclick="toggleMerchantBlock('${m.id}')">${blocked ? '✅ আনব্লক' : '🚫 ব্লক'}</button>
+                            <button class="m-toggle-btn danger" onclick="deleteMerchant('${m.id}')"><i class="fa-solid fa-trash"></i> ডিলিট</button>
+                        </div>
+                    </div>`;
+                });
+                box.innerHTML = html;
+            } catch(e) { box.innerHTML = '<div class="no-data" style="color:red;">লোড ব্যর্থ</div>'; }
+        }
+
+        // মার্চেন্টের নামে ক্লিক → ব্যালেন্স + মোট অর্ডার + মোট প্রোডাক্ট
+        window.openMerchantDetail = async function(id) {
+            $('merchantDetailModal').classList.add('open');
+            const body = $('merchantDetailBody');
+            body.innerHTML = '<div class="no-data">লোড হচ্ছে...</div>';
+            try {
+                const [mSnap, pSnap, oSnap, prSnap] = await Promise.all([
+                    getDoc(doc(db, 'merchants', id)),
+                    getDocs(query(collection(db, 'products'), where('sellerId', '==', id))),
+                    getDocs(collection(db, 'orders')),
+                    getDocs(query(collection(db, 'paymentRequests'), where('merchantId', '==', id)))
+                ]);
+                if (!mSnap.exists()) { body.innerHTML = '<div class="no-data">মার্চেন্ট পাওয়া যায়নি</div>'; return; }
+                const m = mSnap.data();
+                const myProducts = [];
+                pSnap.forEach(d => myProducts.push({ id: d.id, ...d.data() }));
+                const myIds = new Set(myProducts.map(p => p.id));
+                const allOrders = [];
+                oSnap.forEach(d => allOrders.push(d.data()));
+                const myOrders = allOrders.filter(o => (o.items || []).some(i => myIds.has(i.id)));
+                let earnings = 0;
+                myOrders.forEach(o => {
+                    if (o.status !== 'delivered') return;
+                    earnings += (o.items || []).filter(i => myIds.has(i.id)).reduce((s, i) => s + (i.price || 0) * (i.quantity || 1), 0);
+                });
+                const commission = Math.round(earnings * COMMISSION_RATE);
+                const net = earnings - commission;
+                const myReqs = [];
+                prSnap.forEach(d => myReqs.push(d.data()));
+                const paidTotal = myReqs.filter(r => r.status === 'paid').reduce((s, r) => s + (r.amount || 0), 0);
+                const pendingTotal = myReqs.filter(r => !r.status || r.status === 'pending').reduce((s, r) => s + (r.amount || 0), 0);
+                const balance = net - paidTotal - pendingTotal;
+
+                const front = m.nidFront || m.nidImage || '';
+                const back = m.nidBack || '';
+                body.innerHTML = `
+                    <div class="md-head">
+                        <div class="avatar"><i class="fa-solid fa-store"></i></div>
+                        <div>
+                            <div style="font-size:16px;font-weight:700;color:#333;">${m.name || 'Merchant'}</div>
+                            <div style="font-size:12px;color:#999;">${m.phone || '—'} | ${m.email || '—'}</div>
+                        </div>
+                    </div>
+                    <div class="md-row"><span class="k">🏠 ঠিকানা</span><span class="v" style="text-align:right;">${m.address || '—'}</span></div>
+                    <div class="md-row"><span class="k">📅 যোগদান</span><span class="v">${fmtDate(m.createdAt) || '—'}</span></div>
+                    <div class="md-row"><span class="k">📦 মোট প্রোডাক্ট</span><span class="v">${myProducts.length} টি</span></div>
+                    <div class="md-row"><span class="k">🧾 মোট অর্ডার (তার প্রোডাক্ট)</span><span class="v">${myOrders.length} টি</span></div>
+                    <div class="md-row"><span class="k">💰 মোট আয় (ডেলিভারড)</span><span class="v">৳${earnings.toLocaleString('bn-BD')}</span></div>
+                    <div class="md-row"><span class="k">🏢 SB কমিশন (5%)</span><span class="v" style="color:#d9534f;">− ৳${commission.toLocaleString('bn-BD')}</span></div>
+                    <div class="md-row"><span class="k">🏦 তোলার পর (সফল)</span><span class="v" style="color:#d9534f;">− ৳${paidTotal.toLocaleString('bn-BD')}</span></div>
+                    <div class="md-row"><span class="k">⏳ চলমান রিকোয়েস্ট</span><span class="v" style="color:#d9534f;">− ৳${pendingTotal.toLocaleString('bn-BD')}</span></div>
+                    <div class="md-row balance"><span class="k">🏷️ মোট ব্যালেন্স</span><span class="v">৳${balance.toLocaleString('bn-BD')}</span></div>
+                    ${(front || back) ? `
+                    <div style="margin-top:14px;font-size:13px;font-weight:700;color:#555;">🪪 NID:</div>
+                    <div class="nid-mini" style="margin-top:6px;">
+                        ${front ? `<img src="${front}" alt="NID front" onclick="showNid('${front}')" style="width:70px;height:46px;">` : ''}
+                        ${back ? `<img src="${back}" alt="NID back" onclick="showNid('${back}')" style="width:70px;height:46px;">` : ''}
+                    </div>` : ''}`;
+            } catch(e) { body.innerHTML = `<div class="no-data" style="color:red;">লোড ব্যর্থ: ${e.message}</div>`; }
+        };
+        window.closeMerchantDetail = function() { $('merchantDetailModal').classList.remove('open'); };
+
+        window.toggleMerchantBlock = async function(id) {
+            try {
+                const snap = await getDoc(doc(db, 'merchants', id));
+                if (!snap.exists()) return;
+                const m = snap.data();
+                if (m.status === 'blocked') {
+                    await updateDoc(doc(db, 'merchants', id), { status: 'active' });
+                    alert('✅ মার্চেন্ট আনব্লক হয়েছে!');
+                } else {
+                    if (!confirm('এই মার্চেন্টকে ব্লক করবেন? ব্লক হলে সে তার প্যানেলে প্রবেশ করতে পারবে না।')) return;
+                    await updateDoc(doc(db, 'merchants', id), { status: 'blocked' });
+                    alert('🚫 মার্চেন্ট ব্লক হয়েছে!');
+                }
+                loadMerchantList();
+            } catch(e) { alert('ব্যর্থ: ' + e.message); }
+        };
+
+        window.deleteMerchant = async function(id) {
+            if (!confirm('এই মার্চেন্টের রেজিস্ট্রেশন মুছে দেবেন? (তার প্রোডাক্ট আলাদা থেকে যাবে)')) return;
+            try {
+                await deleteDoc(doc(db, 'merchants', id));
+                alert('✅ মার্চেন্ট ডিলিট হয়েছে!');
+                loadMerchantList();
+                loadDashboard();
+            } catch(e) { alert('ডিলিট ব্যর্থ: ' + e.message); }
+        };
+
+        // ========== SETTINGS ==========
+        async function loadSettings() {
+            try {
+                const snap = await getDoc(doc(db, 'settings', 'general'));
+                const s = snap.exists() ? snap.data() : {};
+                $('setDhaka').value = s.deliveryDhaka ?? 80;
+                $('setOutside').value = s.deliveryOutside ?? 130;
+                $('setPhone').value = s.shopPhone || '';
+                $('setEmail').value = s.shopEmail || '';
+                $('setFacebook').value = s.facebook || '';
+                $('setAddress').value = s.address || '';
+                $('setLanguage').value = s.language || 'en';
+            } catch(e) {}
+        }
+
+        async function saveSettings() {
+            const btn = $('saveSettingsBtn');
+            btn.disabled = true;
+            btn.textContent = 'সেভ হচ্ছে...';
+            try {
+                await setDoc(doc(db, 'settings', 'general'), {
+                    deliveryDhaka: parseInt($('setDhaka').value) || 80,
+                    deliveryOutside: parseInt($('setOutside').value) || 130,
+                    shopPhone: $('setPhone').value.trim(),
+                    shopEmail: $('setEmail').value.trim(),
+                    facebook: $('setFacebook').value.trim(),
+                    address: $('setAddress').value.trim(),
+                    language: $('setLanguage').value || 'en',
+                    updatedAt: serverTimestamp()
+                }, { merge: true });
+                alert('✅ সেটিংস সেভ হয়েছে! (ডেলিভারি চার্জ + ভাষা আপডেট হয়ে গেছে)');
+            } catch(e) {
+                alert('সেভ ব্যর্থ: ' + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> সেটিংস সেভ করুন';
+            }
+        }
+
+        // ========== CATEGORY DROPDOWN ==========
+        async function loadCategoryDropdown() {
+            const sel = $('pCategory');
+            if (!sel) return;
+            const currentVal = sel.value;
+            try {
+                const snap = await getDocs(query(collection(db, 'categories'), orderBy('order')));
+                sel.innerHTML = '<option value="">বেছে নিন</option>';
+                if (snap.empty) {
+                    ['ব্যাগস','ফ্যাশন','জুতো','ঘড়ি'].forEach(c => sel.innerHTML += `<option value="${c}">${c}</option>`);
+                    return;
+                }
+                snap.forEach(d => sel.innerHTML += `<option value="${d.data().name}">${d.data().name}</option>`);
+                sel.value = currentVal;
+            } catch(e) {}
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4130dc43faad887',t:'MTc5MDQzMzk0MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
