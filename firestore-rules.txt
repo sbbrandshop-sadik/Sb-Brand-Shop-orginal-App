@@ -1,0 +1,94 @@
+# ============================================================
+# SB BRAND SHOP — FINAL FIRESTORE RULES (v3)
+# আপনার বর্তমান rules-এর পুরোটা হটিয়ে এটা paste করুন, তারপর Publish
+# (আগের rules-এর backup আছে, চাইলে ফেরত আনা যাবে)
+#
+# v3-এ নতুন:
+#  - paymentRequests collection (merchant payout request)
+#  - merchants update rule tightening:
+#    blocked merchant নিজে নিজের status change করতে পারবে না
+# ============================================================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // আপনার main admin email
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email == 'sadikul.pcml@gmail.com';
+    }
+
+    // রেজিস্টার করা active merchant
+    function isMerchant() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/merchants/$(request.auth.uid))
+        && get(/databases/$(database)/documents/merchants/$(request.auth.uid)).data.status == 'active';
+    }
+
+    // ===== শপের public data (হোমপেজ, প্রোডাক্ট পেজ) =====
+    match /products/{id} {
+      allow read: if true;
+      // admin অথবা active merchant প্রোডাক্ট যোগ করতে পারে
+      // (merchant যোগ করলে status: 'pending' — অ্যাডমিন approve করলে শপে দেখাবে)
+      allow create: if isAdmin() || isMerchant();
+      // admin সব পারে; merchant শুধু নিজের (sellerId মিলে থাকতে হবে)
+      allow update, delete: if isAdmin() || (isMerchant() && resource.data.sellerId == request.auth.uid);
+    }
+    match /categories/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /banners/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /settings/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ===== User account =====
+    match /users/{uid} {
+      allow read, create, update: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // ===== Orders =====
+    match /orders/{id} {
+      allow create: if true;  // guest orderও যাবে (আগের মতোই)
+      allow read: if request.auth != null;
+      allow update: if isAdmin();
+    }
+
+    // ===== Merchants =====
+    // user নিজের merchant doc update করতে পারে, কিন্তু:
+    //  1) blocked অবস্থায় নিজের doc change করা যাবে না
+    //  2) নিজে নিজে status 'blocked' করা যাবে না (শুধু admin ব্লক করে)
+    match /merchants/{uid} {
+      allow read: if isAdmin() || (request.auth != null && request.auth.uid == uid);
+      allow create: if request.auth != null && request.auth.uid == uid;
+      allow update: if isAdmin()
+        || (request.auth != null
+            && request.auth.uid == uid
+            && resource.data.status != 'blocked'
+            && request.resource.data.status != 'blocked');
+      allow delete: if isAdmin();
+    }
+
+    // ===== Category Requests =====
+    match /categoryRequests/{id} {
+      allow create: if isMerchant();
+      allow read: if isAdmin() || (request.auth != null && resource.data.merchantId == request.auth.uid);
+      allow update: if isAdmin();
+    }
+
+    // ===== Payment Requests (merchant → admin payout) =====
+    // Merchant নিজের ব্যালেন্স অনুযায়ী request পাঠায় (status: pending)
+    // Admin টাকা দিলে status 'paid' করে
+    match /paymentRequests/{id} {
+      allow create: if isMerchant();
+      allow read: if isAdmin() || (request.auth != null && resource.data.merchantId == request.auth.uid);
+      allow update: if isAdmin();
+    }
+  }
+}

@@ -146,6 +146,88 @@ body {
     color: #333;
 }
 
+/* ৩.৫. ALL SHOPS (merchant shops) */
+.shops-section {
+    margin-bottom: 25px;
+}
+
+.shops-scroller {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding: 6px 4px 16px 4px;
+}
+
+.shops-scroller::-webkit-scrollbar {
+    display: none;
+}
+
+.shop-card {
+    min-width: 132px;
+    flex-shrink: 0;
+    border-radius: 18px;
+    padding: 2px; /* gradient border */
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.shop-card:hover {
+    transform: translateY(-5px) rotate(-1.5deg);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.14);
+}
+
+.shop-card-inner {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 14px 10px 12px 10px;
+    text-align: center;
+}
+
+.shop-avatar {
+    width: 54px;
+    height: 54px;
+    margin: 0 auto;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 800;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+}
+
+.shop-name {
+    margin-top: 9px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #222;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 116px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.shop-count {
+    margin-top: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+}
+
+.shop-view {
+    margin-top: 9px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    color: #006643;
+}
+
 /* ৪. প্রোডাক্ট গ্রিড */
 .product-grid {
     display: grid;

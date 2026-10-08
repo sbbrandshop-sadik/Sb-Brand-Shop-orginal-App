@@ -1,0 +1,36 @@
+{
+  "documents": [
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/banners/77feEGyMFWffT689l3lS",
+      "fields": {
+        "order": {
+          "integerValue": "1"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781606087/sewpmnjonmcqyehwce0u.png"
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-16T10:34:48.748Z"
+        }
+      },
+      "createTime": "2026-06-16T10:34:48.762355Z",
+      "updateTime": "2026-06-16T10:34:48.762355Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/banners/JCgBn2P0J4uHrB7hkAmL",
+      "fields": {
+        "createdAt": {
+          "timestampValue": "2026-06-16T10:35:38.724Z"
+        },
+        "order": {
+          "integerValue": "2"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781606137/rdmaf5xe3irit7nnk2yn.jpg"
+        }
+      },
+      "createTime": "2026-06-16T10:35:38.753874Z",
+      "updateTime": "2026-06-16T10:35:38.753874Z"
+    }
+  ]
+}

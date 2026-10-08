@@ -1,0 +1,595 @@
+{
+  "documents": [
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/0URdWgjqyODRyCukvxUt",
+      "fields": {
+        "createdAt": {
+          "timestampValue": "2026-06-19T15:31:56.265Z"
+        },
+        "discount": {
+          "integerValue": "25"
+        },
+        "freeDelivery": {
+          "booleanValue": false
+        },
+        "isOffer": {
+          "booleanValue": true
+        },
+        "price": {
+          "integerValue": "300"
+        },
+        "oldPrice": {
+          "integerValue": "350"
+        },
+        "specification": {
+          "stringValue": ""
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781883115/ladsjbkcv9pthzfao6ha.png"
+        },
+        "category": {
+          "stringValue": "ক্যাপ"
+        },
+        "name": {
+          "stringValue": "🖤ডিসকোয়ার্ড২ ভিন্টেজ ডেনিম ক্যাপ: লাইট ব্লু ডেনিম ফ্যাব্রিকে রাফ-কাট প্যাচ ও এমব্রয়ডারি করা কুল ভিন্টেজ স্টাইলের ক্যাপ🔥"
+        },
+        "description": {
+          "stringValue": ""
+        }
+      },
+      "createTime": "2026-06-19T15:31:56.295710Z",
+      "updateTime": "2026-07-30T12:40:07.983744Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/AGQIM7vP0izgatZw0pf4",
+      "fields": {
+        "isOffer": {
+          "booleanValue": true
+        },
+        "price": {
+          "integerValue": "250"
+        },
+        "name": {
+          "stringValue": "🧢✨ফ্যালকন রেভোলিউশন কর্ডরয় ক্যাপ: চকলেট ও কালোর প্রিমিয়াম কম্বিনেশনে ইউনিক হোয়াইট লোগো এমব্রয়ডারি করা লাক্সারি ক্যাপ😎"
+        },
+        "oldPrice": {
+          "integerValue": "350"
+        },
+        "discount": {
+          "integerValue": "25"
+        },
+        "category": {
+          "stringValue": "ক্যাপ"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781882755/vs4ndqiqrr9tazku2oep.png"
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-19T15:25:56.334Z"
+        }
+      },
+      "createTime": "2026-06-19T15:25:56.372647Z",
+      "updateTime": "2026-06-19T15:25:56.372647Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/AuwBu1kX6cgUi0of4x2U",
+      "fields": {
+        "oldPrice": {
+          "integerValue": "350"
+        },
+        "price": {
+          "integerValue": "250"
+        },
+        "discount": {
+          "integerValue": "25"
+        },
+        "category": {
+          "stringValue": "ক্যাপ"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781876452/iznvs1yxjycq4xcjeoiv.png"
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-19T13:40:53.224Z"
+        },
+        "name": {
+          "stringValue": "🔥Shadow Flame Cap    ...    ক্রিম-কালো রঙের প্রিমিয়াম ক্যাপ, স্মার্ট ও ট্রেন্ডি লুকের জন্য পারফেক্ট। 🧢✨"
+        },
+        "isOffer": {
+          "booleanValue": true
+        }
+      },
+      "createTime": "2026-06-19T13:40:53.265198Z",
+      "updateTime": "2026-06-19T13:40:53.265198Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/JMs9HuI1ju5UdAY9Hg4X",
+      "fields": {
+        "name": {
+          "stringValue": "💙 Polo Sky Cap  ....হালকা নীল রঙের স্টাইলিশ ক্যাপ, ক্যাজুয়াল ও ট্রেন্ডি লুকের জন্য আদর্শ। 🧢✨"
+        },
+        "discount": {
+          "integerValue": "25"
+        },
+        "category": {
+          "stringValue": "ক্যাপ"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781880286/wzjthmhzckwto8q3t5eg.png"
+        },
+        "isOffer": {
+          "booleanValue": true
+        },
+        "oldPrice": {
+          "integerValue": "350"
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-19T14:44:46.985Z"
+        },
+        "price": {
+          "integerValue": "250"
+        }
+      },
+      "createTime": "2026-06-19T14:44:47.036851Z",
+      "updateTime": "2026-06-19T14:44:47.036851Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/JqEf9qMo0PxgvoeXlzBr",
+      "fields": {
+        "name": {
+          "stringValue": "🔥SB Street Cap......স্ট্রিট-ফ্যাশন অনুপ্রাণিত ডিজাইন, তরুণদের জন্য ট্রেন্ডি চয়েস। 😎"
+        },
+        "oldPrice": {
+          "integerValue": "350"
+        },
+        "discount": {
+          "integerValue": "25"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781881427/ch4hj163waqzcol6emm7.png"
+        },
+        "category": {
+          "stringValue": "ক্যাপ"
+        },
+        "price": {
+          "integerValue": "250"
+        },
+        "isOffer": {
+          "booleanValue": true
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-19T15:03:48.016Z"
+        }
+      },
+      "createTime": "2026-06-19T15:03:48.055043Z",
+      "updateTime": "2026-06-19T15:03:48.055043Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/M9DQBJyEMtlxhxd1IbeU",
+      "fields": {
+        "oldPrice": {
+          "integerValue": "350"
+        },
+        "price": {
+          "integerValue": "250"
+        },
+        "name": {
+          "stringValue": "🔥Vertex Pro Cap.....প্রিমিয়াম কটন ফ্যাব্রিক, ব্রিদেবল সাইড ভেন্ট, কার্ভড ভিজর ও অ্যাডজাস্টেবল ফিট।"
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-19T14:58:51.399Z"
+        },
+        "category": {
+          "stringValue": "ক্যাপ"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781881130/r5b9mqilo8bpvdtdumyp.png"
+        },
+        "discount": {
+          "integerValue": "25"
+        },
+        "isOffer": {
+          "booleanValue": true
+        }
+      },
+      "createTime": "2026-06-19T14:58:51.433964Z",
+      "updateTime": "2026-06-19T14:58:51.433964Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/MCpR4UwHeBwuuRLHVjHm",
+      "fields": {
+        "oldPrice": {
+          "integerValue": "350"
+        },
+        "isOffer": {
+          "booleanValue": true
+        },
+        "name": {
+          "stringValue": "💙 Tommy Denim Cap.....ডেনিম ফিনিশের স্টাইলিশ ক্যাপ, স্মার্ট ও ক্যাজুয়াল লুকের জন্য পারফেক্ট। 🧢✨"
+        },
+        "discount": {
+          "integerValue": "25"
+        },
+        "category": {
+          "stringValue": "ক্যাপ"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781880381/afrc0enxxdnel5olxwv9.png"
+        },
+        "price": {
+          "integerValue": "250"
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-19T14:46:22.276Z"
+        }
+      },
+      "createTime": "2026-06-19T14:46:22.314096Z",
+      "updateTime": "2026-06-19T14:46:22.314096Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/OLsWQNdKlDio93Nic7aK",
+      "fields": {
+        "createdAt": {
+          "timestampValue": "2026-06-14T15:27:48.267Z"
+        },
+        "price": {
+          "integerValue": "250"
+        },
+        "oldPrice": {
+          "integerValue": "350"
+        },
+        "discount": {
+          "integerValue": "10"
+        },
+        "category": {
+          "stringValue": "ফ্যাশন"
+        },
+        "isOffer": {
+          "booleanValue": true
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781450867/kjyf0xzoghnhocfnpepi.jpg"
+        },
+        "name": {
+          "stringValue": "Think and grow rich book"
+        }
+      },
+      "createTime": "2026-06-14T15:27:48.311758Z",
+      "updateTime": "2026-06-14T15:27:48.311758Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/QWBm1SxmeQ4CeX4afAim",
+      "fields": {
+        "name": {
+          "stringValue": "🔥স্টার প্রিমিয়াম ভেলভেট ক্যাপ....... মারুন-কালো কম্বিনেশনে আকর্ষণীয় এমব্রয়ডারি করা লাক্সারি ক্যাপ👑"
+        },
+        "price": {
+          "integerValue": "250"
+        },
+        "isOffer": {
+          "booleanValue": true
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781882355/lpszlterubhgn2afidrx.png"
+        },
+        "category": {
+          "stringValue": "ক্যাপ"
+        },
+        "discount": {
+          "integerValue": "25"
+        },
+        "oldPrice": {
+          "integerValue": "350"
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-19T15:19:16.250Z"
+        }
+      },
+      "createTime": "2026-06-19T15:19:16.289965Z",
+      "updateTime": "2026-06-19T15:19:16.289965Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/RSn9H4AvfJjeB0QwNyEK",
+      "fields": {
+        "createdAt": {
+          "timestampValue": "2026-06-19T14:55:01.319Z"
+        },
+        "name": {
+          "stringValue": "🔥স্টার বেসবল ক্যাপ.....হলুদ-কালো রং, স্টার এমব্রয়ডারি, কটন ফ্যাব্রিক, অ্যাডজাস্টেবল ফিট।"
+        },
+        "price": {
+          "integerValue": "250"
+        },
+        "discount": {
+          "integerValue": "25"
+        },
+        "category": {
+          "stringValue": "ক্যাপ"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781880900/titasxbm0t4rbp5qweae.png"
+        },
+        "oldPrice": {
+          "integerValue": "350"
+        },
+        "isOffer": {
+          "booleanValue": true
+        }
+      },
+      "createTime": "2026-06-19T14:55:01.355980Z",
+      "updateTime": "2026-06-19T14:55:01.355980Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/STmMfYETanGfTYIXUBYX",
+      "fields": {
+        "oldPrice": {
+          "integerValue": "350"
+        },
+        "discount": {
+          "integerValue": "25"
+        },
+        "category": {
+          "stringValue": "ক্যাপ"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781882870/lfvbcdmuzkjcholph4bh.png"
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-19T15:27:51.033Z"
+        },
+        "price": {
+          "integerValue": "250"
+        },
+        "name": {
+          "stringValue": "👑রেডি টু রেস প্রিমিয়াম ক্যাপ: কালো ও বেজ কম্বিনেশনে বোল্ড টেক্সট এমব্রয়ডারি করা অত্যন্ত স্টাইলিশ ও স্পোর্টি ক্যাপ🌟"
+        },
+        "isOffer": {
+          "booleanValue": true
+        }
+      },
+      "createTime": "2026-06-19T15:27:51.069175Z",
+      "updateTime": "2026-06-19T15:27:51.069175Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/TFugEuW2ponNEWCdu6Ul",
+      "fields": {
+        "discount": {
+          "integerValue": "25"
+        },
+        "category": {
+          "stringValue": "ক্যাপ"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781882590/digompusq0kv76l4fags.png"
+        },
+        "price": {
+          "integerValue": "250"
+        },
+        "name": {
+          "stringValue": "🔥এডভেঞ্চার কর্ডরয় ক্যাপ: ট্যান-কালো কম্বিনেশনে প্রিমিয়াম কর্ডরয় কাপড়ে আকর্ষণীয় এমব্রয়ডারি করা স্টাইলিশ ক্যাপ🎯"
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-19T15:23:11.214Z"
+        },
+        "isOffer": {
+          "booleanValue": true
+        },
+        "oldPrice": {
+          "integerValue": "350"
+        }
+      },
+      "createTime": "2026-06-19T15:23:11.250454Z",
+      "updateTime": "2026-06-19T15:23:11.250454Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/fijd2LtAQ0mxAJmWUkyd",
+      "fields": {
+        "oldPrice": {
+          "integerValue": "350"
+        },
+        "price": {
+          "integerValue": "250"
+        },
+        "discount": {
+          "integerValue": "25"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781871558/lsnpet23onkarj6ygvpa.jpg"
+        },
+        "category": {
+          "stringValue": "ক্যাপ"
+        },
+        "name": {
+          "stringValue": "Golden Eclipse Cap 🖤💛 — প্রিমিয়াম কোয়ালিটির স্টাইলিশ ইয়েলো-অ্যান্ড-ব্ল্যাক ক্যাপ, যা আপনার লুকে যোগ করবে ইউনিক ও ট্রেন্ডি ভাইব। ✨🧢"
+        },
+        "isOffer": {
+          "booleanValue": true
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-19T12:19:19.226Z"
+        }
+      },
+      "createTime": "2026-06-19T12:19:19.266702Z",
+      "updateTime": "2026-06-19T12:19:19.266702Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/jwSCHdO9DVkDTAJsRClT",
+      "fields": {
+        "oldPrice": {
+          "integerValue": "350"
+        },
+        "isOffer": {
+          "booleanValue": true
+        },
+        "discount": {
+          "integerValue": "25"
+        },
+        "category": {
+          "stringValue": "ক্যাপ"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781883006/ozvhtwmqwmkfgrbkrpn5.png"
+        },
+        "price": {
+          "integerValue": "250"
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-19T15:30:07.378Z"
+        },
+        "name": {
+          "stringValue": "🖤জাম্পম্যান ক্লাসিক হোয়াইট ক্যাপ: প্রিমিয়াম অফ-হোয়াইট ফ্যাব্রিকে ব্ল্যাক জাম্পম্যান লোগো এমব্রয়ডারি করা ক্লাসিক ও ট্রেন্ডি ক্যাপ🧢✨"
+        }
+      },
+      "createTime": "2026-06-19T15:30:07.412648Z",
+      "updateTime": "2026-06-19T15:30:07.412648Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/tZvvVjkUK0zD3cryM6xe",
+      "fields": {
+        "createdAt": {
+          "timestampValue": "2026-06-19T15:05:49.093Z"
+        },
+        "oldPrice": {
+          "integerValue": "350"
+        },
+        "discount": {
+          "integerValue": "25"
+        },
+        "category": {
+          "stringValue": "ক্যাপ"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781881548/ky9ziryktxgivcmvz6a5.png"
+        },
+        "name": {
+          "stringValue": "🧢SB Adidas Elite Cap – স্মার্ট ও ফ্যাশনেবল স্টাইলের জন্য তৈরি। 👑"
+        },
+        "isOffer": {
+          "booleanValue": true
+        },
+        "price": {
+          "integerValue": "250"
+        }
+      },
+      "createTime": "2026-06-19T15:05:49.142321Z",
+      "updateTime": "2026-06-19T15:05:49.142321Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/taSMCejKgyva0z4c8xmQ",
+      "fields": {
+        "isOffer": {
+          "booleanValue": true
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-16T10:34:08.741Z"
+        },
+        "price": {
+          "integerValue": "550"
+        },
+        "discount": {
+          "integerValue": "10"
+        },
+        "category": {
+          "stringValue": "ব্যাগস"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781606047/dh8trnu5elugudagmcue.jpg"
+        },
+        "name": {
+          "stringValue": "meyeder stylis bag"
+        },
+        "oldPrice": {
+          "integerValue": "750"
+        }
+      },
+      "createTime": "2026-06-16T10:34:08.785011Z",
+      "updateTime": "2026-06-16T10:34:08.785011Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/vdc4Mfh5t1q1iCV4Qbeu",
+      "fields": {
+        "price": {
+          "integerValue": "250"
+        },
+        "discount": {
+          "integerValue": "25"
+        },
+        "category": {
+          "stringValue": "ক্যাপ"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781881666/ztqoucajcqdwrmirmhr4.png"
+        },
+        "name": {
+          "stringValue": "🖤SB Focus Vision Cap – আত্মবিশ্বাসী ও আধুনিক ব্যক্তিত্বের প্রতীক। 🎯"
+        },
+        "oldPrice": {
+          "integerValue": "350"
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-19T15:07:47.426Z"
+        },
+        "isOffer": {
+          "booleanValue": true
+        }
+      },
+      "createTime": "2026-06-19T15:07:47.461031Z",
+      "updateTime": "2026-06-19T15:07:47.461031Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/products/x3CNFcsFfRfzo3rhA27c",
+      "fields": {
+        "discount": {
+          "integerValue": "25"
+        },
+        "images": {
+          "arrayValue": {
+            "values": [
+              {
+                "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1782047955/jatyfmjypxnazzwmrrlz.jpg"
+              },
+              {
+                "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1782047955/qpjghtafebjc0y20x7rp.jpg"
+              },
+              {
+                "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1782047956/rugakitfmqwkjf4olohh.jpg"
+              }
+            ]
+          }
+        },
+        "price": {
+          "integerValue": "250"
+        },
+        "isOffer": {
+          "booleanValue": true
+        },
+        "description": {
+          "stringValue": "যারা ভ্রমণ, ট্রেকিং এবং নতুন কিছু আবিষ্কারের রোমাঞ্চ ভালোবাসেন, তাদের জন্য তৈরি করা হয়েছে এই স্টাইলিশ অ্যাডভেঞ্চার ক্যাপ!\n\nউজ্জ্বল লাল রঙের সাথে ক্লাসিক কালো ভাইজরের (সামনের অংশ) কন্ট্রাস্ট কম্বিনেশন ক্যাপটিকে দিয়েছে একটি বোল্ড, এনার্জেটিক ও স্পোর্টি লুক। এর ঠিক সামনেই কালো সুতোর নিখুঁত এমব্রয়ডারিতে ফুটে উঠেছে একটি পাহাড়ের চূড়া এবং \"ADVENTURE\" লেখাটি, যা আপনার ভেতরের অভিযাত্রী সত্তাকে দারুণভাবে উপস্থাপন করে।\n\nউন্নত মানের আরামদায়ক ও শ্বাস-প্রশ্বাসযোগ্য (Breathable) ফেব্রিক দিয়ে তৈরি এই ক্যাপটি রোদের তীব্রতা থেকে আপনার চোখ ও মুখকে সুরক্ষিত রাখবে। এর স্ট্রাকচার্ড ডিজাইন এবং বাঁকানো ভাইজর খুব সহজেই নিজের সুন্দর আকৃতি ধরে রাখে।\n\nকেন এই ক্যাপটি বেছে নেবেন?\n\nস্টাইলিশ লুক: যেকোনো ক্যাজুয়াল টি-শার্ট, জিন্স বা স্পোর্টসওয়্যারের সাথে দারুণ মানিয়ে যায়।\n\nআউটডোর ফ্রেন্ডলি: হাইকিং, ক্যাম্পিং, বাইক রাইডিং, লং ড্রাইভ কিংবা প্রতিদিনের ব্যবহারের জন্য পারফেক্ট।\n\nটেকসই ডিজাইন: নিখুঁত এমব্রয়ডারি এবং মজবুত সেলাই ক্যাপটিকে করেছে দীর্ঘস্থায়ী।\n\nপ্রকৃতির টানে বেরিয়ে পড়ার জন্য প্রস্তুত তো? আজই আপনার আউটডোর কালেকশনে যোগ করুন এই প্রিমিয়াম অ্যাডভেঞ্চার ক্যাপটি!"
+        },
+        "oldPrice": {
+          "integerValue": "400"
+        },
+        "category": {
+          "stringValue": "ক্যাপ"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1782047955/jatyfmjypxnazzwmrrlz.jpg"
+        },
+        "specification": {
+          "stringValue": "ক্যাপের ধরন: বেসবল ক্যাপ (Baseball Cap)\n\nস্টাইল: ক্যাজুয়াল, স্পোর্টি এবং আউটডোর\n\nব্যবহারকারী: ইউনিসেক্স (ছেলে এবং মেয়ে উভয়ের জন্য উপযোগী)\n\nরঙ ও ডিজাইন:\n\nমূল প্যানেলের রঙ (Crown): উজ্জ্বল লাল (Bright Red)\n\nসামনের অংশের রঙ (Visor/Brim): সলিড কালো (Solid Black)\n\nলোগো/ডিজাইন: ক্যাপের ঠিক সামনে কালো সুতো দিয়ে সুন্দরভাবে একটি পাহাড়ের চূড়ার (Mountain peak) গ্রাফিক্স এবং তার নিচে স্টাইলিশ ফন্টে \"ADVENTURE\" লেখাটি এমব্রয়ডারি (Embroidery) করা হয়েছে।\n\nসেলাই (Stitching): কালো ভাইজরের (সামনের অংশের) ওপর সমান্তরালভাবে সেলাইয়ের কাজ করা আছে, যা ক্যাপটিকে আরও টেকসই ও সুন্দর লুক দিয়েছে।\n\nউপাদান ও গঠন (Material & Structure):\n\nফেব্রিক (Fabric): প্রিমিয়াম কোয়ালিটি কটন বা কটন-ব্লেন্ড (ছবি দেখে অনুমান করা যায়, যা গরমের দিনেও পরতে আরামদায়ক)।\n\nশেপ (Shape): স্ট্রাকচার্ড ক্রাউন (Structured Crown) – ক্যাপের সামনের অংশটি শক্ত, তাই এটি সহজেই নিজের সুন্দর আকৃতি ধরে রাখতে পারে।\n\nভাইজর (Visor): কার্ভড (Curved) বা বাঁকানো, যা রোদ থেকে চোখ ও মুখকে ভালোভাবে রক্ষা করতে সাহায্য করে।\n\nটপ বাটন: ক্যাপের একদম ওপরে একটি লাল রঙের বাটন রয়েছে।\n\nব্যবহারের উপযোগিতা:\nএই ক্যাপটি ট্রাভেলিং, ট্রেকিং, হাইকিং, বাইক রাইডিং বা দৈনন্দিন ক্যাজুয়াল আউটফিটের সাথে পরার জন্য একটি দারুণ পছন্দ। লাল এবং কালোর কম্বিনেশন এটিকে বেশ আকর্ষণীয় করে তুলেছে"
+        },
+        "freeDelivery": {
+          "booleanValue": false
+        },
+        "name": {
+          "stringValue": "The Red Mountain Adventure Cap"
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-21T13:19:17.479Z"
+        }
+      },
+      "createTime": "2026-06-21T13:19:17.520497Z",
+      "updateTime": "2026-06-21T13:19:17.520497Z"
+    }
+  ]
+}

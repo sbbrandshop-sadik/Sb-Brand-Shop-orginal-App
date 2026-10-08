@@ -129,6 +129,14 @@
                 <label>ইমেইল *</label>
                 <input type="email" id="mEmail" placeholder="example@gmail.com">
             </div>
+            <div class="m-group">
+                <label>শপের ছবি / লোগো *</label>
+                <div class="nid-upload" id="shopImgBox" onclick="document.getElementById('mShopImage').click()">
+                    <i class="fa-solid fa-store"></i>
+                    <div class="nid-hint">শপের ছবি বা লোগো বাছাই করুন (হোমপেজের All Shops-এ দেখাবে)</div>
+                </div>
+                <input type="file" id="mShopImage" accept="image/*" style="display:none;">
+            </div>
             <div class="nid-note">
                 ⚠️ <b>বাংলাদেশ জাতীয় পরিচয়পত্র (NID)</b> এর দুই পাশের ছবি দিন —
                 সামনে (উপরের) ও পিছনের (নিচের) অংশ। অন্য কোনো ছবি দিলে রিজিস্ট্রেশন হবে না।
@@ -201,6 +209,36 @@
         }
 
         let nidFrontData = '', nidBackData = '';
+        let shopImageData = ''; // Cloudinary URL (public)
+
+        // ========== SHOP IMAGE → Cloudinary (public URL) ==========
+        async function uploadShopImage(file) {
+            const fd = new FormData();
+            fd.append('file', file);
+            fd.append('upload_preset', 'sb brand shop');
+            const res = await fetch(`https://api.cloudinary.com/v1_1/difqe10gj/image/upload`, { method: 'POST', body: fd });
+            const data = await res.json();
+            if (!data.secure_url) throw new Error('Upload failed');
+            return data.secure_url;
+        }
+        window.pickShopImage = async function (inputEl, boxEl) {
+            const file = inputEl.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('image/')) { showToast('শুধু ছবি ফাইল দিন'); return; }
+            if (file.size > 5 * 1024 * 1024) { showToast('ছবি ৫MB-এর বেশি! ছোট ছবি দিন'); return; }
+            boxEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i><div class="nid-hint">আপলোড হচ্ছে...</div>';
+            try {
+                const url = await uploadShopImage(file);
+                shopImageData = url;
+                boxEl.innerHTML = `<img src="${url}" alt="Shop image">`;
+                boxEl.classList.add('has-img');
+            } catch (e) {
+                boxEl.innerHTML = '<i class="fa-solid fa-store"></i><div class="nid-hint">আপলোড ব্যর্থ! আবার চেষ্টা করুন</div>';
+                boxEl.classList.remove('has-img');
+                showToast('ছবি আপলোড হয়নি! আবার চেষ্টা করুন');
+            }
+        };
+        document.getElementById('mShopImage').addEventListener('change', e => pickShopImage(e.target, document.getElementById('shopImgBox')));
 
         window.pickNid = async function(which, inputEl, boxEl) {
             const file = inputEl.files[0];
@@ -217,6 +255,10 @@
 
         window.openMerchantModal = function() {
             if (!currentUser) return;
+            // প্রতিবার খোলার সময় shop image box reset
+            shopImageData = '';
+            document.getElementById('shopImgBox').innerHTML = '<i class="fa-solid fa-store"></i><div class="nid-hint">শপের ছবি বা লোগো বাছাই করুন (হোমপেজের All Shops-এ দেখাবে)</div>';
+            document.getElementById('shopImgBox').classList.remove('has-img');
             getDoc(doc(db, 'merchants', currentUser.uid)).then(snap => {
                 if (snap.exists()) {
                     const m = snap.data();
@@ -224,6 +266,11 @@
                     document.getElementById('mAddress').value = m.address || '';
                     document.getElementById('mPhone').value = m.phone || '';
                     document.getElementById('mEmail').value = m.email || currentUser.email || '';
+                    if (m.shopImage) {
+                        shopImageData = m.shopImage;
+                        document.getElementById('shopImgBox').innerHTML = `<img src="${m.shopImage}" alt="Shop image">`;
+                        document.getElementById('shopImgBox').classList.add('has-img');
+                    }
                     if (m.nidFront) {
                         nidFrontData = m.nidFront;
                         document.getElementById('nidFrontBox').innerHTML = `<img src="${m.nidFront}" alt="NID front">`;
@@ -260,6 +307,7 @@
             if (!address) { showToast('ঠিকানা দিন'); return; }
             if (!phone || phone.length < 11) { showToast('সঠিক মোবাইল নম্বর দিন'); return; }
             if (!email) { showToast('ইমেইল দিন'); return; }
+            if (!shopImageData) { showToast('শপের ছবি / লোগো দিন'); return; }
             if (!nidFrontData) { showToast('NID সামনের ছবি দিন'); return; }
             if (!nidBackData) { showToast('NID পিছনের ছবি দিন'); return; }
 
@@ -270,14 +318,24 @@
                 await setDoc(doc(db, 'merchants', currentUser.uid), {
                     userId: currentUser.uid,
                     name, address, phone, email,
+                    shopImage: shopImageData,
                     nidFront: nidFrontData,
                     nidBack: nidBackData,
                     status: 'active',
                     updatedAt: serverTimestamp()
                 }, { merge: true });
+                // 🏪 Public shop doc (name + image only) → হোমপেজের "All Shops"
+                // rules-এর shops ব্লক যোগ করা পর্যন্ত এটা fail করলেও registration বাধবে না
+                try {
+                    await setDoc(doc(db, 'shops', currentUser.uid), {
+                        name, image: shopImageData, updatedAt: serverTimestamp()
+                    }, { merge: true });
+                } catch (shopErr) {
+                    console.warn('shops doc not saved (rules update pending?):', shopErr);
+                }
                 closeMerchantModal();
                 showToast('✅ মার্চেন্ট হিসেবে রিজিস্টার সফল!');
-                nidFrontData = ''; nidBackData = '';
+                nidFrontData = ''; nidBackData = ''; shopImageData = '';
                 // নিবন্ধন সম্পন্ন → সরাসরি merchant panel-এ
                 setTimeout(() => { window.location.href = 'merchant.html'; }, 900);
             } catch(e) {

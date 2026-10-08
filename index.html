@@ -1,271 +1,878 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SB BRAND SHOP</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <script src="lang.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SB Brand Shop - Colorful Collection</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+<script>
+tailwind.config={theme:{extend:{fontFamily:{poppins:['Poppins','sans-serif'],hind:['Hind Siliguri','sans-serif']}}}}
+</script>
+<style>
+*{font-family:'Hind Siliguri','Poppins',sans-serif}
+.font-display{font-family:'Poppins',sans-serif}
+html{scroll-behavior:smooth}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:linear-gradient(#FF006A,#FF7A00);border-radius:999px}
+.blob{position:absolute;border-radius:50%;filter:blur(40px);opacity:.5;animation:float 6s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-20px) scale(1.05)}}
+.glass{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.gradient-text{background:linear-gradient(90deg,#FF006A 0%,#FF7A00 50%,#FFD600 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.card-hover{transition:all .3s cubic-bezier(.34,1.56,.64,1)}
+.card-hover:hover{transform:translateY(-8px) rotate(1deg)}
+.no-scrollbar::-webkit-scrollbar{display:none}
+.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+.hero-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s ease}
+.hero-slide.active{opacity:1}
+</style>
+<script src="lang.js"></script>
 </head>
-<body>
+<body class="bg-[#FFFBF0] text-zinc-900 overflow-x-hidden">
 
-    <header class="top-header">
-        <div class="logo">SB BRAND SHOP</div>
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search your favorite product..." data-i18n-ph="searchPlaceholder">
-            <button type="submit" id="searchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
-        </div>
-    </header>
+<!-- ===== Announcement Bar ===== -->
+<div class="bg-gradient-to-r from-[#FF006A] via-[#FF6B35] to-[#FFD600] text-white text-[11px] md:text-xs font-bold tracking-wide py-2.5 px-4 hidden md:flex items-center justify-center gap-3">
+<span class="hidden md:inline bg-white text-[#FF006A] px-2 py-0.5 rounded-full text-[10px]">HOT</span>
+<span data-i18n="annMsg">Delivery inside Dhaka ৳80 • Outside Dhaka ৳130 • New collection live!</span>
+<a href="#offers" class="hidden md:inline-flex items-center gap-1 bg-black text-white px-3 py-1 rounded-full text-[10px] font-black" data-i18n="annShopNow">SHOP NOW</a>
+</div>
 
-    <main class="main-content">
-
-        <section class="banner-section" id="bannerSection">
-            <div class="banner-box"><img src="https://via.placeholder.com/600x200?text=Loading..." alt="Banner 1"></div>
-            <div class="banner-box"><img src="https://via.placeholder.com/600x200?text=Loading..." alt="Banner 2"></div>
-        </section>
-
-        <section class="category-section">
-            <h2 class="section-title" data-i18n="categoryTitle">Product Categories</h2>
-            <div class="category-grid" id="categoryGrid">
-                <div class="loading-text" data-i18n="loading">Loading...</div>
-            </div>
-        </section>
-
-        <section class="offer-section" id="offerSection">
-            <h2 class="section-title" data-i18n="offerTitle">Special Offers</h2>
-            <div class="product-grid" id="offerGrid">
-                <div class="loading-text" data-i18n="loading">Loading...</div>
-            </div>
-        </section>
-
-        <section class="all-products-section">
-            <h2 class="section-title" id="allProductsTitle" data-i18n="allProductsTitle">All Our Products</h2>
-            <div class="product-grid" id="allProductsGrid">
-                <div class="loading-text" data-i18n="loading">Loading...</div>
-            </div>
-        </section>
-
-    </main>
-
-    <nav class="bottom-nav">
-        <a href="index.html" class="nav-item active">
-            <i class="fa-solid fa-house"></i>
-            <span data-i18n="navHome">Home</span>
-        </a>
-        <a href="#reels" class="nav-item">
-            <i class="fa-solid fa-clapperboard"></i>
-            <span data-i18n="navReels">Reels</span>
-        </a>
-        <a href="cart.html" class="nav-item">
-            <i class="fa-solid fa-cart-shopping"></i>
-            <span data-i18n="navCart">Cart</span>
-            <span class="cart-badge" id="cartCount" style="display:none">0</span>
-        </a>
-        <a href="profile.html" class="nav-item">
-            <i class="fa-solid fa-user"></i>
-            <span data-i18n="navProfile">Profile</span>
-        </a>
+<!-- ===== Header ===== -->
+<header class="sticky top-0 z-40 bg-white/85 glass border-b border-black/5">
+<div class="max-w-[1280px] mx-auto px-4 md:px-6 h-[64px] md:h-[72px] flex items-center justify-between gap-4">
+  <div class="flex items-center gap-3">
+    <button id="mobileMenuBtn" class="md:hidden w-10 h-10 rounded-xl bg-zinc-900 text-white grid place-items-center"><i class="fa-solid fa-bars"></i></button>
+    <a href="#home" class="flex items-center gap-2">
+      <div class="w-9 h-9 md:w-11 md:h-11 rounded-xl bg-gradient-to-br from-[#FF006A] to-[#FFB700] grid place-items-center text-white font-black text-lg md:text-xl font-display shadow-[0_8px_20px_rgba(255,0,106,.3)]">SB</div>
+      <div class="leading-none">
+        <div class="font-display font-black text-[16px] md:text-[20px] tracking-tight">SB BRAND <span class="gradient-text">SHOP</span></div>
+        <div class="text-[8px] md:text-[9px] tracking-[0.2em] font-bold text-zinc-500 -mt-1">COLORFUL FASHION</div>
+      </div>
+    </a>
+    <nav class="hidden lg:flex items-center gap-1 ml-6">
+      <a href="#home" class="px-4 py-2 rounded-full bg-zinc-900 text-white text-sm font-bold" data-i18n="navHome">Home</a>
+      <a href="#categories" class="px-4 py-2 rounded-full hover:bg-zinc-100 text-sm font-semibold" data-i18n="navCategories">Categories</a>
+      <a href="#shops" class="px-4 py-2 rounded-full hover:bg-zinc-100 text-sm font-semibold" data-i18n="navShops">Shops</a>
+      <a href="#offers" class="px-4 py-2 rounded-full bg-[#FF006A] text-white text-sm font-bold" data-i18n="navOffers">Offers</a>
+      <a href="#contact" class="px-4 py-2 rounded-full hover:bg-zinc-100 text-sm font-semibold" data-i18n="navContact">Contact</a>
     </nav>
+  </div>
+  <div class="flex-1 max-w-[420px] hidden md:flex items-center">
+    <div class="relative w-full">
+      <input id="searchInput" type="text" placeholder="Search cap, bag, book..." data-i18n-ph="searchPh" class="w-full h-11 pl-11 pr-4 bg-zinc-100 rounded-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#FF006A]/30 focus:bg-white border border-transparent focus:border-[#FF006A]/20 transition">
+      <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 text-sm"></i>
+      <button id="searchBtn" class="absolute right-1.5 top-1.5 hidden lg:flex items-center gap-1 bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] text-white text-[10px] font-black px-3 py-1.5 rounded-full">SEARCH <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </div>
+  <div class="flex items-center gap-1.5 md:gap-2">
+    <a href="profile.html" class="hidden md:grid w-10 h-10 rounded-full bg-zinc-100 place-items-center hover:bg-zinc-200 transition"><i class="fa-regular fa-user"></i></a>
+    <button id="wishlistBtn" class="relative w-10 h-10 rounded-full bg-zinc-100 grid place-items-center hover:bg-zinc-200 transition">
+      <i class="fa-regular fa-heart"></i>
+      <span id="wishlistCount" class="absolute -top-1 -right-1 w-5 h-5 bg-[#FF006A] text-white text-[11px] font-black rounded-full grid place-items-center hidden">0</span>
+    </button>
+    <a href="cart.html" class="relative flex items-center gap-2 bg-zinc-900 text-white rounded-full pl-2 pr-1 py-1 hover:bg-black transition">
+      <span class="w-8 h-8 rounded-full bg-white text-zinc-900 grid place-items-center text-sm"><i class="fa-solid fa-bag-shopping"></i></span>
+      <span class="hidden md:inline text-sm font-bold pr-2" data-i18n="cartBtn">Cart</span>
+      <span id="headerCartCount" class="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-[#FF006A] to-[#FFB700] text-white text-xs font-black rounded-full grid place-items-center border-2 border-white hidden">0</span>
+    </a>
+  </div>
+</div>
+<!-- mobile search -->
+<div class="md:hidden px-4 pb-3">
+  <div class="relative">
+    <input id="searchInputMobile" type="text" placeholder="Search cap, bag, book..." data-i18n-ph="searchPh" class="w-full h-11 pl-11 pr-4 bg-zinc-100 rounded-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#FF006A]/20">
+    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+  </div>
+</div>
+<!-- mobile menu -->
+<div id="mobileMenu" class="hidden md:hidden border-t bg-white px-4 py-4 space-y-1">
+  <a href="#home" class="block py-2 font-bold" data-i18n="navHome">Home</a>
+  <a href="#categories" class="block py-2 font-semibold" data-i18n="navCategories">Categories</a>
+  <a href="#shops" class="block py-2 font-semibold" data-i18n="navShops">Shops</a>
+  <a href="#offers" class="block py-2 font-bold text-[#FF006A]" data-i18n="navOffers">Offers</a>
+  <a href="#contact" class="block py-2 font-semibold" data-i18n="navContact">Contact</a>
+</div>
+</header>
 
-    <!-- Toast Message -->
-    <div id="toast" class="toast"></div>
+<!-- ===== Hero ===== -->
+<section id="home" class="relative overflow-hidden scroll-mt-24">
+<div class="max-w-[1280px] mx-auto px-4 md:px-6 pt-6 md:pt-8">
+<div class="relative rounded-[30px] md:rounded-[40px] bg-gradient-to-br from-[#FFF7D6] via-[#FFE9F3] to-[#EDE9FF] overflow-hidden border border-black/[0.06] p-5 md:p-10 lg:p-12">
+  <div class="blob w-[380px] h-[380px] bg-[#FF006A]/25 -top-20 -right-20"></div>
+  <div class="blob w-[320px] h-[320px] bg-[#FFB700]/30 -bottom-20 left-1/3" style="animation-delay:1s"></div>
+  <div class="blob w-[260px] h-[260px] bg-[#8B5CF6]/20 top-10 left-10" style="animation-delay:2s"></div>
+  <div class="relative flex flex-col gap-3 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:gap-6 lg:items-center">
+    <!-- A: heading (desktop-এ left column-এর উপর) -->
+    <div class="lg:col-start-1 lg:row-start-1">
+      <div class="inline-flex items-center gap-2 bg-white rounded-full px-3 py-1.5 shadow-[0_8px_20px_rgba(0,0,0,.06)] border border-black/5">
+        <span class="w-2 h-2 rounded-full bg-[#00D26A] animate-pulse"></span>
+        <span class="text-[11px] md:text-xs font-black tracking-widest" data-i18n="heroLive">NEW DROP LIVE</span>
+        <span class="hidden md:inline text-xs font-medium text-zinc-500" id="heroCountText">• 20+ new designs</span>
+      </div>
+      <h1 class="font-display font-black leading-[0.95] mt-3 md:mt-4 text-[27px] md:text-[58px] lg:text-[68px] tracking-tight">
+        <span class="block" data-i18n="heroT1">Colorful Finds,</span>
+        <span class="block gradient-text" data-i18n="heroT2">Premium Quality,</span>
+        <span class="block flex items-center gap-3" data-i18n="heroT3">One Stop Shop</span>
+      </h1>
+      <p class="mt-3 md:mt-4 text-[14px] md:text-[17px] leading-relaxed text-zinc-600 font-medium max-w-[520px]" id="heroSub">At SB Brand Shop you'll find the most vibrant, trendy & high-quality products.</p>
+    </div>
+    <!-- B: banner carousel (desktop-এ right column; mobile-এ heading-এর ঠিক নিচে) -->
+    <div class="relative flex items-center justify-center lg:col-start-2 lg:row-start-1 lg:row-span-2">
+      <div class="relative w-full max-w-[420px] bg-white rounded-[24px] md:rounded-[28px] p-2.5 md:p-3 shadow-[0_30px_60px_rgba(0,0,0,.15)] rotate-[-1deg]">
+        <div class="rounded-[18px] md:rounded-[22px] overflow-hidden bg-gradient-to-br from-[#FF006A] via-[#FF7A00] to-[#FFD600] p-[3px]">
+          <div class="rounded-[15px] md:rounded-[20px] overflow-hidden bg-zinc-100 relative">
+            <div id="heroSlides" class="relative h-[170px] md:h-[380px]">
+              <img src="hero.jpg" class="hero-slide active" alt="SB Brand Shop">
+            </div>
+            <!-- arrows -->
+            <button onclick="heroPrev()" class="hero-arrow absolute left-2.5 md:left-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 md:w-10 md:h-10 rounded-full bg-zinc-900/75 text-white grid place-items-center hover:bg-zinc-900 transition"><i class="fa-solid fa-chevron-left text-xs md:text-sm"></i></button>
+            <button onclick="heroNext()" class="hero-arrow absolute right-2.5 md:right-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 md:w-10 md:h-10 rounded-full bg-zinc-900/75 text-white grid place-items-center hover:bg-zinc-900 transition"><i class="fa-solid fa-chevron-right text-xs md:text-sm"></i></button>
+            <!-- dots -->
+            <div id="heroDots" class="absolute bottom-2.5 md:bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5"></div>
+          </div>
+        </div>
+        <!-- floating badge -->
+        <div class="absolute -top-2 -right-2 md:right-2 bg-[#8B5CF6] text-white rounded-2xl px-3.5 md:px-4 py-2.5 md:py-3 shadow-xl rotate-3">
+          <div class="text-[10px] md:text-[11px] font-black tracking-widest opacity-80" data-i18n="flatOff">FLAT</div>
+          <div class="font-black text-lg md:text-2xl leading-none"><span id="flatOffVal">25</span>% <span data-i18n="offWord">OFF</span></div>
+        </div>
+      </div>
+    </div>
+    <!-- C: buttons + stats (desktop-এ left column-এর নিচে; mobile-এ শেষে) -->
+    <div class="lg:col-start-1 lg:row-start-2">
+      <div class="flex flex-wrap gap-2.5 md:gap-3 mt-0.5 md:mt-6">
+        <a href="#trending" class="inline-flex items-center gap-2 bg-zinc-900 text-white rounded-full px-6 md:px-7 py-3 md:py-3.5 font-black text-sm shadow-[0_12px_24px_rgba(0,0,0,.2)] hover:bg-black transition"><span data-i18n="btnShop">Shop Now</span> <span class="w-6 h-6 md:w-7 md:h-7 rounded-full bg-white text-zinc-900 grid place-items-center"><i class="fa-solid fa-arrow-right text-xs"></i></span></a>
+        <a href="#offers" class="inline-flex items-center gap-2.5 md:gap-3 bg-white rounded-full px-3 py-1.5 md:py-2 pr-5 md:pr-6 font-bold text-sm shadow-[0_8px_20px_rgba(0,0,0,.08)] border border-black/5 hover:scale-[1.02] transition">
+          <span class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-[#FF006A] to-[#FFB700] grid place-items-center text-white"><i class="fa-solid fa-fire-flame-curved text-xs"></i></span>
+          <span data-i18n="btnOffers">See Offers</span>
+        </a>
+      </div>
+      <!-- stats -->
+      <div class="grid grid-cols-3 gap-1.5 md:gap-3 mt-4 md:mt-7 max-w-[560px]">
+        <div class="bg-white rounded-2xl px-2 md:px-4 py-2 md:py-4 flex items-center gap-1.5 md:gap-3 shadow-[0_8px_20px_rgba(0,0,0,.06)] border border-black/5 min-w-0">
+          <span class="w-7 h-7 md:w-10 md:h-10 rounded-xl bg-[#FFE9F3] text-[#FF006A] grid place-items-center shrink-0 text-[10px] md:text-sm"><i class="fa-solid fa-shirt"></i></span>
+          <div class="min-w-0"><div class="font-black leading-none text-[13px] md:text-lg" id="statProducts">—</div><div class="text-[8px] md:text-[11px] leading-[1.2] font-bold text-zinc-500" data-i18n="statProducts">Products</div></div>
+        </div>
+        <div class="bg-zinc-900 text-white rounded-2xl px-2 md:px-4 py-2 md:py-4 flex items-center gap-1.5 md:gap-3 shadow-xl min-w-0">
+          <span class="w-7 h-7 md:w-10 md:h-10 rounded-xl bg-white/15 grid place-items-center shrink-0 text-[10px] md:text-sm"><i class="fa-solid fa-layer-group"></i></span>
+          <div class="min-w-0"><div class="font-black leading-none text-[13px] md:text-lg" id="statCategories">—</div><div class="text-[8px] md:text-[11px] leading-[1.2] font-bold text-white/60" data-i18n="statCategories">Categories</div></div>
+        </div>
+        <div class="bg-gradient-to-br from-[#8B5CF6] to-[#EC4899] text-white rounded-2xl px-2 md:px-4 py-2 md:py-4 flex items-center gap-1.5 md:gap-3 shadow-xl min-w-0">
+          <span class="w-7 h-7 md:w-10 md:h-10 rounded-xl bg-white/20 grid place-items-center shrink-0 text-[10px] md:text-sm"><i class="fa-solid fa-shield-halved"></i></span>
+          <div class="min-w-0"><div class="font-black leading-none text-[13px] md:text-lg" data-i18n="statCod">COD</div><div class="text-[8px] md:text-[11px] leading-[1.2] font-bold text-white/80" data-i18n="statCodSub">Cash on Delivery</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</section>
 
-    <script type="module">
-        import { db } from './firebase-config.js';
-        import {
-            collection, getDocs, query, where, orderBy, limit, doc, getDoc
-        } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<!-- ===== Categories ===== -->
+<section id="categories" class="max-w-[1280px] mx-auto px-4 md:px-6 mt-6 md:mt-10 scroll-mt-24">
+  <div class="flex items-end justify-between gap-4">
+    <div>
+      <div class="inline-flex items-center gap-2 bg-[#FFD600] rounded-full px-3 py-1 text-xs font-black tracking-widest" data-i18n="catBadge">CATEGORIES ✦</div>
+      <h2 class="font-display font-black text-2xl md:text-3xl mt-2 tracking-tight" data-i18n="catTitle">Colorful Categories</h2>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="scrollCategories(-1)" class="w-10 h-10 rounded-full bg-white border border-black/10 grid place-items-center hover:bg-zinc-900 hover:text-white transition"><i class="fa-solid fa-arrow-left text-sm"></i></button>
+      <button onclick="scrollCategories(1)" class="w-10 h-10 rounded-full bg-zinc-900 text-white grid place-items-center hover:bg-black transition"><i class="fa-solid fa-arrow-right text-sm"></i></button>
+    </div>
+  </div>
+  <div id="categoryScroller" class="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory mt-6 pb-2 scroll-smooth">
+    <div class="text-sm font-bold text-zinc-400" data-i18n="loading">Loading...</div>
+  </div>
+</section>
 
-        const { t, applyI18n, initShopLang } = window.APP_I18N;
-        applyI18n();
+<!-- ===== ALL SHOPS (merchant shops) ===== -->
+<section id="shops" class="max-w-[1280px] mx-auto px-4 md:px-6 mt-6 md:mt-10 scroll-mt-24" style="display:none">
+  <div class="flex items-end justify-between gap-4">
+    <div>
+      <div class="inline-flex items-center gap-2 bg-[#FF006A] text-white rounded-full px-3 py-1 text-xs font-black tracking-widest" data-i18n="allShopsBadge">ALL SHOPS ✦</div>
+      <h2 class="font-display font-black text-2xl md:text-3xl mt-2 tracking-tight" data-i18n="allShopsTitle">All Shops</h2>
+    </div>
+  </div>
+  <div id="shopScroller" class="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory mt-6 pb-2 scroll-smooth"></div>
+</section>
 
-        // ========== CART ==========
-        function getCart() {
-            return JSON.parse(localStorage.getItem('sb_cart') || '[]');
-        }
-        function saveCart(cart) {
-            localStorage.setItem('sb_cart', JSON.stringify(cart));
-            updateCartCount();
-        }
-        function updateCartCount() {
-            const cart = getCart();
-            const total = cart.reduce((s, i) => s + i.quantity, 0);
-            const badge = document.getElementById('cartCount');
-            badge.textContent = total;
-            badge.style.display = total > 0 ? 'flex' : 'none';
-        }
-        window.addToCart = function(encoded) {
-            const product = JSON.parse(decodeURIComponent(encoded));
-            const cart = getCart();
-            const found = cart.find(i => i.id === product.id);
-            if (found) found.quantity += 1;
-            else cart.push({ ...product, quantity: 1 });
-            saveCart(cart);
-            showToast(t('addedToCart'));
-        };
-        window.buyNow = function(encoded) {
-            const p = JSON.parse(decodeURIComponent(encoded));
-            const params = new URLSearchParams({
-                id: p.id,
-                name: encodeURIComponent(p.name),
-                price: p.price,
-                oldPrice: p.oldPrice || '',
-                img: encodeURIComponent(p.imageUrl || ''),
-                freeDelivery: p.freeDelivery ? '1' : '0'
+<!-- ===== Flash Sale Banner ===== -->
+<section id="flashSale" class="max-w-[1280px] mx-auto px-4 md:px-6 mt-6">
+  <div class="rounded-[28px] bg-zinc-900 text-white overflow-hidden relative">
+    <div class="absolute inset-0 opacity-20" style="background:radial-gradient(600px 300px at 20% 0%,#FF006A,transparent),radial-gradient(600px 300px at 90% 0%,#FFB700,transparent),radial-gradient(600px 300px at 50% 100%,#8B5CF6,transparent)"></div>
+    <div class="relative p-4 md:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 bg-white text-zinc-900 rounded-full px-3 py-1.5 text-xs font-black"><span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span> <span data-i18n="flashPill">FLASH SALE • Limited time!</span></div>
+        <h3 class="font-display font-black text-xl md:text-4xl mt-2 leading-none"><span data-i18n="flashTitle">MEGA</span> <span class="text-[#FFD600]"><span id="flashOffVal">25</span>% <span data-i18n="offWord">OFF</span></span> ⚡</h3>
+        <p class="text-white/70 font-medium text-xs md:text-sm mt-1.5" data-i18n="flashSub">Until midnight tonight • On all offer products</p>
+      </div>
+      <div class="flex items-center gap-2.5">
+        <div class="text-center">
+          <div id="cdH" class="w-10 h-10 md:w-16 md:h-16 rounded-2xl bg-white text-zinc-900 grid place-items-center font-black text-base md:text-2xl">00</div>
+          <div class="text-[10px] font-black tracking-widest mt-1 text-white/60" data-i18n="hrs">HOURS</div>
+        </div>
+        <span class="text-xl font-black text-white/30">:</span>
+        <div class="text-center">
+          <div id="cdM" class="w-10 h-10 md:w-16 md:h-16 rounded-2xl bg-white text-zinc-900 grid place-items-center font-black text-base md:text-2xl">00</div>
+          <div class="text-[10px] font-black tracking-widest mt-1 text-white/60" data-i18n="mins">MINS</div>
+        </div>
+        <span class="text-xl font-black text-white/30">:</span>
+        <div class="text-center">
+          <div id="cdS" class="w-10 h-10 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-[#FF006A] to-[#FFB700] text-white grid place-items-center font-black text-base md:text-2xl">00</div>
+          <div class="text-[10px] font-black tracking-widest mt-1 text-white/60" data-i18n="secs">SECS</div>
+        </div>
+      </div>
+      <a href="#offers" class="inline-flex items-center justify-center gap-2 bg-white text-zinc-900 rounded-full px-4 py-2 font-black text-xs md:text-sm hover:bg-zinc-100 transition"><span data-i18n="seeAllOffers">See All Offers</span> <i class="fa-solid fa-bolt text-[#FF006A]"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Offer Products ===== -->
+<section id="offers" class="max-w-[1280px] mx-auto px-4 md:px-6 mt-6 md:mt-10 scroll-mt-24">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="font-display font-black text-2xl md:text-3xl tracking-tight" data-i18n="offerTitle">Offer Products 🔥</h2>
+      <p class="text-sm font-medium text-zinc-500 mt-1" data-i18n="offerSub">Best products at the best prices</p>
+    </div>
+  </div>
+  <div id="offerGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6 mt-5">
+    <div class="col-span-2 md:col-span-4 text-sm font-bold text-zinc-400" data-i18n="loading">Loading...</div>
+  </div>
+</section>
+
+<!-- ===== Trending Collection (all products) ===== -->
+<section id="trending" class="max-w-[1280px] mx-auto px-4 md:px-6 mt-6 md:mt-10 scroll-mt-24">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <h2 class="font-display font-black text-2xl md:text-3xl tracking-tight" id="trendingTitleEl" data-i18n="trendingTitle">Trending Collection ✨</h2>
+      <p class="text-sm font-medium text-zinc-500 mt-1" data-i18n="trendingSub">Handpicked, colorful designs for you</p>
+    </div>
+    <div class="flex items-center gap-2 w-full lg:w-auto lg:flex-1 lg:min-w-0">
+      <div id="filterPills" class="flex items-center gap-2 overflow-x-auto no-scrollbar max-w-full flex-1 min-w-0"></div>
+      <button onclick="scrollPills(-1)" class="shrink-0 w-9 h-9 rounded-full bg-white border border-black/10 grid place-items-center hover:bg-zinc-900 hover:text-white transition" aria-label="scroll left"><i class="fa-solid fa-arrow-left text-xs"></i></button>
+      <button onclick="scrollPills(1)" class="shrink-0 w-9 h-9 rounded-full bg-zinc-900 text-white grid place-items-center hover:bg-black transition" aria-label="scroll right"><i class="fa-solid fa-arrow-right text-xs"></i></button>
+    </div>
+  </div>
+  <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6 mt-5">
+    <div class="col-span-2 md:col-span-4 text-sm font-bold text-zinc-400" data-i18n="loading">Loading...</div>
+  </div>
+  <div class="flex justify-center mt-6">
+    <button id="loadMoreBtn" class="px-8 py-3 rounded-full bg-white border border-black/10 font-black text-sm hover:bg-zinc-900 hover:text-white transition hidden"><span data-i18n="viewMore">View More</span> <i class="fa-solid fa-chevron-down ml-1"></i></button>
+  </div>
+</section>
+
+<!-- ===== Vibrant Promo Banners ===== -->
+<section class="max-w-[1280px] mx-auto px-4 md:px-6 mt-6">
+  <div class="grid md:grid-cols-2 gap-4 md:gap-6">
+    <a href="#trending" class="relative rounded-[28px] overflow-hidden bg-gradient-to-br from-[#FF006A] to-[#FF8A00] p-5 md:p-8 text-white min-h-[190px] md:min-h-[280px] flex flex-col justify-between">
+      <img id="promoImg1" src="" alt="" class="absolute right-0 top-0 w-1/2 h-full object-cover mix-blend-overlay opacity-40" onerror="this.style.display='none'">
+      <div class="relative">
+        <div class="inline-flex bg-white text-[#FF006A] rounded-full px-3 py-1 text-xs font-black" data-i18n="promo1Badge">NEW DROP</div>
+        <h3 class="font-display font-black text-xl md:text-3xl leading-tight mt-2.5" id="promo1TitleEl">New Collection</h3>
+      </div>
+      <span class="relative self-start bg-white text-zinc-900 rounded-full px-5 py-2.5 font-black text-sm inline-flex items-center gap-2"><span data-i18n="promo1Btn">Explore Now</span> <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+    <a href="#offers" class="relative rounded-[28px] overflow-hidden bg-gradient-to-br from-[#8B5CF6] to-[#06B6D4] p-5 md:p-8 text-white min-h-[190px] md:min-h-[280px] flex flex-col justify-between">
+      <img id="promoImg2" src="" alt="" class="absolute right-0 top-0 w-1/2 h-full object-cover mix-blend-overlay opacity-30" onerror="this.style.display='none'">
+      <div class="relative">
+        <div class="inline-flex bg-[#FFD600] text-zinc-900 rounded-full px-3 py-1 text-xs font-black" data-i18n="promo2Badge">MEGA OFFER</div>
+        <h3 class="font-display font-black text-xl md:text-3xl leading-tight mt-2.5" id="promo2TitleEl">Special Offers</h3>
+      </div>
+      <span class="relative self-start bg-zinc-900 text-white rounded-full px-5 py-2.5 font-black text-sm inline-flex items-center gap-2"><span data-i18n="promo2Btn">See Offers</span> <i class="fa-solid fa-arrow-right"></i></span>
+    </a>
+  </div>
+</section>
+
+<!-- ===== Testimonials ===== -->
+<section class="max-w-[1280px] mx-auto px-4 md:px-6 mt-6">
+  <div class="rounded-[28px] bg-white border border-black/5 p-5 md:p-8 shadow-[0_12px_30px_rgba(0,0,0,.06)]">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <h3 class="font-display font-black text-xl md:text-2xl" data-i18n="testiTitle">What Our Customers Say 💬</h3>
+      <div class="flex items-center gap-2 text-sm font-bold"><span class="text-[#FFB700]"><i class="fa-solid fa-star"></i> 4.9</span> <span class="text-zinc-400">• 2,847 <span data-i18n="testiCount">reviews</span></span></div>
+    </div>
+    <div class="grid md:grid-cols-3 gap-3 md:gap-4 mt-5">
+      <div class="rounded-2xl bg-[#FFF7D6] p-4 md:p-5 border border-black/5">
+        <div class="flex text-[#FFB700] text-xs gap-0.5"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+        <p class="font-medium text-sm leading-relaxed mt-2.5" id="testi1Quote">—</p>
+        <div class="flex items-center gap-3 mt-4"><span class="w-9 h-9 rounded-full bg-gradient-to-br from-[#FFB700] to-[#FF8A00] text-white grid place-items-center font-black text-sm">R</span><div><div class="font-black text-sm" id="testi1Name">—</div><div class="text-xs font-bold text-zinc-500"><span data-i18n="verified">Verified Buyer</span> • <span id="testi1City">—</span></div></div>
+      </div>
+      <div class="rounded-2xl bg-[#FFE9F3] p-4 md:p-5 border border-black/5">
+        <div class="flex text-[#FFB700] text-xs gap-0.5"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+        <p class="font-medium text-sm leading-relaxed mt-2.5" id="testi2Quote">—</p>
+        <div class="flex items-center gap-3 mt-4"><span class="w-9 h-9 rounded-full bg-gradient-to-br from-[#FF006A] to-[#EC4899] text-white grid place-items-center font-black text-sm">N</span><div><div class="font-black text-sm" id="testi2Name">—</div><div class="text-xs font-bold text-zinc-500"><span data-i18n="verified">Verified Buyer</span> • <span id="testi2City">—</span></div></div>
+      </div>
+      <div class="rounded-2xl bg-[#EDE9FF] p-4 md:p-5 border border-black/5">
+        <div class="flex text-[#FFB700] text-xs gap-0.5"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+        <p class="font-medium text-sm leading-relaxed mt-2.5" id="testi3Quote">—</p>
+        <div class="flex items-center gap-3 mt-4"><span class="w-9 h-9 rounded-full bg-gradient-to-br from-[#8B5CF6] to-[#06B6D4] text-white grid place-items-center font-black text-sm">T</span><div><div class="font-black text-sm" id="testi3Name">—</div><div class="text-xs font-bold text-zinc-500"><span data-i18n="verified">Verified Buyer</span> • <span id="testi3City">—</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Newsletter ===== -->
+<section class="max-w-[1280px] mx-auto px-4 md:px-6 mt-6">
+  <div class="rounded-[28px] bg-gradient-to-r from-[#FF006A] via-[#8B5CF6] to-[#06B6D4] p-[2px]">
+    <div class="rounded-[26px] bg-zinc-900 text-white p-6 md:p-8 flex flex-col lg:flex-row items-center justify-between gap-6 relative overflow-hidden">
+      <div class="absolute -right-10 -top-10 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+      <div class="relative lg:max-w-[520px] text-center lg:text-left">
+        <h3 class="font-display font-black text-2xl md:text-3xl leading-none" data-i18n="newsTitle">Join Our Community 🎉</h3>
+        <p class="text-white/70 font-medium text-sm mt-2" data-i18n="newsSub">Subscribe to get new products & exclusive offers first.</p>
+      </div>
+      <form id="newsletterForm" class="relative w-full lg:w-[420px] flex gap-2 bg-white rounded-full p-1.5 max-w-full">
+        <input type="email" required placeholder="Your email address" data-i18n-ph="newsPh" class="flex-1 min-w-0 px-4 md:px-5 py-2.5 rounded-full text-sm font-medium text-zinc-900 focus:outline-none">
+        <button type="submit" class="bg-zinc-900 text-white rounded-full px-4 md:px-6 py-2.5 font-black text-xs md:text-sm hover:bg-black transition whitespace-nowrap shrink-0" data-i18n="newsBtn">JOIN NOW</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer id="contact" class="mt-10 bg-white border-t border-black/5 scroll-mt-24">
+<div class="max-w-[1280px] mx-auto px-4 md:px-6 py-10">
+  <div class="grid md:grid-cols-4 gap-8">
+    <div>
+      <div class="flex items-center gap-2">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FF006A] to-[#FFB700] grid place-items-center text-white font-black">SB</div>
+        <div class="font-display font-black leading-none">SB BRAND SHOP</div>
+      </div>
+      <p class="text-sm font-medium text-zinc-500 mt-3 leading-relaxed" data-i18n="footAbout">Bangladesh's colorful & trendy product destination.</p>
+      <div class="flex gap-2 mt-4">
+        <a href="#" id="fbLink" class="w-9 h-9 rounded-full bg-zinc-900 text-white grid place-items-center hover:bg-black transition"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+        <a href="#" class="w-9 h-9 rounded-full bg-gradient-to-br from-[#8B5CF6] to-[#EC4899] text-white grid place-items-center"><i class="fa-brands fa-instagram text-sm"></i></a>
+        <a href="#" class="w-9 h-9 rounded-full bg-black text-white grid place-items-center"><i class="fa-brands fa-tiktok text-sm"></i></a>
+        <a href="#" class="w-9 h-9 rounded-full bg-[#FF006A] text-white grid place-items-center"><i class="fa-brands fa-youtube text-sm"></i></a>
+      </div>
+    </div>
+    <div>
+      <h4 class="font-black text-sm tracking-widest" data-i18n="footShop">SHOP</h4>
+      <ul class="mt-4 space-y-2 text-sm font-semibold text-zinc-600">
+        <li><a href="#trending" class="hover:text-zinc-900" data-i18n="fNew">New Arrival</a></li>
+        <li><a href="#offers" class="hover:text-zinc-900" data-i18n="fBest">Best Sellers</a></li>
+        <li><a href="#categories" class="hover:text-zinc-900" data-i18n="fCaps">Cap Collection</a></li>
+        <li><a href="#categories" class="hover:text-zinc-900" data-i18n="fBags">Bags & More</a></li>
+        <li><a href="#offers" class="hover:text-zinc-900 text-[#FF006A]" data-i18n="fOffers">Offers</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-black text-sm tracking-widest" data-i18n="footHelp">HELP</h4>
+      <ul class="mt-4 space-y-2 text-sm font-semibold text-zinc-600">
+        <li><a href="profile.html" class="hover:text-zinc-900" data-i18n="fTrack">Track Order</a></li>
+        <li><a href="#" class="hover:text-zinc-900" data-i18n="fReturn">Return & Exchange</a></li>
+        <li><a href="#" class="hover:text-zinc-900" data-i18n="fDelivery">Delivery Policy</a></li>
+        <li><a href="product.html" class="hover:text-zinc-900" data-i18n="fSize">Product Details</a></li>
+        <li><a href="profile.html" class="hover:text-zinc-900" data-i18n="fContact">Contact Us</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-black text-sm tracking-widest" data-i18n="footContact">CONTACT</h4>
+      <div class="mt-4 space-y-3 text-sm font-medium">
+        <div class="flex gap-3"><span class="w-8 h-8 rounded-full bg-[#FFF7D6] grid place-items-center text-[#FF8A00] shrink-0"><i class="fa-solid fa-location-dot"></i></span><span><span data-i18n="footAddr1">Majar Road, Mirpur 1</span><br><span data-i18n="footAddr2">Dhaka, Bangladesh</span></span></div>
+        <div class="flex gap-3 items-center"><span class="w-8 h-8 rounded-full bg-[#FFE9F3] grid place-items-center text-[#FF006A] shrink-0"><i class="fa-solid fa-phone"></i></span><span class="font-black" data-i18n="footPhone">01856628537</span></div>
+        <div class="flex gap-3 items-center"><span class="w-8 h-8 rounded-full bg-[#EDE9FF] grid place-items-center text-[#8B5CF6] shrink-0"><i class="fa-solid fa-envelope"></i></span><span data-i18n="footEmail">sbbrandshop@gmail.com</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-8 pt-6 border-t border-black/5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs font-bold text-zinc-500">
+    <div data-i18n="footCopy">© 2026 SB Brand Shop. All rights reserved. Made with ♥ in Bangladesh.</div>
+    <div class="flex items-center gap-2"><span data-i18n="payWith">Pay with</span> <span class="bg-zinc-900 text-white px-2 py-1 rounded font-black text-[10px]">bKash</span><span class="bg-[#E60012] text-white px-2 py-1 rounded font-black text-[10px]">Nagad</span><span class="bg-white border border-zinc-200 px-2 py-1 rounded font-black text-[10px]">COD</span></div>
+  </div>
+</div>
+</footer>
+
+<!-- ===== Bottom Nav (4 items — unchanged) ===== -->
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-item active">
+    <i class="fa-solid fa-house"></i>
+    <span data-i18n="navHome">Home</span>
+  </a>
+  <a href="#reels" class="nav-item">
+    <i class="fa-solid fa-clapperboard"></i>
+    <span data-i18n="navReels">Reels</span>
+  </a>
+  <a href="cart.html" class="nav-item">
+    <i class="fa-solid fa-cart-shopping"></i>
+    <span data-i18n="navCart">Cart</span>
+    <span class="cart-badge" id="cartCount" style="display:none">0</span>
+  </a>
+  <a href="profile.html" class="nav-item">
+    <i class="fa-solid fa-user"></i>
+    <span data-i18n="navProfile">Profile</span>
+  </a>
+</nav>
+
+<!-- ===== Toast ===== -->
+<div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-zinc-900 text-white px-5 py-3 rounded-full font-bold text-sm shadow-2xl hidden z-50 items-center gap-2 max-w-[90%]">
+<span id="toastIcon" class="w-7 h-7 rounded-full bg-white text-zinc-900 grid place-items-center text-xs shrink-0"><i class="fa-solid fa-check"></i></span>
+<span id="toastMsg">Added to cart!</span>
+</div>
+
+<script type="module">
+import { db } from './firebase-config.js';
+import { collection, getDocs, query, where, orderBy, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const { t, applyI18n, initShopLang } = window.APP_I18N;
+applyI18n();
+
+// 🔗 Social links
+const LINKS = {
+    whatsappGroup: 'https://whatsapp.com/channel/0029VatIOE40QearyWrKBW3a',
+    facebook: 'https://www.facebook.com/profile.php?id=61582716104815'
+};
+// Facebook icon → page
+(function () {
+    const fb = document.getElementById('fbLink');
+    if (fb && LINKS.facebook) { fb.href = LINKS.facebook; fb.target = '_blank'; fb.rel = 'noopener'; }
+})();
+
+// ========== STATE ==========
+let allProducts = [];     // approved products only
+let allCategories = [];   // {name, imageUrl}
+let allShops = [];        // {id, name, image, count}
+let banners = [];
+let activeCat = null;
+let activeShop = null;    // {id, name}
+let searchQ = '';
+let visibleCount = 8;
+let wishlist = new Set(JSON.parse(localStorage.getItem('sb_wishlist') || '[]'));
+
+// ========== HELPERS ==========
+function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function discOf(p) {
+    if (p.discount) return p.discount;
+    if (p.oldPrice && p.price && p.oldPrice > p.price) return Math.round((1 - p.price / p.oldPrice) * 100);
+    return 0;
+}
+
+// ========== TOAST ==========
+let toastTimer = null;
+function showToast(msg) {
+    const el = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    el.classList.remove('hidden'); el.classList.add('flex');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { el.classList.add('hidden'); el.classList.remove('flex'); }, 2500);
+}
+
+// ========== CART ==========
+function getCart() { return JSON.parse(localStorage.getItem('sb_cart') || '[]'); }
+function saveCart(cart) { localStorage.setItem('sb_cart', JSON.stringify(cart)); updateCartCount(); }
+function updateCartCount() {
+    const total = getCart().reduce((s, i) => s + i.quantity, 0);
+    ['cartCount', 'headerCartCount'].forEach(id => {
+        const b = document.getElementById(id);
+        if (!b) return;
+        b.textContent = total;
+        if (id === 'cartCount') b.style.display = total > 0 ? 'flex' : 'none';
+        else b.classList.toggle('hidden', total === 0);
+    });
+}
+window.addToCart = function (encoded) {
+    const product = JSON.parse(decodeURIComponent(encoded));
+    const cart = getCart();
+    const found = cart.find(i => i.id === product.id);
+    if (found) found.quantity += 1;
+    else cart.push({ ...product, quantity: 1 });
+    saveCart(cart);
+    showToast(t('addedToCart'));
+};
+window.buyNow = function (encoded) {
+    const p = JSON.parse(decodeURIComponent(encoded));
+    const params = new URLSearchParams({
+        id: p.id, name: encodeURIComponent(p.name), price: p.price,
+        oldPrice: p.oldPrice || '', img: encodeURIComponent(p.imageUrl || ''),
+        freeDelivery: p.freeDelivery ? '1' : '0'
+    });
+    window.location.href = 'order.html?' + params.toString();
+};
+
+// ========== WISHLIST ==========
+function updateWishCount() {
+    const b = document.getElementById('wishlistCount');
+    b.textContent = wishlist.size;
+    b.classList.toggle('hidden', wishlist.size === 0);
+}
+window.toggleWish = function (id) {
+    if (wishlist.has(id)) wishlist.delete(id); else wishlist.add(id);
+    localStorage.setItem('sb_wishlist', JSON.stringify([...wishlist]));
+    updateWishCount();
+    renderOffers();
+    renderTrending();
+};
+
+// ========== HERO BANNER CAROUSEL (admin banners, 3s auto) ==========
+let bannerIdx = 0;
+let bannerTimer = null;
+function heroSlideCount() { return document.querySelectorAll('#heroSlides .hero-slide').length; }
+function goSlide(i) {
+    const slides = document.querySelectorAll('#heroSlides .hero-slide');
+    if (slides.length === 0) return;
+    bannerIdx = (i + slides.length) % slides.length;
+    slides.forEach((s, j) => s.classList.toggle('active', j === bannerIdx));
+    document.querySelectorAll('#heroDots > span').forEach((d, j) => {
+        d.className = 'h-2 rounded-full transition-all duration-300 ' + (j === bannerIdx ? 'w-6 bg-white' : 'w-2 bg-white/50');
+    });
+}
+function startBannerTimer() {
+    clearInterval(bannerTimer);
+    if (heroSlideCount() > 1) bannerTimer = setInterval(() => goSlide(bannerIdx + 1), 3000);
+}
+window.heroPrev = function () { goSlide(bannerIdx - 1); startBannerTimer(); };
+window.heroNext = function () { goSlide(bannerIdx + 1); startBannerTimer(); };
+
+function renderHeroCarousel() {
+    const slides = banners.map(b => b.imageUrl).filter(Boolean);
+    if (slides.length === 0) slides.push('hero.jpg');
+    document.getElementById('heroSlides').innerHTML = slides.map((s, i) =>
+        `<img src="${esc(s)}" class="hero-slide ${i === 0 ? 'active' : ''}" alt="Banner ${i + 1}" loading="lazy">`).join('');
+    const dots = document.getElementById('heroDots');
+    const multi = slides.length > 1;
+    document.querySelectorAll('.hero-arrow').forEach(a => a.style.display = multi ? '' : 'none');
+    dots.style.display = multi ? 'flex' : 'none';
+    dots.innerHTML = multi ? slides.map((_, i) =>
+        `<span onclick="goSlide(${i});startBannerTimer()" class="h-2 w-2 rounded-full bg-white ${i === 0 ? '!w-6' : 'bg-white/50'} transition-all duration-300 cursor-pointer"></span>`).join('') : '';
+    bannerIdx = 0;
+    startBannerTimer();
+    // hover করলে pause (desktop)
+    const area = document.getElementById('heroSlides');
+    area.onmouseenter = () => clearInterval(bannerTimer);
+    area.onmouseleave = startBannerTimer;
+}
+
+// ========== PRODUCT CARD (reference design style) ==========
+function productCard(p) {
+    const safe = encodeURIComponent(JSON.stringify({
+        id: p.id, name: p.name, price: p.price,
+        oldPrice: p.oldPrice || null, imageUrl: p.imageUrl,
+        freeDelivery: p.freeDelivery || false
+    }));
+    const disc = discOf(p);
+    let badge = '';
+    if (disc > 0) {
+        if (p.isOffer) badge = `<span class="absolute top-2.5 left-2.5 z-10 text-[10px] font-black tracking-widest px-2.5 py-1 rounded-full bg-[#FF006A] text-white">🔥 OFFER • -${disc}%</span>`;
+        else badge = `<span class="absolute top-2.5 left-2.5 z-10 text-[10px] font-black tracking-widest px-2.5 py-1 rounded-full bg-[#FFD600] text-zinc-900">-${disc}%</span>`;
+    } else if (p.isOffer) {
+        badge = `<span class="absolute top-2.5 left-2.5 z-10 text-[10px] font-black tracking-widest px-2.5 py-1 rounded-full bg-[#FF006A] text-white">OFFER</span>`;
+    }
+    const isWish = wishlist.has(p.id);
+    return `
+    <div class="group bg-white rounded-[20px] p-2 md:p-2.5 shadow-[0_8px_24px_rgba(0,0,0,.06)] border border-black/5 hover:shadow-[0_16px_32px_rgba(0,0,0,.12)] transition flex flex-col">
+        <div class="relative rounded-[18px] overflow-hidden bg-zinc-50">
+            ${badge}
+            <button onclick="toggleWish('${p.id}')" class="absolute top-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-white shadow grid place-items-center ${isWish ? 'text-[#FF006A]' : 'text-zinc-400'} hover:text-[#FF006A] transition"><i class="${isWish ? 'fa-solid' : 'fa-regular'} fa-heart text-sm"></i></button>
+            <a href="product.html?id=${p.id}"><img src="${p.imageUrl || 'https://via.placeholder.com/300'}" alt="${esc(p.name)}" loading="lazy" class="w-full h-[120px] md:h-[220px] object-cover group-hover:scale-105 transition duration-500 cursor-pointer"></a>
+        </div>
+        <div class="p-2 pt-2.5 flex-1 flex flex-col">
+            <div class="text-[11px] font-bold text-zinc-400 text-right truncate">${esc(p.category || '')}</div>
+            <a href="product.html?id=${p.id}" class="font-bold text-[12px] md:text-sm leading-snug line-clamp-2 hover:text-[#FF006A] transition min-h-[30px] md:min-h-[42px]">${esc(p.name)}</a>
+            <div class="flex items-baseline gap-2 mt-1">
+                <span class="font-black text-[15px] md:text-lg">৳${p.price}</span>
+                ${p.oldPrice ? `<span class="text-xs text-zinc-400 line-through font-bold">৳${p.oldPrice}</span>` : ''}
+                ${disc > 0 ? `<span class="text-xs font-black text-[#00D26A]">-${disc}%</span>` : ''}
+            </div>
+            <button onclick="addToCart('${safe}')" class="w-full mt-1.5 bg-zinc-900 text-white rounded-full py-1.5 text-[11px] md:text-sm font-black hover:bg-black transition">🛒 <span data-t="addToCart">${t('addToCart')}</span></button>
+            <button onclick="buyNow('${safe}')" class="w-full mt-1 bg-[#006643] text-white rounded-full py-1 text-[11px] md:text-xs font-black hover:bg-[#00523a] transition"><span data-t="buyNow">${t('buyNow')}</span></button>
+        </div>
+    </div>`;
+}
+
+// ========== STYLES PALETTE ==========
+const STYLES = [
+    { grad: 'linear-gradient(135deg,#FF006A,#FF6B35)', pastel: 'linear-gradient(135deg,rgba(255,0,106,.15),rgba(255,183,0,.15))' },
+    { grad: 'linear-gradient(135deg,#8B5CF6,#EC4899)', pastel: 'linear-gradient(135deg,rgba(139,92,246,.15),rgba(236,72,153,.15))' },
+    { grad: 'linear-gradient(135deg,#06B6D4,#3B82F6)', pastel: 'linear-gradient(135deg,rgba(6,182,212,.15),rgba(59,130,246,.15))' },
+    { grad: 'linear-gradient(135deg,#00D26A,#06B6D4)', pastel: 'linear-gradient(135deg,rgba(0,210,106,.15),rgba(6,182,212,.15))' },
+    { grad: 'linear-gradient(135deg,#FFB700,#FF006A)', pastel: 'linear-gradient(135deg,rgba(255,183,0,.18),rgba(255,0,106,.15))' },
+    { grad: 'linear-gradient(135deg,#F97316,#EAB308)', pastel: 'linear-gradient(135deg,rgba(249,115,22,.15),rgba(234,179,8,.15))' }
+];
+
+// ========== CATEGORIES ==========
+function renderCategories() {
+    const el = document.getElementById('categoryScroller');
+    if (allCategories.length === 0) { el.innerHTML = ''; return; }
+    const countByCat = {};
+    allProducts.forEach(p => { if (p.category) countByCat[p.category] = (countByCat[p.category] || 0) + 1; });
+    el.innerHTML = allCategories.map((c, i) => {
+        const s = STYLES[i % STYLES.length];
+        const n = countByCat[c.name] || 0;
+        const icon = c.imageUrl
+            ? `<img src="${esc(c.imageUrl)}" alt="${esc(c.name)}" class="w-full h-full object-cover">`
+            : `<span class="text-5xl">🛍️</span>`;
+        return `
+        <div class="min-w-[100px] md:min-w-[200px] snap-start rounded-[24px] p-[2px] card-hover cursor-pointer" style="background:${s.grad}" onclick="filterByCategory(${i})">
+            <div class="bg-white rounded-[20px] p-3 md:p-4 h-full">
+                <div class="w-full h-[70px] md:h-[100px] rounded-2xl overflow-hidden grid place-items-center" style="background:${s.pastel}">${icon}</div>
+                <div class="mt-2 md:mt-3 font-black truncate">${esc(c.name)}</div>
+                <div class="text-[10px] md:text-xs font-bold text-zinc-500">${n} ${t('items')}</div>
+                <div class="mt-3 inline-flex items-center gap-1 text-xs font-black tracking-widest">${t('explore')} <i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </div>`;
+    }).join('');
+}
+window.scrollCategories = function (dir) {
+    document.getElementById('categoryScroller').scrollBy({ left: dir * 380, behavior: 'smooth' });
+};
+window.scrollPills = function (dir) {
+    const el = document.getElementById('filterPills');
+    if (el) el.scrollBy({ left: dir * 220, behavior: 'smooth' });
+};
+
+// ========== ALL SHOPS ==========
+function renderShops() {
+    const sec = document.getElementById('shops');
+    if (allShops.length === 0) { sec.style.display = 'none'; return; }
+    sec.style.display = '';
+    document.getElementById('shopScroller').innerHTML = allShops.map((s, i) => {
+        const st = STYLES[i % STYLES.length];
+        const icon = s.image
+            ? `<img src="${esc(s.image)}" alt="${esc(s.name)}" class="w-full h-full object-cover">`
+            : `<span class="text-5xl font-black text-white" style="background:${st.grad};-webkit-background-clip:text;background-clip:text;width:100%;height:100%;display:grid;place-items:center">${esc((s.name || 'S').trim().charAt(0).toUpperCase())}</span>`;
+        return `
+        <div class="min-w-[100px] md:min-w-[200px] snap-start rounded-[24px] p-[2px] card-hover cursor-pointer" style="background:${st.grad}" onclick="filterByShop(${i})">
+            <div class="bg-white rounded-[20px] p-3 md:p-4 h-full">
+                <div class="w-full h-[70px] md:h-[100px] rounded-2xl overflow-hidden grid place-items-center" style="background:${st.pastel}">${icon}</div>
+                <div class="mt-2 md:mt-3 font-black truncate">${esc(s.name)}</div>
+                <div class="text-[10px] md:text-xs font-bold text-zinc-500">${s.count} ${t('shopProducts')}</div>
+                <div class="mt-3 inline-flex items-center gap-1 text-xs font-black tracking-widest">${t('viewShop')} <i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </div>`;
+    }).join('');
+}
+window.filterByShop = function (i) {
+    const s = allShops[i];
+    if (!s) return;
+    activeShop = { id: s.id, name: s.name };
+    activeCat = null;
+    searchQ = '';
+    visibleCount = 8;
+    syncPills();
+    renderTrending();
+    document.getElementById('trending').scrollIntoView({ behavior: 'smooth' });
+};
+
+// ========== FILTER PILLS ==========
+function renderPills() {
+    const el = document.getElementById('filterPills');
+    let html = `<button data-cat="" class="pill whitespace-nowrap px-5 py-2.5 rounded-full bg-zinc-900 text-white font-black text-sm">${t('allPill')}</button>`;
+    allCategories.forEach(c => {
+        html += `<button data-cat="${esc(c.name)}" class="pill whitespace-nowrap px-5 py-2.5 rounded-full bg-white border border-black/10 font-bold text-sm hover:bg-zinc-900 hover:text-white transition">${esc(c.name)}</button>`;
+    });
+    el.innerHTML = html;
+    el.querySelectorAll('.pill').forEach(b => {
+        b.addEventListener('click', () => {
+            activeCat = b.dataset.cat || null;
+            activeShop = null;
+            searchQ = '';
+            visibleCount = 8;
+            syncPills();
+            renderTrending();
+        });
+    });
+}
+function syncPills() {
+    document.querySelectorAll('#filterPills .pill').forEach(b => {
+        const on = activeShop ? false : (b.dataset.cat === (activeCat || ''));
+        b.className = 'pill whitespace-nowrap px-5 py-2.5 rounded-full text-sm transition ' +
+            (on ? 'bg-zinc-900 text-white font-black' : 'bg-white border border-black/10 font-bold hover:bg-zinc-900 hover:text-white');
+    });
+}
+window.filterByCategory = function (i) {
+    const c = allCategories[i];
+    if (!c) return;
+    activeCat = c.name;
+    activeShop = null;
+    searchQ = '';
+    visibleCount = 8;
+    syncPills();
+    renderTrending();
+    document.getElementById('trending').scrollIntoView({ behavior: 'smooth' });
+};
+
+// ========== OFFERS ==========
+function renderOffers() {
+    const grid = document.getElementById('offerGrid');
+    const offers = allProducts.filter(p => p.isOffer);
+    const flash = document.getElementById('flashSale');
+    if (offers.length === 0) {
+        document.getElementById('offers').style.display = 'none';
+        if (flash) flash.style.display = 'none';
+        return;
+    }
+    grid.innerHTML = offers.map(productCard).join('');
+}
+
+// ========== TRENDING (all products) ==========
+function renderTrending() {
+    const grid = document.getElementById('productGrid');
+    const titleEl = document.getElementById('trendingTitleEl');
+    let list = allProducts;
+    if (activeShop) list = list.filter(p => p.sellerId === activeShop.id);
+    else if (activeCat) list = list.filter(p => p.category === activeCat);
+    if (searchQ) list = list.filter(p => (p.name || '').toLowerCase().includes(searchQ.toLowerCase()));
+
+    // title
+    if (searchQ) titleEl.textContent = `"${searchQ}"` + t('searchSuffix');
+    else if (activeShop) titleEl.textContent = activeShop.name;
+    else if (activeCat) titleEl.textContent = activeCat + ' ' + t('productsOf');
+    else titleEl.textContent = t('trendingTitle');
+
+    if (list.length === 0) {
+        grid.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-16 bg-white rounded-3xl border border-dashed"><div class="text-4xl">🔍</div><div class="font-black mt-2">${t('noResults')}</div><div class="text-sm text-zinc-500">${t('noResultsSub')}</div></div>`;
+        document.getElementById('loadMoreBtn').classList.add('hidden');
+        return;
+    }
+    const toShow = list.slice(0, visibleCount);
+    grid.innerHTML = toShow.map(productCard).join('');
+    const btn = document.getElementById('loadMoreBtn');
+    if (list.length > visibleCount) {
+        btn.classList.remove('hidden');
+        btn.innerHTML = `${t('viewMore')} <i class="fa-solid fa-chevron-down ml-1"></i>`;
+    } else {
+        btn.classList.add('hidden');
+    }
+}
+
+// ========== HERO ==========
+function renderHero() {
+    document.getElementById('heroCountText').textContent = `• ${allProducts.length}+ ${t('heroCount')}`;
+    document.getElementById('statProducts').textContent = allProducts.length + '+';
+    document.getElementById('statCategories').textContent = allCategories.length + '+';
+    document.getElementById('heroSub').innerHTML =
+        `${t('heroSub1')}<span class="text-zinc-900 font-bold underline decoration-[#FF006A] decoration-4 underline-offset-2">${t('heroSub2')}</span> ${t('heroSub3')}`;
+    const maxDisc = Math.max(0, ...allProducts.filter(p => p.isOffer).map(discOf));
+    if (maxDisc > 0) {
+        document.getElementById('flatOffVal').textContent = maxDisc;
+        document.getElementById('flashOffVal').textContent = maxDisc;
+    }
+    renderHeroCarousel();
+    // promo banner images (from admin banners)
+    if (banners[0] && banners[0].imageUrl) document.getElementById('promoImg1').src = banners[0].imageUrl;
+    if (banners[1] && banners[1].imageUrl) document.getElementById('promoImg2').src = banners[1].imageUrl;
+    else if (banners[0] && banners[0].imageUrl) document.getElementById('promoImg2').src = banners[0].imageUrl;
+    // promo titles (i18n, may contain <br>)
+    document.getElementById('promo1TitleEl').innerHTML = t('promo1Title');
+    document.getElementById('promo2TitleEl').innerHTML = t('promo2Title');
+}
+
+// ========== TESTIMONIALS ==========
+function renderTestimonials() {
+    ['1','2','3'].forEach(n => {
+        document.getElementById(`testi${n}Quote`).textContent = '“' + t(`testi${n}`) + '”';
+        document.getElementById(`testi${n}Name`).textContent = t(`testi${n}Name`);
+        document.getElementById(`testi${n}City`).textContent = t(`testi${n}City`);
+    });
+}
+
+// ========== COUNTDOWN (to midnight) ==========
+function tick() {
+    const now = new Date();
+    const end = new Date(now); end.setHours(24, 0, 0, 0);
+    let s = Math.max(0, Math.floor((end - now) / 1000));
+    const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+    document.getElementById('cdH').textContent = String(h).padStart(2, '0');
+    document.getElementById('cdM').textContent = String(m).padStart(2, '0');
+    document.getElementById('cdS').textContent = String(sec).padStart(2, '0');
+}
+setInterval(tick, 1000); tick();
+
+// ========== SEARCH ==========
+function doSearch() {
+    const term = (document.getElementById('searchInput').value || document.getElementById('searchInputMobile').value || '').trim();
+    document.getElementById('searchInput').value = term;
+    document.getElementById('searchInputMobile').value = term;
+    searchQ = term;
+    activeCat = null;
+    activeShop = null;
+    visibleCount = 8;
+    syncPills();
+    renderTrending();
+    if (term) document.getElementById('trending').scrollIntoView({ behavior: 'smooth' });
+}
+document.getElementById('searchBtn').addEventListener('click', doSearch);
+['searchInput', 'searchInputMobile'].forEach(id =>
+    document.getElementById(id).addEventListener('keypress', e => { if (e.key === 'Enter') doSearch(); })
+);
+
+// ========== LOAD MORE ==========
+document.getElementById('loadMoreBtn').addEventListener('click', () => {
+    visibleCount = visibleCount >= 8 && visibleCount < 9999 ? 9999 : 8;
+    renderTrending();
+});
+
+// ========== MOBILE MENU ==========
+document.getElementById('mobileMenuBtn').addEventListener('click', () =>
+    document.getElementById('mobileMenu').classList.toggle('hidden'));
+document.querySelectorAll('#mobileMenu a').forEach(a =>
+    a.addEventListener('click', () => document.getElementById('mobileMenu').classList.add('hidden')));
+
+// ========== WISHLIST HEADER BTN ==========
+document.getElementById('wishlistBtn').addEventListener('click', () =>
+    document.getElementById('trending').scrollIntoView({ behavior: 'smooth' }));
+
+// ========== NEWSLETTER → WhatsApp group ==========
+document.getElementById('newsletterForm').addEventListener('submit', e => {
+    e.preventDefault();
+    if (LINKS.whatsappGroup) {
+        window.open(LINKS.whatsappGroup, '_blank');
+    } else {
+        showToast(t('newsToast'));
+    }
+    e.target.reset();
+});
+
+// ========== LOAD DATA ==========
+async function loadAll() {
+    try {
+        const [pSnap, cSnap, bSnap] = await Promise.all([
+            getDocs(collection(db, 'products')),
+            getDocs(query(collection(db, 'categories'), orderBy('order'))),
+            getDocs(query(collection(db, 'banners'), orderBy('order')))
+        ]);
+        pSnap.forEach(d => {
+            const p = { id: d.id, ...d.data() };
+            // pending/rejected product shop-এ দেখাবে না
+            if (!p.status || p.status === 'approved') allProducts.push(p);
+        });
+        allCategories = [];
+        cSnap.forEach(d => allCategories.push(d.data()));
+        banners = [];
+        bSnap.forEach(d => banners.push(d.data()));
+
+        // shops (public collection — name + image only)
+        // rules update-এর আগে পর্যন্ত এটা read করা যাবে না → gracefully hide
+        try {
+            const sSnap = await getDocs(collection(db, 'shops'));
+            const countBySeller = {};
+            allProducts.forEach(p => { if (p.sellerId) countBySeller[p.sellerId] = (countBySeller[p.sellerId] || 0) + 1; });
+            sSnap.forEach(d => {
+                const s = d.data();
+                allShops.push({ id: d.id, name: s.name || 'Shop', image: s.image || '', count: countBySeller[d.id] || 0 });
             });
-            window.location.href = 'order.html?' + params.toString();
-        };
+            allShops.sort((a, b) => (b.count - a.count) || a.name.localeCompare(b.name));
+        } catch (e) { console.log('shops collection not readable yet'); }
+    } catch (e) { console.error('load failed', e); }
 
-        // ========== TOAST ==========
-        function showToast(msg) {
-            const el = document.getElementById('toast');
-            el.textContent = msg;
-            el.classList.add('show');
-            setTimeout(() => el.classList.remove('show'), 2500);
-        }
+    // render all
+    renderHero();
+    renderCategories();
+    renderShops();
+    renderPills();
+    renderOffers();
+    renderTrending();
+    renderTestimonials();
+    updateCartCount();
+    updateWishCount();
+}
 
-        // ========== PRODUCT CARD ==========
-        function productCard(p) {
-            const safe = encodeURIComponent(JSON.stringify({
-                id: p.id, name: p.name, price: p.price,
-                oldPrice: p.oldPrice || null, imageUrl: p.imageUrl,
-                freeDelivery: p.freeDelivery || false
-            }));
-            return `
-            <div class="product-card">
-                ${p.discount ? `<span class="badge">-${p.discount}%</span>` : ''}
-                <a href="product.html?id=${p.id}" class="product-link">
-                    <img src="${p.imageUrl || 'https://via.placeholder.com/150'}" alt="${p.name}" loading="lazy">
-                    <h3>${p.name}</h3>
-                </a>
-                <p class="price">
-                    ${p.oldPrice ? `<span class="old-price">৳${p.oldPrice}</span>` : ''}
-                    ৳${p.price}
-                </p>
-                <button class="cart-btn" onclick="addToCart('${safe}')">
-                    <i class="fa-solid fa-cart-plus"></i> ${t('addToCart')}
-                </button>
-                <button class="buy-btn" onclick="buyNow('${safe}')">${t('buyNow')}</button>
-            </div>`;
-        }
-
-        // ========== LOAD BANNERS ==========
-        async function loadBanners() {
-            try {
-                const snap = await getDocs(query(collection(db, 'banners'), orderBy('order')));
-                if (!snap.empty) {
-                    const sec = document.getElementById('bannerSection');
-                    sec.innerHTML = '';
-                    snap.forEach(d => {
-                        sec.innerHTML += `<div class="banner-box"><img src="${d.data().imageUrl}" alt="Banner"></div>`;
-                    });
-                }
-            } catch(e) {}
-        }
-
-        // ========== LOAD CATEGORIES ==========
-        async function loadCategories() {
-            try {
-                const snap = await getDocs(query(collection(db, 'categories'), orderBy('order')));
-                const grid = document.getElementById('categoryGrid');
-                if (snap.empty) {
-                    const defaults = ['ব্যাগস','ফ্যাশন','জুতো','ঘড়ি'];
-                    grid.innerHTML = defaults.map(c => `
-                        <div class="category-item" onclick="filterByCategory('${c}')">
-                            <img src="https://via.placeholder.com/80" alt="${c}">
-                            <p>${c}</p>
-                        </div>`).join('');
-                    return;
-                }
-                grid.innerHTML = '';
-                snap.forEach(d => {
-                    const c = d.data();
-                    grid.innerHTML += `
-                        <div class="category-item" onclick="filterByCategory('${c.name}')">
-                            <img src="${c.imageUrl || 'https://via.placeholder.com/80'}" alt="${c.name}">
-                            <p>${c.name}</p>
-                        </div>`;
-                });
-            } catch(e) { console.log(e); }
-        }
-
-        // ========== LOAD OFFERS ==========
-        async function loadOffers() {
-            try {
-                const snap = await getDocs(query(collection(db, 'products'), where('isOffer', '==', true)));
-                const grid = document.getElementById('offerGrid');
-                const offers = [];
-                snap.forEach(d => {
-                    const p = { id: d.id, ...d.data() };
-                    // pending/rejected product offer-তেও দেখাবে না
-                    if (!p.status || p.status === 'approved') offers.push(p);
-                });
-                if (offers.length === 0) {
-                    document.getElementById('offerSection').style.display = 'none';
-                    return;
-                }
-                grid.innerHTML = '';
-                offers.forEach(p => grid.innerHTML += productCard(p));
-            } catch(e) { document.getElementById('offerSection').style.display = 'none'; }
-        }
-
-        // ========== LOAD ALL PRODUCTS ==========
-        async function loadProducts(category = null, search = null) {
-            const grid = document.getElementById('allProductsGrid');
-            grid.innerHTML = `<div class="loading-text">${t('loading')}</div>`;
-            try {
-                const snap = await getDocs(collection(db, 'products'));
-                let products = [];
-                snap.forEach(d => products.push({ id: d.id, ...d.data() }));
-
-                // 🔑 Merchant-এর pending/rejected product shop-এ দেখাবে না
-                products = products.filter(p => !p.status || p.status === 'approved');
-
-                if (category) products = products.filter(p => p.category === category);
-                if (search) products = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
-
-                if (products.length === 0) {
-                    grid.innerHTML = `<p class="empty-msg">${t('emptyMsg')}</p>`;
-                    return;
-                }
-                grid.innerHTML = '';
-                products.forEach(p => grid.innerHTML += productCard(p));
-            } catch(e) {
-                grid.innerHTML = `<p class="empty-msg">${t('loadFailed')}</p>`;
-            }
-        }
-
-        // ========== FILTER ==========
-        window.filterByCategory = function(cat) {
-            document.getElementById('allProductsTitle').textContent = cat + ' ' + t('productsOf');
-            loadProducts(cat);
-            document.querySelector('.all-products-section').scrollIntoView({ behavior: 'smooth' });
-        };
-
-        // ========== SEARCH ==========
-        document.getElementById('searchBtn').addEventListener('click', () => {
-            const term = document.getElementById('searchInput').value.trim();
-            if (term) {
-                document.getElementById('allProductsTitle').textContent = '"' + term + '"' + t('searchSuffix');
-                loadProducts(null, term);
-                document.querySelector('.all-products-section').scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-        document.getElementById('searchInput').addEventListener('keypress', e => {
-            if (e.key === 'Enter') document.getElementById('searchBtn').click();
-        });
-
-        // ========== INIT ==========
-        await initShopLang(async () => {
-            const snap = await getDoc(doc(db, 'settings', 'general'));
-            return snap.exists() ? snap.data() : null;
-        });
-        updateCartCount();
-        loadBanners();
-        loadCategories();
-        loadOffers();
-        loadProducts();
-    </script>
+// ========== INIT ==========
+await initShopLang(async () => {
+    const snap = await getDoc(doc(db, 'settings', 'general'));
+    return snap.exists() ? snap.data() : null;
+});
+applyI18n();
+await loadAll();
+</script>
 </body>
 </html>

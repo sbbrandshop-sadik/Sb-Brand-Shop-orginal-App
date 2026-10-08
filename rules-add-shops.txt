@@ -1,0 +1,27 @@
+# ============================================================
+# SB BRAND SHOP — RULES ADD: "shops" collection (2026 All Shops)
+# ============================================================
+# কীভাবে যোগ করবেন (পুরো rules-এর জায়গায় দিতে হয় না):
+#
+# 1. Firebase Console খুলুন → Firebase Console (console.firebase.google.com)
+# 2. আপনার project (sb-brand-shop-426a4) সিলেক্ট করুন
+# 3. left menu → Build → Firestore Database → Rules ট্যাব
+# 4. নিচের block টা কপি করে আপনার বর্তমান rules-এর ভেতরে যোগ করুন
+#    (যেমন: "match /paymentRequests/{id} {...}" block-এর পরে,
+#     শেষের দিকের বন্ধ ব্র্যাকেট }-এর আগে)
+# 5. উপরে "Publish" বাটনে ক্লিক করুন
+#
+# কী করবে এই block:
+#  - "shops" collection এ থাকবে শুধু: name + image (শপের ছবি)
+#  - কোনো NID/ফোন/ঠিকানা থাকবে না → public করা নিরাপদ
+#  - কেউ যেকোনো সময় পড়তে পারবে (হোমপেজের All Shops-এর জন্য)
+#  - লেখতে পারবে: শুধু নিজে (নিজের uid) অথবা main admin
+# ============================================================
+
+    // ===== Shops (public: homepage "All Shops" section) =====
+    // শুধু শপের নাম + ছবি — কোনো ব্যক্তিগত তথ্য নেই
+    match /shops/{uid} {
+      allow read: if true;
+      allow create, update: if isAdmin() || (request.auth != null && request.auth.uid == uid);
+      allow delete: if isAdmin();
+    }

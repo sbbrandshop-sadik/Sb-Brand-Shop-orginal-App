@@ -1,0 +1,86 @@
+=====================================================
+SB BRAND SHOP — Website → Android App গাইড
+=====================================================
+
+আপনার website (https://sb-brand-shop-426a4.web.app) টাকে
+native Android App-এ বানানোর ২টি উপায় আছে:
+
+-----------------------------------------------------
+ROUTE A: CAPACITOR → REAL ANDROID APP (APK)  ← পছন্দ
+-----------------------------------------------------
+এটা একটা real app হবে: Play Store-এ দিতে পারবেন,
+আপনার folder-এ আগে থেকেই capacitor setup আছে।
+
+গুরুত্বপূর্ণ কথা: app-এর ভিতরে আপনার LIVE website চলবে।
+মানে website-এ নতুন feature deploy করলে app-ও সাথে
+সাথে update — নতুন APK বানানোর দরকার না!
+
+================ প্রস্তুতি ================
+1. আপনার PC-তে Android Studio থাকতে হবে
+   (না থাকলে: https://developer.android.com/studio থেকে
+   download করে install করুন — free, ~1.5GB,
+   install-এর সময় SDK জিনিসগুলো accept করে দিন)
+
+================ Steps ================
+১. ভিতরের sb-brand-shop folder-এ (যেখানে firebase.json +
+   capacitor.config.json আছে) terminal খুলুন
+
+২. এই folder-এ capacitor.config.json ফাইলটি REPLACe করুন
+   (এই zip-এর capacitor.config.json নিন)
+
+৩. Capacitor packages install করুন (একবারই লাগবে):
+   npm install @capacitor/core @capacitor/cli @capacitor/android
+
+৪. App sync করুন:
+   npx cap sync android
+
+================ APK বানানো ================
+উপায় 1 (terminal):
+   cd android
+   gradlew.bat assembleDebug
+
+   APK বানানো শেষে পাবে এখানে:
+   android\app\build\outputs\apk\debug\app-debug.apk
+
+উপায় 2 (Android Studio):
+   Android Studio → Open → android folder খুলুন
+   → উপরে Build → Build Bundle(s) / APK(s) → Build APK(s)
+   → শেষে "locate" চাপলে APK-এর জায়গা দেখাবে
+
+================ Phone-এ install ================
+app-debug.apk file-টা phone-এ পাঠান (WhatsApp/Drive/cable)
+→ Phone-এ চাপ দিন → "Unknown sources install allow" দিন
+→ App install → খুললেই আপনার পুরো shop!
+(app-এর নাম: SB BRAND SHOP, icon: সবুজ shopping bag)
+
+-----------------------------------------------------
+ROUTE B: PWA — APK ছাড়াই "Add to Home Screen"
+-----------------------------------------------------
+(এটা সহজ-হালকা option: Android Studio লাগবে না,
+কিন্তু Play Store-এ দেওয়া যাবে না)
+
+আমি manifest.json + icon বানিয়ে দিলে আপনি hosting-এ
+copy করে deploy করলেই:
+   Phone-এ website খুলুন → Browser menu (⋮) →
+   "Add to Home screen" / "Install app" → চাইলে
+   "Add to Home screen" → Home-এ icon বসবে, full-screen-এ
+   app-এর মতো চলবে।
+
+(চাইলে বলুন — manifest + service worker বানিয়ে দেব)
+
+-----------------------------------------------------
+বাংলাদেশ থেকে Play Store-এ দিতে চাইলে (বোনাস):
+-----------------------------------------------------
+1. Google Play Console developer account = $25 (একবারই)
+2. Release build-এর জন্য signing key লাগবে
+   (Android Studio-এ Generate Signed APK থেকে বানানো যায়)
+3. App-এ privacy policy page + content rating লাগবে
+(এটা পরে করলেই হয় — আগে নিজের phone-এ debug APK দিয়ে
+test করুন)
+
+=====================================================
+সারসংক্ষেপ:
+• আগে নিজের phone-এ Route A-র debug APK বানিয়ে test করুন
+• সব ভালো লাগলে Route B-র PWA-টাও বানিয়ে দেব (একসাথে চলবে)
+• Play Store-র জন্য বললে release build গাইড দেব
+=====================================================

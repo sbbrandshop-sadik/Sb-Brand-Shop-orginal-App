@@ -1,0 +1,99 @@
+{
+  "documents": [
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/categories/TBeWEMMyIxprledRFGci",
+      "fields": {
+        "catId": {
+          "stringValue": "book"
+        },
+        "name": {
+          "stringValue": "বই"
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-14T15:46:40.461Z"
+        },
+        "icon": {
+          "stringValue": "📗"
+        }
+      },
+      "createTime": "2026-06-14T15:46:40.495173Z",
+      "updateTime": "2026-06-14T15:46:40.495173Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/categories/TinVSSvPwRdztz0hZFpF",
+      "fields": {
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1788786118/xbnzo3oabrbfjxl6a1nm.webp"
+        },
+        "order": {
+          "integerValue": "3"
+        },
+        "createdAt": {
+          "timestampValue": "2026-09-07T13:01:59.381Z"
+        },
+        "name": {
+          "stringValue": "Books"
+        }
+      },
+      "createTime": "2026-09-07T13:01:59.523986Z",
+      "updateTime": "2026-09-07T13:01:59.523986Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/categories/ZY8o0mczm3jzzORjwTMM",
+      "fields": {
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781870723/ggij6oqd454szvsgm2vj.jpg"
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-19T12:05:24.787Z"
+        },
+        "name": {
+          "stringValue": "ক্যাপ"
+        },
+        "order": {
+          "integerValue": "1"
+        }
+      },
+      "createTime": "2026-06-19T12:05:24.923231Z",
+      "updateTime": "2026-06-19T12:05:24.923231Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/categories/n0g5CpnqEUJI40Teq4hu",
+      "fields": {
+        "createdAt": {
+          "timestampValue": "2026-06-14T15:17:01.727Z"
+        },
+        "icon": {
+          "stringValue": "👜"
+        },
+        "name": {
+          "stringValue": "লেডিস ব্যাগ"
+        },
+        "catId": {
+          "stringValue": "ladis-bag"
+        }
+      },
+      "createTime": "2026-06-14T15:17:01.761573Z",
+      "updateTime": "2026-06-14T15:17:01.761573Z"
+    },
+    {
+      "name": "projects/sb-brand-shop-426a4/databases/(default)/documents/categories/z2RLIhJKaPQclvERQRJ4",
+      "fields": {
+        "name": {
+          "stringValue": "ফরমাল পেন্স"
+        },
+        "order": {
+          "integerValue": "2"
+        },
+        "createdAt": {
+          "timestampValue": "2026-06-19T15:41:06.928Z"
+        },
+        "imageUrl": {
+          "stringValue": "https://res.cloudinary.com/difqe10gj/image/upload/v1781883666/v6sd9nfuwmdir6oilzep.jpg"
+        }
+      },
+      "createTime": "2026-06-19T15:41:06.946235Z",
+      "updateTime": "2026-06-19T15:41:06.946235Z"
+    }
+  ]
+}

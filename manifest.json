@@ -1,0 +1,17 @@
+{
+  "name": "SB BRAND SHOP",
+  "short_name": "SB Shop",
+  "description": "SB Brand Shop - Colorful Collection",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFBF0",
+  "theme_color": "#FF006A",
+  "icons": [
+    {
+      "src": "/app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
