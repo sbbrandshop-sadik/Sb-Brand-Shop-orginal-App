@@ -4,76 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details - SB BRAND SHOP</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <script src="lang.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+    tailwind.config={theme:{extend:{fontFamily:{poppins:['Poppins','sans-serif'],hind:['Hind Siliguri','sans-serif']}}}}
+    </script>
     <style>
-        .pd-wrap { max-width: 650px; margin: 0 auto; padding-bottom: 20px; }
+        *{font-family:'Hind Siliguri','Poppins',sans-serif}
+        .font-display{font-family:'Poppins',sans-serif}
+        .no-scrollbar::-webkit-scrollbar{display:none}
+        .no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
 
-        /* Header back button */
+        /* Header */
         .pd-header { display: flex; align-items: center; gap: 12px; }
         .pd-back { color: white; font-size: 18px; text-decoration: none; flex-shrink: 0; }
         .pd-title { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Image gallery */
-        .gallery-wrap { background: white; }
-        .main-img-box { width: 100%; aspect-ratio: 1; background: #f5f5f5; overflow: hidden; position: relative; }
-        .main-img-box img { width: 100%; height: 100%; object-fit: contain; }
-        .badge-discount { position: absolute; top: 14px; left: 14px; background: #d9534f; color: white; font-size: 13px; padding: 5px 12px; border-radius: 6px; font-weight: bold; z-index: 5; }
-        .thumb-row { display: flex; gap: 8px; padding: 12px; overflow-x: auto; }
-        .thumb-row::-webkit-scrollbar { display: none; }
-        .thumb-item { width: 64px; height: 64px; border-radius: 8px; overflow: hidden; border: 2px solid #e5e5e5; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
-        .thumb-item img { width: 100%; height: 100%; object-fit: cover; }
-        .thumb-item.active { border-color: #006643; }
+        /* Gallery */
+        .pd-main-img { transition: opacity .3s ease; }
+        .pd-thumb-item { border: 2px solid #e5e5e5; transition: .2s; }
+        .pd-thumb-item.active { border-color: #006643; }
 
-        /* Info section */
-        .pd-info { background: white; margin-top: 10px; padding: 18px; }
-        .pd-name { font-size: 19px; font-weight: 700; color: #222; margin-bottom: 10px; line-height: 1.4; }
-        .pd-price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
-        .pd-price { font-size: 24px; font-weight: bold; color: #d9534f; }
-        .pd-old-price { font-size: 15px; color: #aaa; text-decoration: line-through; }
-        .pd-discount-tag { background: #fff0ef; color: #d9534f; font-size: 12px; font-weight: bold; padding: 3px 8px; border-radius: 5px; }
-        .pd-delivery-tag { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 13px; color: #006643; font-weight: 600; background: #f0fff8; padding: 6px 12px; border-radius: 8px; }
-
-        /* Section blocks */
-        .pd-section { background: white; margin-top: 10px; padding: 18px; }
-        .pd-section h3 { font-size: 15px; font-weight: 700; color: #006643; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-        .pd-section p, .pd-section div { font-size: 14px; color: #555; line-height: 1.8; white-space: pre-line; }
-
+        /* Spec list */
         .spec-list { list-style: none; }
-        .spec-list li { display: flex; padding: 8px 0; border-bottom: 1px solid #f2f2f2; font-size: 14px; }
+        .spec-list li { display: flex; padding: 10px 0; border-bottom: 1px solid #f2f2f2; font-size: 14px; }
         .spec-list li:last-child { border-bottom: none; }
-        .spec-key { color: #888; min-width: 110px; flex-shrink: 0; }
+        .spec-key { color: #888; min-width: 130px; flex-shrink: 0; }
         .spec-val { color: #333; font-weight: 500; }
 
-        /* Sticky bottom bar */
-        .pd-action-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: white; padding: 12px 15px;
-            box-shadow: 0 -3px 12px rgba(0,0,0,0.08);
-            display: flex; gap: 10px; z-index: 1000;
-        }
-        .pd-cart-btn, .pd-order-btn {
-            flex: 1; padding: 14px 0; border: none; border-radius: 12px;
-            font-size: 15px; font-weight: bold; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            transition: 0.2s;
-        }
-        .pd-cart-btn { background: #ffc107; color: #111; }
-        .pd-cart-btn:hover { background: #e0a800; }
-        .pd-order-btn { background: #006643; color: white; }
-        .pd-order-btn:hover { background: #004d33; }
+        /* Tabs */
+        .pd-tab { padding: 14px 18px; font-size: 14px; font-weight: 700; color: #888; border-bottom: 2px solid transparent; white-space: nowrap; cursor: pointer; transition: .2s; }
+        .pd-tab.active { color: #006643; border-bottom-color: #006643; }
 
         .pd-skeleton { text-align: center; padding: 60px 20px; color: #aaa; }
-
-        /* Toast reuse */
-        .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); background: #333; color: white; padding: 12px 22px; border-radius: 25px; font-size: 14px; font-weight: 500; opacity: 0; transition: all 0.3s ease; z-index: 9999; white-space: nowrap; pointer-events: none; }
+        .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); background: #333; color: white; padding: 12px 22px; border-radius: 25px; font-size: 14px; font-weight: 500; opacity: 0; transition: all 0.3s ease; z-index: 9999; white-space: nowrap; pointer-events: none; }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-        body { padding-bottom: 80px; }
+        body { padding-bottom: 88px; }
     </style>
+    <script src="lang.js"></script>
 </head>
-<body>
+<body class="bg-[#FFFBF0] text-zinc-900">
     <header class="top-header">
         <div class="pd-header">
             <a href="javascript:history.back()" class="pd-back"><i class="fa-solid fa-arrow-left"></i></a>
@@ -81,15 +53,34 @@
         </div>
     </header>
 
-    <div class="pd-wrap" id="pdRoot">
+    <div id="pdRoot">
         <div class="pd-skeleton" data-i18n="loading">Loading...</div>
+    </div>
+
+    <!-- Sticky bottom action bar -->
+    <div id="pdActionBar" class="fixed bottom-0 inset-x-0 bg-white border-t border-black/5 shadow-[0_-6px_24px_rgba(0,0,0,.10)] z-[1000]" style="display:none">
+        <div class="max-w-[1200px] mx-auto px-4 py-3 flex items-center gap-3">
+            <div class="min-w-0">
+                <div class="flex items-baseline gap-2">
+                    <span id="barPrice" class="font-display font-black text-2xl text-[#006643]">৳0</span>
+                    <span id="barOld" class="text-sm text-zinc-400 line-through font-bold hidden"></span>
+                </div>
+                <div id="barSave" class="text-[11px] font-bold text-[#006643] hidden"></div>
+            </div>
+            <button id="barWish" onclick="toggleWishPD()" class="ml-auto w-12 h-12 rounded-xl border border-black/10 grid place-items-center text-zinc-400 hover:text-[#FF006A] transition shrink-0">
+                <i class="fa-regular fa-heart text-lg"></i>
+            </button>
+            <button onclick="orderNowPD()" class="flex-1 md:flex-none md:px-12 py-3.5 rounded-xl bg-[#006643] text-white font-black text-sm hover:bg-[#004d33] transition shadow-[0_10px_20px_rgba(0,102,67,.3)]">
+                <i class="fa-solid fa-bolt"></i> <span data-i18n="buyNow">Order Now</span>
+            </button>
+        </div>
     </div>
 
     <div id="toast" class="toast"></div>
 
     <script type="module">
         import { db } from './firebase-config.js';
-        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const { t, applyI18n, initShopLang, currentLang } = window.APP_I18N;
         applyI18n();
@@ -97,48 +88,142 @@
         const params = new URLSearchParams(window.location.search);
         const productId = params.get('id');
 
+        let qty = 1;
+        let slideIdx = 0;
+        let productImages = [];
+
+        function esc(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
         function showToast(msg) {
             const el = document.getElementById('toast');
             el.textContent = msg;
             el.classList.add('show');
             setTimeout(() => el.classList.remove('show'), 2500);
         }
-
         function getCart() { return JSON.parse(localStorage.getItem('sb_cart') || '[]'); }
         function saveCart(c) { localStorage.setItem('sb_cart', JSON.stringify(c)); }
+        let wishlist = new Set(JSON.parse(localStorage.getItem('sb_wishlist') || '[]'));
 
-        window.addToCartPD = function() {
+        // ---------- Cart / Order ----------
+        window.addToCartPD = function () {
+            const p = window.__product;
+            if (!p) return;
             const cart = getCart();
-            const found = cart.find(i => i.id === window.__product.id);
-            if (found) found.quantity += 1;
-            else cart.push({
-                id: window.__product.id, name: window.__product.name,
-                price: window.__product.price, imageUrl: window.__product.imageUrl,
-                quantity: 1
-            });
+            const found = cart.find(i => i.id === p.id);
+            if (found) {
+                found.quantity += qty;
+                found.oldPrice = p.oldPrice || null;
+                found.freeDelivery = !!p.freeDelivery;
+            } else cart.push({ id: p.id, name: p.name, price: p.price, oldPrice: p.oldPrice || null, imageUrl: p.imageUrl, freeDelivery: !!p.freeDelivery, quantity: qty });
             saveCart(cart);
             showToast(t('addedToCart'));
         };
 
-        window.orderNowPD = function() {
+        window.orderNowPD = function () {
             const p = window.__product;
+            if (!p) return;
             const q = new URLSearchParams({
                 id: p.id,
-                name: encodeURIComponent(p.name),
+                name: p.name,
                 price: p.price,
                 oldPrice: p.oldPrice || '',
-                img: encodeURIComponent(p.imageUrl || ''),
+                img: p.imageUrl || '',
                 freeDelivery: p.freeDelivery ? '1' : '0'
             });
             window.location.href = 'order.html?' + q.toString();
         };
 
-        window.switchMainImg = function(url, el) {
-            document.getElementById('mainImg').src = url;
-            document.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
+        window.toggleWishPD = function () {
+            const p = window.__product;
+            if (!p) return;
+            if (wishlist.has(p.id)) wishlist.delete(p.id); else wishlist.add(p.id);
+            localStorage.setItem('sb_wishlist', JSON.stringify([...wishlist]));
+            renderWishIcon();
         };
 
+        function renderWishIcon() {
+            const p = window.__product;
+            const el = document.getElementById('barWish');
+            if (!p || !el) return;
+            const on = wishlist.has(p.id);
+            el.innerHTML = `<i class="${on ? 'fa-solid' : 'fa-regular'} fa-heart text-lg ${on ? 'text-[#FF006A]' : ''}"></i>`;
+        }
+
+        // ---------- Gallery ----------
+        function renderGallery() {
+            const main = document.getElementById('mainImg');
+            const dots = document.getElementById('pdDots');
+            const prev = document.getElementById('pdPrev');
+            const next = document.getElementById('pdNext');
+            if (!main) return;
+            main.src = productImages[slideIdx] || '';
+            main.style.opacity = 0;
+            setTimeout(() => { main.style.opacity = 1; }, 120);
+            if (dots) dots.innerHTML = productImages.map((_, i) =>
+                `<span class="w-2 h-2 rounded-full transition ${i === slideIdx ? 'bg-[#006643] w-5' : 'bg-zinc-300'}" onclick="pdGoSlide(${i})"></span>`
+            ).join('');
+            const multi = productImages.length > 1;
+            if (prev) prev.style.display = multi ? 'grid' : 'none';
+            if (next) next.style.display = multi ? 'grid' : 'none';
+            if (dots) dots.style.display = multi ? 'flex' : 'none';
+        }
+        window.pdGoSlide = function (i) {
+            if (!productImages.length) return;
+            slideIdx = (i + productImages.length) % productImages.length;
+            renderGallery();
+            document.querySelectorAll('.pd-thumb-item').forEach((el, j) => el.classList.toggle('active', j === slideIdx));
+        };
+        window.pdThumbClick = function (i) { window.pdGoSlide(i); };
+
+        // ---------- Quantity ----------
+        window.pdQty = function (d) {
+            qty = Math.min(10, Math.max(1, qty + d));
+            document.getElementById('qtyVal').textContent = qty;
+        };
+
+        // ---------- Tabs ----------
+        window.pdTab = function (name) {
+            document.querySelectorAll('.pd-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+            document.querySelectorAll('.pd-tab-panel').forEach(p => p.style.display = p.dataset.panel === name ? 'block' : 'none');
+        };
+
+        // ---------- Offer scroller ----------
+        window.pdScrollOffers = function (dir) {
+            const el = document.getElementById('pdOfferScroller');
+            if (el) el.scrollBy({ left: dir * 330, behavior: 'smooth' });
+        };
+
+        async function loadOffers() {
+            const sec = document.getElementById('pdOfferSec');
+            if (!sec) return;
+            try {
+                const snap = await getDocs(collection(db, 'products'));
+                const offers = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+                    .filter(p => p.isOffer === true && p.status !== 'pending' && p.status !== 'rejected' && p.id !== productId)
+                    .slice(0, 12);
+                if (offers.length === 0) return;
+                const sc = document.getElementById('pdOfferScroller');
+                sc.innerHTML = offers.map(p => {
+                    const disc = p.discount || (p.oldPrice && p.oldPrice > p.price ? Math.round((1 - p.price / p.oldPrice) * 100) : 0);
+                    return `
+                    <a href="product.html?id=${p.id}" class="block w-[100px] md:w-[200px] shrink-0 snap-start bg-white rounded-2xl p-1.5 border border-black/5 shadow-[0_6px_16px_rgba(0,0,0,.06)] transition hover:shadow-[0_10px_24px_rgba(0,0,0,.12)]">
+                        <div class="relative rounded-xl overflow-hidden bg-zinc-50">
+                            ${disc > 0 ? `<span class="absolute top-1 left-1 z-10 text-[8px] md:text-[10px] font-black px-1.5 md:px-2 py-0.5 rounded-md bg-[#FF006A] text-white">-${disc}%</span>` : ''}
+                            <img src="${p.imageUrl || ''}" alt="${esc(p.name)}" loading="lazy" class="w-full h-[72px] md:h-[150px] object-cover">
+                        </div>
+                        <div class="px-1 pt-1.5 md:pt-2">
+                            <div class="text-[10px] md:text-sm font-bold truncate">${esc(p.name)}</div>
+                            <div class="flex items-baseline gap-1 mt-0.5">
+                                <span class="text-[11px] md:text-base font-black text-[#006643]">৳${p.price}</span>
+                                ${p.oldPrice ? `<span class="text-[9px] md:text-xs text-zinc-400 line-through font-bold">৳${p.oldPrice}</span>` : ''}
+                            </div>
+                        </div>
+                    </a>`;
+                }).join('');
+                sec.style.display = 'block';
+            } catch (e) { /* hide silently */ }
+        }
+
+        // ---------- Render ----------
         async function loadProduct() {
             const root = document.getElementById('pdRoot');
             if (!productId) {
@@ -160,8 +245,17 @@
                 }
 
                 window.__product = p;
+                productImages = (p.images && p.images.length > 0) ? p.images : [p.imageUrl || 'https://via.placeholder.com/600'];
+                slideIdx = 0;
+                qty = 1;
 
-                const images = (p.images && p.images.length > 0) ? p.images : [p.imageUrl || 'https://via.placeholder.com/400'];
+                const disc = p.discount || (p.oldPrice && p.oldPrice > p.price ? Math.round((1 - p.price / p.oldPrice) * 100) : 0);
+                const save = p.oldPrice && p.oldPrice > p.price ? (p.oldPrice - p.price) : 0;
+                const rating = p.rating || 4.9;
+                const reviews = p.reviewCount || 128;
+                const stars = [1,2,3,4,5].map(i =>
+                    `<i class="fa-solid fa-star ${i <= Math.round(rating) ? 'text-[#FFB700]' : 'text-zinc-300'}"></i>`
+                ).join('');
 
                 // Specification parse (key: value প্রতি লাইনে)
                 let specHTML = '';
@@ -172,61 +266,199 @@
                         if (idx > -1) {
                             const key = line.substring(0, idx).trim();
                             const val = line.substring(idx + 1).trim();
-                            return `<li><span class="spec-key">${key}</span><span class="spec-val">${val}</span></li>`;
+                            return `<li><span class="spec-key">${esc(key)}</span><span class="spec-val">${esc(val)}</span></li>`;
                         }
-                        return `<li><span class="spec-val">${line}</span></li>`;
+                        return `<li><span class="spec-val">${esc(line)}</span></li>`;
                     }).join('') + '</ul>';
                 }
 
-                const isBn = currentLang() === 'bn';
-                const discTag = p.discount ? `<span class="pd-discount-tag">${p.discount}% ${isBn ? 'ছাড়' : 'OFF'}</span>` : '';
+                const featIcon = (ic) => `<span class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-[#E8F5EE] text-[#006643] grid place-items-center shrink-0"><i class="fa-solid ${ic}"></i></span>`;
+                const reviewsData = [
+                    { n: 'Rafsan Ahmed', c: 'Dhaka', q: 'The colors are exactly like the photos! Product quality is amazing and delivery is super fast.', g: 'from-[#FFB700] to-[#FF8A00]' },
+                    { n: 'Nusrat Jahan', c: 'Chattogram', q: 'SB Brand Shop means trust. Every order arrives on time and the quality is top-notch.', g: 'from-[#FF006A] to-[#EC4899]' },
+                    { n: 'Tahmid Hasan', c: 'Sylhet', q: 'From packaging to product, everything is premium. I love the colorful vibe!', g: 'from-[#8B5CF6] to-[#06B6D4]' }
+                ];
 
                 root.innerHTML = `
-                    <div class="gallery-wrap">
-                        <div class="main-img-box">
-                            ${p.discount ? `<span class="badge-discount">-${p.discount}%</span>` : ''}
-                            <img id="mainImg" src="${images[0]}" alt="${p.name}">
-                        </div>
-                        ${images.length > 1 ? `
-                        <div class="thumb-row">
-                            ${images.map((img, i) => `
-                                <div class="thumb-item ${i===0?'active':''}" onclick="switchMainImg('${img}', this)">
-                                    <img src="${img}" alt="thumb-${i+1}">
+                <!-- Breadcrumb -->
+                <nav class="max-w-[1200px] mx-auto px-4 md:px-6 pt-3 pb-1 text-xs md:text-sm font-medium text-zinc-500 flex items-center gap-1.5 flex-wrap">
+                    <a href="index.html" class="hover:text-[#006643] transition">${t('pdBHome')}</a>
+                    <i class="fa-solid fa-chevron-right text-[9px] text-zinc-300"></i>
+                    ${p.category ? `<span class="hover:text-[#006643]">${esc(p.category)}</span><i class="fa-solid fa-chevron-right text-[9px] text-zinc-300"></i>` : ''}
+                    <span class="text-zinc-900 font-bold truncate max-w-[180px]">${esc(p.name)}</span>
+                </nav>
+
+                <div class="max-w-[1200px] mx-auto px-4 md:px-6 pb-6">
+                    <div class="grid lg:grid-cols-[1.05fr_0.95fr] gap-5 lg:gap-8 items-start">
+                        <!-- LEFT: Gallery -->
+                        <div class="bg-white rounded-[26px] p-3 md:p-4 shadow-[0_10px_30px_rgba(0,0,0,.06)] border border-black/5">
+                            <div class="relative rounded-[20px] overflow-hidden bg-zinc-100 aspect-square">
+                                ${disc > 0 ? `<span class="absolute top-3 left-3 z-10 text-xs font-black tracking-widest px-3 py-1.5 rounded-lg bg-[#006643] text-white">-${disc}%</span>` : ''}
+                                <img id="mainImg" class="pd-main-img w-full h-full object-cover" src="${productImages[0]}" alt="${esc(p.name)}">
+                                <button id="pdPrev" onclick="pdGoSlide(slideIdx - 1)" class="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/90 text-zinc-900 grid place-items-center shadow hover:bg-white transition"><i class="fa-solid fa-chevron-left text-sm"></i></button>
+                                <button id="pdNext" onclick="pdGoSlide(slideIdx + 1)" class="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/90 text-zinc-900 grid place-items-center shadow hover:bg-white transition"><i class="fa-solid fa-chevron-right text-sm"></i></button>
+                                <div id="pdDots" class="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5"></div>
+                            </div>
+                            ${productImages.length > 1 ? `
+                            <div class="flex gap-2.5 mt-3 overflow-x-auto no-scrollbar">
+                                ${productImages.map((img, i) => `
+                                <div class="pd-thumb-item ${i === 0 ? 'active' : ''} rounded-xl overflow-hidden cursor-pointer shrink-0 w-16 h-16" onclick="pdThumbClick(${i})">
+                                    <img src="${img}" alt="thumb-${i + 1}" class="w-full h-full object-cover">
                                 </div>`).join('')}
-                        </div>` : ''}
-                    </div>
-
-                    <div class="pd-info">
-                        <div class="pd-name">${p.name}</div>
-                        <div class="pd-price-row">
-                            <span class="pd-price">৳${p.price}</span>
-                            ${p.oldPrice ? `<span class="pd-old-price">৳${p.oldPrice}</span>` : ''}
-                            ${discTag}
+                            </div>` : ''}
                         </div>
-                        ${p.freeDelivery ? `<div class="pd-delivery-tag"><i class="fa-solid fa-truck-fast"></i> ${t('freeDelivery')}</div>` : ''}
+
+                        <!-- RIGHT: Info -->
+                        <div>
+                            <h1 class="font-display font-black text-2xl md:text-3xl leading-tight tracking-tight">${esc(p.name)}</h1>
+                            ${p.category ? `<div class="text-sm md:text-base font-bold text-[#006643] mt-1">${esc(p.category)}</div>` : ''}
+                            <div class="flex items-center gap-2 mt-3 flex-wrap">
+                                <span class="flex text-[15px] gap-0.5">${stars}</span>
+                                <span class="text-sm font-black">${rating}</span>
+                                <span class="text-sm text-zinc-400 font-medium">(${reviews} ${t('pdReviews')})</span>
+                            </div>
+
+                            <hr class="my-4 border-black/5">
+
+                            <div class="flex items-center gap-3 flex-wrap">
+                                <span class="font-display font-black text-3xl md:text-4xl text-[#006643]">৳${p.price}</span>
+                                ${p.oldPrice ? `<span class="text-lg md:text-xl text-zinc-400 line-through font-bold">৳${p.oldPrice}</span>` : ''}
+                                ${disc > 0 ? `<span class="bg-[#FFE9F3] text-[#FF006A] text-xs font-black px-3 py-1.5 rounded-lg">-${disc}%</span>` : ''}
+                            </div>
+                            ${p.freeDelivery ? `<div class="inline-flex items-center gap-2 mt-3 text-sm font-bold text-[#006643] bg-[#E8F5EE] px-3 py-1.5 rounded-full"><i class="fa-solid fa-truck-fast"></i> ${t('freeDelivery')}</div>` : ''}
+
+                            <!-- Features -->
+                            <div class="grid grid-cols-2 gap-2.5 mt-5">
+                                <div class="flex items-center gap-3 bg-zinc-50 rounded-2xl p-3 border border-black/5">${featIcon('fa-money-bill-wave')}<span class="text-[13px] md:text-sm font-bold">${t('pdFeat1')}</span></div>
+                                <div class="flex items-center gap-3 bg-zinc-50 rounded-2xl p-3 border border-black/5">${featIcon('fa-truck-fast')}<span class="text-[13px] md:text-sm font-bold">${t('pdFeat2')}</span></div>
+                                <div class="flex items-center gap-3 bg-zinc-50 rounded-2xl p-3 border border-black/5">${featIcon('fa-circle-check')}<span class="text-[13px] md:text-sm font-bold">${t('pdFeat3')}</span></div>
+                                <div class="flex items-center gap-3 bg-zinc-50 rounded-2xl p-3 border border-black/5">${featIcon('fa-rotate-left')}<span class="text-[13px] md:text-sm font-bold">${t('pdFeat4')}</span></div>
+                            </div>
+
+                            <!-- Delivery card -->
+                            <div class="mt-4 bg-zinc-50 border border-black/5 rounded-2xl p-4 flex items-start gap-3">
+                                <span class="w-11 h-11 rounded-xl bg-white shadow grid place-items-center text-[#006643] shrink-0"><i class="fa-solid fa-truck-fast"></i></span>
+                                <div>
+                                    <div class="font-black text-sm">${t('pdDelivTitle')}</div>
+                                    <div class="text-sm text-zinc-500 mt-1">${t('pdDelivIn')}</div>
+                                    <div class="text-sm text-zinc-500">${t('pdDelivOut')}</div>
+                                </div>
+                            </div>
+
+                            <!-- Quantity -->
+                            <div class="mt-5 flex items-center justify-between">
+                                <span class="font-black text-sm" data-i18n="pdQty">Quantity</span>
+                                <div class="flex items-center gap-4 bg-white border border-black/10 rounded-full px-3 py-1.5 shadow-sm">
+                                    <button onclick="pdQty(-1)" class="w-8 h-8 rounded-full border-2 border-[#006643] text-[#006643] grid place-items-center font-black hover:bg-[#006643] hover:text-white transition">−</button>
+                                    <span id="qtyVal" class="font-black text-lg w-6 text-center">1</span>
+                                    <button onclick="pdQty(1)" class="w-8 h-8 rounded-full border-2 border-[#006643] text-[#006643] grid place-items-center font-black hover:bg-[#006643] hover:text-white transition">+</button>
+                                </div>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="flex gap-3 mt-5">
+                                <button onclick="addToCartPD()" class="flex-1 py-4 rounded-2xl bg-[#006643] text-white font-black text-sm hover:bg-[#004d33] transition shadow-[0_12px_24px_rgba(0,102,67,.25)]">
+                                    <i class="fa-solid fa-cart-plus"></i> <span data-i18n="addToCart">Add to Cart</span>
+                                </button>
+                                <button onclick="orderNowPD()" class="flex-1 py-4 rounded-2xl border-2 border-[#006643] text-[#006643] bg-white font-black text-sm hover:bg-[#E8F5EE] transition">
+                                    <i class="fa-solid fa-bolt"></i> <span data-i18n="buyNow">Order Now</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
-                    ${specHTML ? `
-                    <div class="pd-section">
-                        <h3><i class="fa-solid fa-list-check"></i> ${t('specTitle')}</h3>
-                        ${specHTML}
-                    </div>` : ''}
-
-                    ${p.description ? `
-                    <div class="pd-section">
-                        <h3><i class="fa-solid fa-align-left"></i> ${t('descTitle')}</h3>
-                        <p>${p.description}</p>
-                    </div>` : ''}
-
-                    <div class="pd-action-bar">
-                        <button class="pd-cart-btn" onclick="addToCartPD()">
-                            <i class="fa-solid fa-cart-plus"></i> ${t('addToCart')}
-                        </button>
-                        <button class="pd-order-btn" onclick="orderNowPD()">
-                            <i class="fa-solid fa-bolt"></i> ${t('buyNow')}
-                        </button>
+                    <!-- Trust row -->
+                    <div class="bg-white rounded-[26px] border border-black/5 shadow-[0_10px_30px_rgba(0,0,0,.05)] p-5 mt-5">
+                        <div class="grid grid-cols-4 gap-2 md:gap-4">
+                            <div class="flex flex-col items-center text-center gap-2">
+                                <span class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-[#E8F5EE] text-[#006643] grid place-items-center text-base md:text-lg"><i class="fa-solid fa-money-bill-wave"></i></span>
+                                <div><div class="font-black text-[11px] md:text-sm">${t('pdTrust1')}</div><div class="text-[9px] md:text-xs text-zinc-500 font-medium mt-0.5">${t('pdTrust1s')}</div></div>
+                            </div>
+                            <div class="flex flex-col items-center text-center gap-2">
+                                <span class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-[#FFE9F3] text-[#FF006A] grid place-items-center text-base md:text-lg"><i class="fa-solid fa-shield-halved"></i></span>
+                                <div><div class="font-black text-[11px] md:text-sm">${t('pdTrust2')}</div><div class="text-[9px] md:text-xs text-zinc-500 font-medium mt-0.5">${t('pdTrust2s')}</div></div>
+                            </div>
+                            <div class="flex flex-col items-center text-center gap-2">
+                                <span class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-[#FFF7D6] text-[#FF8A00] grid place-items-center text-base md:text-lg"><i class="fa-solid fa-rotate-left"></i></span>
+                                <div><div class="font-black text-[11px] md:text-sm">${t('pdTrust3')}</div><div class="text-[9px] md:text-xs text-zinc-500 font-medium mt-0.5">${t('pdTrust3s')}</div></div>
+                            </div>
+                            <div class="flex flex-col items-center text-center gap-2">
+                                <span class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-[#EDE9FF] text-[#8B5CF6] grid place-items-center text-base md:text-lg"><i class="fa-solid fa-headset"></i></span>
+                                <div><div class="font-black text-[11px] md:text-sm">${t('pdTrust4')}</div><div class="text-[9px] md:text-xs text-zinc-500 font-medium mt-0.5">${t('pdTrust4s')}</div></div>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Tabs -->
+                    <div class="bg-white rounded-[26px] border border-black/5 shadow-[0_10px_30px_rgba(0,0,0,.05)] mt-5 overflow-hidden">
+                        <div class="flex border-b border-black/5 overflow-x-auto no-scrollbar">
+                            <button class="pd-tab active" data-tab="overview" onclick="pdTab('overview')">${t('pdTabOverview')}</button>
+                            <button class="pd-tab" data-tab="details" onclick="pdTab('details')">${t('pdTabDetails')}</button>
+                            <button class="pd-tab" data-tab="reviews" onclick="pdTab('reviews')">${t('pdTabReviews')}</button>
+                        </div>
+                        <div class="p-5 md:p-6">
+                            <!-- Overview -->
+                            <div class="pd-tab-panel" data-panel="overview">
+                                ${p.description
+                                    ? `<p class="text-sm md:text-[15px] leading-relaxed text-zinc-600 whitespace-pre-line">${esc(p.description)}</p>`
+                                    : `<p class="text-sm text-zinc-500">${t('pdNoDesc')}</p>`}
+                            </div>
+                            <!-- Details -->
+                            <div class="pd-tab-panel" data-panel="details" style="display:none">
+                                ${specHTML || `<ul class="spec-list">
+                                    <li><span class="spec-key">${t('pdPrice')}</span><span class="spec-val">৳${p.price}${p.oldPrice ? ' (৳' + p.oldPrice + ')' : ''}</span></li>
+                                    ${p.category ? `<li><span class="spec-key">${t('pdCategory')}</span><span class="spec-val">${esc(p.category)}</span></li>` : ''}
+                                    <li><span class="spec-key">${t('pdAvailKey')}</span><span class="spec-val text-[#006643] font-bold">${t('pdInStock')}</span></li>
+                                    <li><span class="spec-key">${t('pdDelivKey')}</span><span class="spec-val">${t('pdDelivVal')}</span></li>
+                                </ul>`}
+                            </div>
+                            <!-- Reviews -->
+                            <div class="pd-tab-panel" data-panel="reviews" style="display:none">
+                                <div class="grid md:grid-cols-3 gap-4">
+                                    ${reviewsData.map(r => `
+                                    <div class="rounded-2xl bg-zinc-50 border border-black/5 p-4">
+                                        <div class="flex text-[#FFB700] text-xs gap-0.5"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                                        <p class="font-medium text-sm leading-relaxed mt-3 text-zinc-700">“${r.q}”</p>
+                                        <div class="flex items-center gap-3 mt-4">
+                                            <span class="w-9 h-9 rounded-full bg-gradient-to-br ${r.g} text-white grid place-items-center font-black text-sm">${r.n.charAt(0)}</span>
+                                            <div><div class="font-black text-sm">${r.n}</div><div class="text-xs font-bold text-zinc-500">${t('verified')} • ${r.c}</div></div>
+                                        </div>
+                                    </div>`).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Offer Products scroller (3 at a time + arrows) -->
+                    <div id="pdOfferSec" style="display:none">
+                        <div class="flex items-end justify-between gap-4 mt-6">
+                            <h2 class="font-display font-black text-xl md:text-2xl tracking-tight">${t('offerTitle')}</h2>
+                            <div class="flex items-center gap-2 shrink-0">
+                                <button onclick="pdScrollOffers(-1)" class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-white border border-black/10 grid place-items-center hover:bg-zinc-900 hover:text-white transition" aria-label="scroll left"><i class="fa-solid fa-arrow-left text-xs md:text-sm"></i></button>
+                                <button onclick="pdScrollOffers(1)" class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-zinc-900 text-white grid place-items-center hover:bg-black transition" aria-label="scroll right"><i class="fa-solid fa-arrow-right text-xs md:text-sm"></i></button>
+                            </div>
+                        </div>
+                        <div id="pdOfferScroller" class="flex gap-2.5 md:gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory mt-4 pb-1"></div>
+                    </div>
+                </div>
                 `;
+
+                // Sticky bar
+                const bar = document.getElementById('pdActionBar');
+                bar.style.display = 'block';
+                document.getElementById('barPrice').textContent = '৳' + p.price;
+                const barOld = document.getElementById('barOld');
+                const barSave = document.getElementById('barSave');
+                if (p.oldPrice) {
+                    barOld.textContent = '৳' + p.oldPrice;
+                    barOld.classList.remove('hidden');
+                    if (save > 0) {
+                        barSave.textContent = `${t('pdSave')} ৳${save} (${disc}%)`;
+                        barSave.classList.remove('hidden');
+                    }
+                }
+                renderWishIcon();
+                loadOffers();
             } catch(e) {
                 root.innerHTML = `<div class="pd-skeleton">${t('loadFailed')}</div>`;
             }

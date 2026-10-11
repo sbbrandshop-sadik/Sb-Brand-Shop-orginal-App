@@ -480,12 +480,9 @@ window.addToCart = function (encoded) {
 };
 window.buyNow = function (encoded) {
     const p = JSON.parse(decodeURIComponent(encoded));
-    const params = new URLSearchParams({
-        id: p.id, name: encodeURIComponent(p.name), price: p.price,
-        oldPrice: p.oldPrice || '', img: encodeURIComponent(p.imageUrl || ''),
-        freeDelivery: p.freeDelivery ? '1' : '0'
-    });
-    window.location.href = 'order.html?' + params.toString();
+    if (!p.id) return;
+    // Homepage Order Now first opens the product details page.
+    window.location.href = 'product.html?id=' + encodeURIComponent(p.id);
 };
 
 // ========== WISHLIST ==========

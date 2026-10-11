@@ -29,22 +29,6 @@
         .empty-state p { color: #999; margin-bottom: 20px; font-size: 16px; }
         .shop-link { display: inline-block; background: #006643; color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: bold; }
 
-        /* Modal */
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 9999; align-items: flex-end; justify-content: center; }
-        .overlay.show { display: flex; }
-        .modal { background: white; border-radius: 20px 20px 0 0; padding: 25px; width: 100%; max-width: 500px; animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .modal-title { font-size: 17px; font-weight: bold; color: #006643; margin-bottom: 18px; }
-        .m-group { margin-bottom: 13px; }
-        .m-group label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 5px; }
-        .m-group input, .m-group textarea { width: 100%; padding: 11px 14px; border: 1.5px solid #ddd; border-radius: 10px; font-size: 14px; outline: none; }
-        .m-group input:focus, .m-group textarea:focus { border-color: #006643; }
-        .modal-btns { display: flex; gap: 10px; margin-top: 15px; }
-        .modal-btns button { flex: 1; padding: 13px; border: none; border-radius: 10px; font-weight: bold; font-size: 15px; cursor: pointer; }
-        .confirm-btn { background: #006643; color: white; }
-        .confirm-btn:hover { background: #004d33; }
-        .confirm-btn:disabled { background: #aaa; cursor: not-allowed; }
-        .cancel-btn { background: #f0f0f0; color: #444; }
     </style>
 </head>
 <body>
@@ -54,29 +38,6 @@
 
     <div class="cart-page" id="cartContainer"></div>
 
-    <!-- Order Modal -->
-    <div class="overlay" id="orderOverlay">
-        <div class="modal">
-            <div class="modal-title" data-i18n="deliveryInfo">📦 Delivery Information</div>
-            <div class="m-group">
-                <label data-i18n="yourName">Your Name *</label>
-                <input type="text" id="oName" placeholder="Full name" data-i18n-ph="namePh">
-            </div>
-            <div class="m-group">
-                <label data-i18n="phone">Phone Number *</label>
-                <input type="tel" id="oPhone" placeholder="01XXXXXXXXX" data-i18n-ph="phonePh">
-            </div>
-            <div class="m-group">
-                <label data-i18n="address">Delivery Address *</label>
-                <textarea id="oAddress" rows="3" placeholder="House/Flat, Road, Area, District" data-i18n-ph="addressPh"></textarea>
-            </div>
-            <div class="modal-btns">
-                <button class="cancel-btn" onclick="closeModal()" data-i18n="cancel">Cancel</button>
-                <button class="confirm-btn" id="confirmBtn" data-i18n="confirmOrder">✅ Confirm Order</button>
-            </div>
-        </div>
-    </div>
-
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span data-i18n="navHome">Home</span></a>
         <a href="#" class="nav-item"><i class="fa-solid fa-clapperboard"></i><span data-i18n="navReels">Reels</span></a>
@@ -85,18 +46,11 @@
     </nav>
 
     <script type="module">
-        import { db, auth } from './firebase-config.js';
-        import { collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { db } from './firebase-config.js';
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const { t, applyI18n, initShopLang } = window.APP_I18N;
         applyI18n();
-
-        let currentUser = null;
-        onAuthStateChanged(auth, u => {
-            currentUser = u;
-            if (u) document.getElementById('oName').value = u.displayName || '';
-        });
 
         function getCart() { return JSON.parse(localStorage.getItem('sb_cart') || '[]'); }
         function saveCart(c) { localStorage.setItem('sb_cart', JSON.stringify(c)); render(); }
@@ -139,9 +93,9 @@
             box.innerHTML = html + `
             <div class="cart-summary">
                 <div class="summary-row"><span>${t('totalItems')}</span><span>${itemCount}</span></div>
-                <div class="summary-row"><span>${t('deliveryRow')}</span><span style="color:#006643">${t('free')}</span></div>
+                <div class="summary-row"><span>${t('deliveryRow')}</span><span style="color:#006643">${cart.length && cart.every(item => item.freeDelivery === true) ? t('free') : t('checkoutDelivery')}</span></div>
                 <div class="summary-total"><span>${t('grandTotal')}</span><span>৳${total}</span></div>
-                <button class="checkout-btn" onclick="openModal()">
+                <button class="checkout-btn" onclick="goToOrderForm()">
                     <i class="fa-solid fa-bag-shopping"></i> ${t('cartOrderBtn')}
                 </button>
             </div>`;
@@ -158,46 +112,10 @@
             c.splice(i, 1);
             saveCart(c);
         };
-        window.openModal = function() {
-            if (!currentUser) {
-                if (confirm(t('loginRequired')))
-                    window.location.href = 'login.html';
-                return;
-            }
-            document.getElementById('orderOverlay').classList.add('show');
+        window.goToOrderForm = function() {
+            if (!getCart().length) return;
+            window.location.href = 'order.html?cart=1';
         };
-        window.closeModal = function() {
-            document.getElementById('orderOverlay').classList.remove('show');
-        };
-
-        document.getElementById('confirmBtn').addEventListener('click', async () => {
-            const name = document.getElementById('oName').value.trim();
-            const phone = document.getElementById('oPhone').value.trim();
-            const address = document.getElementById('oAddress').value.trim();
-            if (!name || !phone || !address) { alert(t('fillAll')); return; }
-            const cart = getCart();
-            const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-            const btn = document.getElementById('confirmBtn');
-            btn.disabled = true;
-            btn.textContent = t('orderingNow');
-            try {
-                await addDoc(collection(db, 'orders'), {
-                    userId: currentUser.uid,
-                    userEmail: currentUser.email,
-                    name, phone, address, items: cart, total,
-                    status: 'pending',
-                    createdAt: serverTimestamp()
-                });
-                localStorage.removeItem('sb_cart');
-                closeModal();
-                alert(t('orderSuccessAlert'));
-                window.location.href = 'index.html';
-            } catch(e) {
-                alert(t('orderFailAlert'));
-                btn.disabled = false;
-                btn.textContent = t('confirmOrder');
-            }
-        });
 
         await initShopLang(async () => {
             const snap = await getDoc(doc(db, 'settings', 'general'));
